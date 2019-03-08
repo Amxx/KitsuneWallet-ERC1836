@@ -78,11 +78,22 @@ contract('ERC1836Delegate_Universal', async (accounts) => {
 		assert.isFalse(await Ident.keyHasPurpose(utils.addressToBytes32Padding(user2), "0x0000000000000000000000000000000000000000000000000000000000000004"));
 	});
 
-	it ("Verify proxy registration", async () => {
+	it ("Verify forward proxy registration", async () => {
 		name = "hadrien.mylogin.eth";
+
 		nodeHash = ethers.utils.namehash(name);
-		assert.equal(await (await PublicResolver.at(await ENS.resolver(nodeHash))).addr(nodeHash), Ident.address);
-		assert.equal(await Resolver.name(await Reverse.node(Ident.address)), name);
+		resolver = await PublicResolver.at(await ENS.resolver(nodeHash));
+		address  = await resolver.addr(nodeHash);
+		assert.equal(address, Ident.address);
+	});
+
+	it ("Verify forward proxy registration", async () => {
+		address  = Ident.address;
+		
+		nodeHash = await Reverse.node(address);
+		resolver = await PublicResolver.at(await ENS.resolver(nodeHash));
+		name     = await resolver.name(nodeHash);
+		assert.equal(name, "hadrien.mylogin.eth");
 	});
 
 	it("Deposit on proxy", async () => {

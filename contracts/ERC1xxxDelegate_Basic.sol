@@ -5,9 +5,10 @@ import "../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 import "../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 import "./ERC1xxxDelegate.sol";
+import "./ENSRegistered.sol";
 import "./interfaces/IERC1271.sol";
 
-contract ERC1xxxDelegate_Basic is ERC1xxxDelegate, IERC1271, Ownable
+contract ERC1xxxDelegate_Basic is ERC1xxxDelegate, ENSRegistered, IERC1271, Ownable
 {
 	using SafeMath for uint256;
 	using ECDSA    for bytes32;

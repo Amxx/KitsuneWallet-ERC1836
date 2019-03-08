@@ -1,7 +1,7 @@
 pragma solidity ^0.5.5;
 pragma experimental ABIEncoderV2;
 
-import "../../node_modules/universal-login-contracts/contracts/ENS/ENS.sol";
+import "../../node_modules/universal-login-contracts/contracts/ENS/ENSRegistry.sol";
 import "../../node_modules/universal-login-contracts/contracts/ENS/FIFSRegistrar.sol";
 import "../../node_modules/universal-login-contracts/contracts/ENS/PublicResolver.sol";
 import "../../node_modules/universal-login-contracts/contracts/ENS/ReverseRegistrar.sol";
@@ -17,6 +17,7 @@ contract ERC1xxxDelegate_Universal is ERC1xxxDelegate, ERC1077
 	constructor()
 	public
 	ERC1xxx(address(0), bytes(""))
+	ERC1077(bytes32(0))
 	{
 	}
 
@@ -25,7 +26,7 @@ contract ERC1xxxDelegate_Universal is ERC1xxxDelegate, ERC1077
 		bytes32         _hashLabel,
 		string calldata _name,
 		bytes32         _node,
-		ENS             _ens,
+		ENSRegistry     _ens,
 		FIFSRegistrar   _registrar,
 		PublicResolver  _resolver)
 	external initialization
@@ -48,6 +49,15 @@ contract ERC1xxxDelegate_Universal is ERC1xxxDelegate, ERC1077
 	external protected
 	{
 		// reset memory space
+		for (uint256 purpose = 1; purpose <= 4; ++purpose) // do more ?
+		{
+			for (uint256 i = 0; i < keysByPurpose[purpose].length; ++i)
+			{
+				delete keys[keysByPurpose[purpose][i]];
+			}
+			delete keysByPurpose[purpose];
+		}
+		delete _lastNonce;
 
 		// set next delegate
 		setDelegate(_newDelegate, _callback);

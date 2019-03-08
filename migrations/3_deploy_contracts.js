@@ -9,6 +9,6 @@ module.exports = async function(deployer, network, accounts)
 	await deployer.deploy(ERC1xxxDelegate_Basic);
 	await deployer.deploy(ERC1xxxDelegate_Multisig);
 	await deployer.deploy(ERC1xxxDelegate_MultisigRefund);
-	// await deployer.deploy(ERC1xxxDelegate_Universal);
+	await deployer.deploy(ERC1xxxDelegate_Universal);
 	await deployer.deploy(GenericTarget);
 };

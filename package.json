@@ -1,0 +1,16 @@
+{
+  "name": "erc1xxx",
+  "version": "0.0.0",
+  "description": "A universal proxy for identity through delegates",
+  "main": "truffle.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hadrien Croubois (hc@iex.ec)",
+  "license": "ISC",
+  "devDependencies": {
+    "openzeppelin-solidity": "^2.1.3",
+    "openzeppelin-test-helpers": "^0.1.2",
+    "truffle": "^5.0.7"
+  }
+}

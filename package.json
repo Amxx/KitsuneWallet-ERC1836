@@ -1,11 +1,9 @@
 {
   "name": "erc1xxx",
   "version": "0.0.0",
-  "description": "A universal proxy for identity through delegates",
+  "description": "A universal proxy for upgradable identity through delegates",
   "main": "truffle.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "author": "Hadrien Croubois (hc@iex.ec)",
   "license": "ISC",
   "devDependencies": {

@@ -1,5 +1,5 @@
-const ERC1xxx               = artifacts.require("ERC1xxx");
-const ERC1xxxDelegate_Basic = artifacts.require("ERC1xxxDelegate_Basic");
+const ERC1836               = artifacts.require("ERC1836");
+const ERC1836Delegate_Basic = artifacts.require("ERC1836Delegate_Basic");
 const GenericTarget         = artifacts.require("GenericTarget");
 
 const { shouldFail } = require('openzeppelin-test-helpers');
@@ -10,7 +10,7 @@ function extractEvents(txMined, address, name)
 	return txMined.logs.filter((ev) => { return ev.address == address && ev.event == name });
 }
 
-contract('ERC1xxxDelegate_Basic', async (accounts) => {
+contract('ERC1836Delegate_Basic', async (accounts) => {
 
 	assert.isAtLeast(accounts.length, 10, "should have at least 10 accounts");
 	relayer = accounts[1];
@@ -30,14 +30,14 @@ contract('ERC1xxxDelegate_Basic', async (accounts) => {
 	});
 
 	it ("Create proxy", async () => {
-		Proxy = await ERC1xxx.new(
-			(await ERC1xxxDelegate_Basic.deployed()).address,
-			utils.prepareData(ERC1xxxDelegate_Basic, "initialize", [
+		Proxy = await ERC1836.new(
+			(await ERC1836Delegate_Basic.deployed()).address,
+			utils.prepareData(ERC1836Delegate_Basic, "initialize", [
 				user1
 			]),
 			{ from: relayer }
 		);
-		Ident = await ERC1xxxDelegate_Basic.at(Proxy.address);
+		Ident = await ERC1836Delegate_Basic.at(Proxy.address);
 	});
 
 	it ("Verify proxy initialization", async () => {
@@ -130,9 +130,9 @@ contract('ERC1xxxDelegate_Basic', async (accounts) => {
 			0,
 			Ident.address,
 			0,
-			utils.prepareData(ERC1xxxDelegate_Basic, "updateDelegate", [
-				(await ERC1xxxDelegate_Basic.deployed()).address,
-				utils.prepareData(ERC1xxxDelegate_Basic, "initialize", [
+			utils.prepareData(ERC1836Delegate_Basic, "updateDelegate", [
+				(await ERC1836Delegate_Basic.deployed()).address,
+				utils.prepareData(ERC1836Delegate_Basic, "initialize", [
 					user1
 				])
 			]),
@@ -150,8 +150,8 @@ contract('ERC1xxxDelegate_Basic', async (accounts) => {
 
 	it ("updateDelegate - protected", async () => {
 		await shouldFail.reverting(Ident.updateDelegate(
-			(await ERC1xxxDelegate_Basic.deployed()).address,
-			utils.prepareData(ERC1xxxDelegate_Basic, "initialize", [
+			(await ERC1836Delegate_Basic.deployed()).address,
+			utils.prepareData(ERC1836Delegate_Basic, "initialize", [
 				user2
 			]),
 			{ from: user1 }

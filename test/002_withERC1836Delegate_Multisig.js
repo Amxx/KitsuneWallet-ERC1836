@@ -1,5 +1,5 @@
-const ERC1xxx                  = artifacts.require("ERC1xxx");
-const ERC1xxxDelegate_Multisig = artifacts.require("ERC1xxxDelegate_Multisig");
+const ERC1836                  = artifacts.require("ERC1836");
+const ERC1836Delegate_Multisig = artifacts.require("ERC1836Delegate_Multisig");
 const GenericTarget            = artifacts.require("GenericTarget");
 
 const { shouldFail } = require('openzeppelin-test-helpers');
@@ -10,7 +10,7 @@ function extractEvents(txMined, address, name)
 	return txMined.logs.filter((ev) => { return ev.address == address && ev.event == name });
 }
 
-contract('ERC1xxxDelegate_Multisig', async (accounts) => {
+contract('ERC1836Delegate_Multisig', async (accounts) => {
 
 	assert.isAtLeast(accounts.length, 10, "should have at least 10 accounts");
 	relayer = accounts[1];
@@ -30,9 +30,9 @@ contract('ERC1xxxDelegate_Multisig', async (accounts) => {
 	});
 
 	it ("Create proxy", async () => {
-		Proxy = await ERC1xxx.new(
-			(await ERC1xxxDelegate_Multisig.deployed()).address,
-			utils.prepareData(ERC1xxxDelegate_Multisig, "initialize", [
+		Proxy = await ERC1836.new(
+			(await ERC1836Delegate_Multisig.deployed()).address,
+			utils.prepareData(ERC1836Delegate_Multisig, "initialize", [
 				[ utils.addressToBytes32(user1) ],
 				[ "0x0000000000000000000000000000000000000000000000000000000000000003" ],
 				1,
@@ -40,7 +40,7 @@ contract('ERC1xxxDelegate_Multisig', async (accounts) => {
 			]),
 			{ from: relayer }
 		);
-		Ident = await ERC1xxxDelegate_Multisig.at(Proxy.address);
+		Ident = await ERC1836Delegate_Multisig.at(Proxy.address);
 	});
 
 	it ("Verify proxy initialization", async () => {

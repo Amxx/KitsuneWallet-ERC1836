@@ -5,9 +5,9 @@ import "../node_modules/universal-login-contracts/contracts/ENS/FIFSRegistrar.so
 import "../node_modules/universal-login-contracts/contracts/ENS/PublicResolver.sol";
 import "../node_modules/universal-login-contracts/contracts/ENS/ReverseRegistrar.sol";
 
-import "./ERC1xxxDelegate.sol";
+import "./ERC1836Delegate.sol";
 
-contract ENSRegistered is ERC1xxxDelegate
+contract ENSRegistered is ERC1836Delegate
 {
 	bytes32 constant ADDR_REVERSE_NODE = 0x91d1777781884d03a6757a803996e38de2a42967fb37eeaca72729271025a9e2;
 

@@ -1,7 +1,7 @@
 {
-  "name": "erc1xxx",
+  "name": "erc1836-implementation",
   "version": "0.0.0",
-  "description": "A universal proxy for upgradable identity through delegates",
+  "description": "ERC1836, a upgradable proxy for universal identity through delegates",
   "main": "truffle.js",
   "scripts": {},
   "author": "Hadrien Croubois (hc@iex.ec)",

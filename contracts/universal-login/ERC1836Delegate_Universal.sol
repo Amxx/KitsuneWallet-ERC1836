@@ -7,16 +7,16 @@ import "../../node_modules/universal-login-contracts/contracts/ENS/PublicResolve
 import "../../node_modules/universal-login-contracts/contracts/ENS/ReverseRegistrar.sol";
 import "../../node_modules/universal-login-contracts/contracts/ERC1077.sol";
 
-import "../ERC1xxxDelegate.sol";
+import "../ERC1836Delegate.sol";
 
-contract ERC1xxxDelegate_Universal is ERC1xxxDelegate, ERC1077
+contract ERC1836Delegate_Universal is ERC1836Delegate, ERC1077
 {
 	bytes32 constant ADDR_REVERSE_NODE = 0x91d1777781884d03a6757a803996e38de2a42967fb37eeaca72729271025a9e2;
 
 	// This is a delegate contract, lock it
 	constructor()
 	public
-	ERC1xxx(address(0), bytes(""))
+	ERC1836(address(0), bytes(""))
 	ERC1077(bytes32(0))
 	{
 	}

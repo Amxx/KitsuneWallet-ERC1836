@@ -3,13 +3,12 @@ pragma experimental ABIEncoderV2;
 
 import "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
-import "../node_modules/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-import "./ERC1xxxDelegate.sol";
+import "./ERC1836Delegate.sol";
 import "./ENSRegistered.sol";
 import "./interfaces/IERC1271.sol";
 
-contract ERC1xxxDelegate_MultisigRefund is ERC1xxxDelegate, ENSRegistered, IERC1271
+contract ERC1836Delegate_Multisig is ERC1836Delegate, ENSRegistered, IERC1271
 {
 	using SafeMath for uint256;
 	using ECDSA    for bytes32;
@@ -27,7 +26,7 @@ contract ERC1xxxDelegate_MultisigRefund is ERC1xxxDelegate, ENSRegistered, IERC1
 	// This is a delegate contract, lock it
 	constructor()
 	public
-	ERC1xxx(address(0), bytes(""))
+	ERC1836(address(0), bytes(""))
 	{
 	}
 
@@ -133,14 +132,10 @@ contract ERC1xxxDelegate_MultisigRefund is ERC1xxxDelegate, ENSRegistered, IERC1
 	, uint256        _value
 	, bytes   memory _data
 	, uint256        _nonce
-	, address        _gasToken
-	, uint256        _gasPrice
 	, bytes[] memory _sigs
 	)
 	public
 	{
-		uint256 gasBefore = gasleft();
-
 		++m_nonce;
 		require(_nonce == 0 || _nonce == nonce(), "invalid-nonce");
 
@@ -162,9 +157,7 @@ contract ERC1xxxDelegate_MultisigRefund is ERC1xxxDelegate, ENSRegistered, IERC1
 				_to,
 				_value,
 				keccak256(_data),
-				_nonce,
-				_gasToken,
-				_gasPrice
+				_nonce
 			)).toEthSignedMessageHash();
 
 		for (uint256 i = 0; i < _sigs.length; ++i)
@@ -173,21 +166,6 @@ contract ERC1xxxDelegate_MultisigRefund is ERC1xxxDelegate, ENSRegistered, IERC1
 		}
 
 		_execute(_operationType, _to, _value, _data);
-
-		refund(gasBefore.sub(gasleft()), _gasPrice, _gasToken);
-	}
-
-	function refund(uint256 _gasUsed, uint256 _gasPrice, address _gasToken)
-	internal
-	{
-		if (_gasToken == address(0))
-		{
-			msg.sender.transfer(_gasUsed.mul(_gasPrice));
-		}
-		else
-		{
-			IERC20(_gasToken).transfer(msg.sender, _gasUsed.mul(_gasPrice));
-		}
 	}
 
 	function isValidSignature(bytes32 _data, bytes memory _signature)

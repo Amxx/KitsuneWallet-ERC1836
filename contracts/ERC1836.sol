@@ -1,6 +1,6 @@
 pragma solidity ^0.5.5;
 
-contract ERC1xxx
+contract ERC1836
 {
 	address private m_delegate;
 	bool    private m_initialized;

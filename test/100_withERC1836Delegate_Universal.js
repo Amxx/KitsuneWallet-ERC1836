@@ -3,8 +3,8 @@ const FIFSRegistrar             = artifacts.require("universal-login-contracts/F
 const ReverseRegistrar          = artifacts.require("universal-login-contracts/ReverseRegistrar")
 const PublicResolver            = artifacts.require("universal-login-contracts/PublicResolver")
 
-const ERC1xxx                   = artifacts.require("ERC1xxx");
-const ERC1xxxDelegate_Universal = artifacts.require("ERC1xxxDelegate_Universal");
+const ERC1836                   = artifacts.require("ERC1836");
+const ERC1836Delegate_Universal = artifacts.require("ERC1836Delegate_Universal");
 const GenericTarget             = artifacts.require("GenericTarget");
 
 const { shouldFail } = require('openzeppelin-test-helpers');
@@ -16,7 +16,7 @@ function extractEvents(txMined, address, name)
 	return txMined.logs.filter((ev) => { return ev.address == address && ev.event == name });
 }
 
-contract('ERC1xxxDelegate_Universal', async (accounts) => {
+contract('ERC1836Delegate_Universal', async (accounts) => {
 
 	assert.isAtLeast(accounts.length, 10, "should have at least 10 accounts");
 	relayer = accounts[1];
@@ -51,9 +51,9 @@ contract('ERC1xxxDelegate_Universal', async (accounts) => {
 		const nodeHash  = ethers.utils.namehash(newDomain);
 		const registrar = await ENS.owner(ethers.utils.namehash(domain));
 
-		Proxy = await ERC1xxx.new(
-			(await ERC1xxxDelegate_Universal.deployed()).address,
-			utils.prepareData(ERC1xxxDelegate_Universal, "initialize", [
+		Proxy = await ERC1836.new(
+			(await ERC1836Delegate_Universal.deployed()).address,
+			utils.prepareData(ERC1836Delegate_Universal, "initialize", [
 				utils.addressToBytes32Padding(user1),
 				labelHash,
 				newDomain,
@@ -64,7 +64,7 @@ contract('ERC1xxxDelegate_Universal', async (accounts) => {
 			]),
 			{ from: relayer }
 		);
-		Ident = await ERC1xxxDelegate_Universal.at(Proxy.address);
+		Ident = await ERC1836Delegate_Universal.at(Proxy.address);
 	});
 
 	it ("Verify proxy initialization", async () => {

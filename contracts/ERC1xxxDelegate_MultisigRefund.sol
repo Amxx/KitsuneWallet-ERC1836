@@ -6,7 +6,7 @@ import "../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 import "../node_modules/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 import "./ERC1xxxDelegate.sol";
-import "./IERC1271.sol";
+import "./interfaces/IERC1271.sol";
 
 contract ERC1xxxDelegate_MultisigRefund is ERC1xxxDelegate, IERC1271
 {
@@ -160,8 +160,10 @@ contract ERC1xxxDelegate_MultisigRefund is ERC1xxxDelegate, IERC1271
 				_operationType,
 				_to,
 				_value,
-				_data,
-				_nonce
+				keccak256(_data),
+				_nonce,
+				_gasToken,
+				_gasPrice
 			)).toEthSignedMessageHash();
 
 		for (uint256 i = 0; i < _sigs.length; ++i)

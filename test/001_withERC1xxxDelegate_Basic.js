@@ -10,7 +10,7 @@ function extractEvents(txMined, address, name)
 	return txMined.logs.filter((ev) => { return ev.address == address && ev.event == name });
 }
 
-contract('ERC1xxx', async (accounts) => {
+contract('ERC1xxxDelegate_Basic', async (accounts) => {
 
 	assert.isAtLeast(accounts.length, 10, "should have at least 10 accounts");
 	relayer = accounts[1];

@@ -69,8 +69,14 @@ contract ERC734Delegate is ERC1xxxDelegate, ECDSA
 		return keccak256(abi.encodePacked(addr));
 	}
 
+	function nonce()
+	external view returns (uint256)
+	{
+		return m_nonce;
+	}
+
 	function getKey(bytes32 _key)
-	public view returns (bytes32)
+	external view returns (bytes32)
 	{
 		return m_keyPurposes[_key];
 	}
@@ -82,7 +88,7 @@ contract ERC734Delegate is ERC1xxxDelegate, ECDSA
 	}
 
 	function setKey(bytes32 _key, bytes32 _purpose)
-	public protected
+	external protected
 	{
 		_setKey(_key, _purpose);
 	}
@@ -122,8 +128,7 @@ contract ERC734Delegate is ERC1xxxDelegate, ECDSA
 	)
 	public
 	{
-		++m_nonce;
-		require(_nonce == m_nonce, "invalid-nonce");
+		require(++m_nonce == _nonce, "invalid-nonce");
 
 		bytes32 neededPurpose;
 		if (_to == address(this))

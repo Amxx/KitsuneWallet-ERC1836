@@ -15,7 +15,7 @@ module.exports = {
 			if (metatx.from     == undefined) metatx.from     = identity.address;
 			if (metatx.value    == undefined) metatx.value    = 0;
 			if (metatx.data     == undefined) metatx.data     = [];
-			if (metatx.nonce    == undefined) metatx.nonce    = Number(await identity.keyNonce(web3.utils.keccak256(signer))) + 1;
+			if (metatx.nonce    == undefined) metatx.nonce    = Number(await identity.nonce()) + 1;
 			// if (metatx.gas      == undefined) metatx.gas      = 0;
 			// if (metatx.gasPrice == undefined) metatx.gasPrice = 0;
 			// if (metatx.gasToken == undefined) metatx.gasToken = "0x0000000000000000000000000000000000000000";
@@ -54,14 +54,12 @@ module.exports = {
 	{
 		return new Promise(async (resolve, reject) => {
 			this.signMetaTX(identity, metatx, signer).then((signedmetatx) => {
-				identity.executeSigned(
+				identity.execute(
+					signedmetatx.type,
 					signedmetatx.to,
 					signedmetatx.value,
 					signedmetatx.data,
 					signedmetatx.nonce,
-					signedmetatx.gas,
-					signedmetatx.gasPrice,
-					signedmetatx.gasToken,
 					signedmetatx.signature,
 					{ from : relay }
 				)

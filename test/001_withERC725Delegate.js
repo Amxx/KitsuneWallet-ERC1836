@@ -12,7 +12,10 @@ function extractEvents(txMined, address, name)
 
 contract('ERC1xxx', async (accounts) => {
 
-	// assert.isAtLeast(accounts.length, 10, "should have at least 10 accounts");
+	assert.isAtLeast(accounts.length, 10, "should have at least 10 accounts");
+	relayer = accounts[1];
+	user1   = accounts[1];
+	user2   = accounts[2];
 
 	var Proxy = null;
 	var Ident = null;
@@ -29,20 +32,22 @@ contract('ERC1xxx', async (accounts) => {
 	it ("Create proxy", async () => {
 		Proxy = await ERC1xxx.new(
 			(await ERC725Delegate.deployed()).address,
-			utils.prepareData(ERC725Delegate, "initialize", [ accounts[0] ]),
-			{ from: accounts[1] }
+			utils.prepareData(ERC725Delegate, "initialize", [
+				user1
+			]),
+			{ from: relayer }
 		);
 		Ident = await ERC725Delegate.at(Proxy.address);
 	});
 
 	it ("Verify proxy initialization", async () => {
-		assert.equal(await Ident.owner(), accounts[0]);
+		assert.equal(await Ident.owner(), user1);
 	});
 
 	it("Deposit on proxy", async () => {
 		assert.equal(await web3.eth.getBalance(Ident.address), 0);
 
-		txMined = await Ident.send(web3.utils.toWei("1.00", "ether"), { from: accounts[0] });
+		txMined = await Ident.send(web3.utils.toWei("1.00", "ether"), { from: user1 });
 
 		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("1.00", "ether"));
 	});
@@ -56,7 +61,7 @@ contract('ERC1xxx', async (accounts) => {
 			dest1,
 			web3.utils.toWei("0.50", "ether"),
 			"0x",
-			{ from: accounts[0] }
+			{ from: user1 }
 		);
 
 		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.50", "ether"));
@@ -71,7 +76,7 @@ contract('ERC1xxx', async (accounts) => {
 			Target.address,
 			0,
 			utils.prepareData(GenericTarget, "call", [ randomdata ]),
-			{ from: accounts[0] }
+			{ from: user1 }
 		);
 
 		assert.equal(await Target.lastSender(), Ident.address);
@@ -83,10 +88,10 @@ contract('ERC1xxx', async (accounts) => {
 
 		await shouldFail.reverting(Ident.execute(
 			0,
-			accounts[1],
+			user2,
 			web3.utils.toWei("0.50", "ether"),
 			"0x",
-			{ from: accounts[1] }
+			{ from: user2 }
 		));
 
 		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.50", "ether"));
@@ -94,15 +99,15 @@ contract('ERC1xxx', async (accounts) => {
 
 	it("Unauthorized transferOwnership", async () => {
 		await shouldFail.reverting(Ident.transferOwnership(
-			accounts[1],
-			{ from: accounts[1] }
+			user2,
+			{ from: user2 }
 		));
 	});
 
 	it("Authorized transferOwnership", async () => {
 		await Ident.transferOwnership(
-			accounts[1],
-			{ from: accounts[0] }
+			user2,
+			{ from: user1 }
 		);
 	});
 
@@ -111,10 +116,10 @@ contract('ERC1xxx', async (accounts) => {
 
 		await Ident.execute(
 			0,
-			accounts[1],
+			user2,
 			web3.utils.toWei("0.50", "ether"),
 			"0x",
-			{ from: accounts[1] }
+			{ from: user2 }
 		);
 
 		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.00", "ether"));
@@ -127,24 +132,29 @@ contract('ERC1xxx', async (accounts) => {
 			0,
 			utils.prepareData(ERC725Delegate, "updateDelegate", [
 				(await ERC725Delegate.deployed()).address,
-				utils.prepareData(ERC725Delegate, "initialize", [ accounts[0] ])
+				utils.prepareData(ERC725Delegate, "initialize", [
+					user1
+				])
 			]),
-			{ from: accounts[1] }
+			{ from: user2 }
 		)
-		assert.equal(await Ident.owner(), accounts[0]);
+		assert.equal(await Ident.owner(), user1);
 	});
 
 	it ("initialization - protected", async () => {
 		await shouldFail.reverting(Ident.initialize(
-			accounts[1],
-			{ from: accounts[0] }
+			user2,
+			{ from: user1 }
 		));
 	});
+
 	it ("updateDelegate - protected", async () => {
 		await shouldFail.reverting(Ident.updateDelegate(
 			(await ERC725Delegate.deployed()).address,
-			utils.prepareData(ERC725Delegate, "initialize", [ accounts[1] ]),
-			{ from: accounts[0] }
+			utils.prepareData(ERC725Delegate, "initialize", [
+				user2
+			]),
+			{ from: user1 }
 		));
 	});
 

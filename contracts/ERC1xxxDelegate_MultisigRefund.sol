@@ -1,19 +1,27 @@
 pragma solidity ^0.5.5;
 pragma experimental ABIEncoderV2;
 
-import "./ERC1xxxDelegate.sol";
-import "./ECDSA.sol";
+import "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
+import "../node_modules/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-contract ERC734Delegate is ERC1xxxDelegate, ECDSA
+import "./ERC1xxxDelegate.sol";
+import "./IERC1271.sol";
+
+contract ERC1xxxDelegate_MultisigRefund is ERC1xxxDelegate, IERC1271
 {
+	using SafeMath for uint256;
+	using ECDSA    for bytes32;
+
 	bytes32 constant PURPOSE_MANAGEMENT = 0x0000000000000000000000000000000000000000000000000000000000000001;
 	bytes32 constant PURPOSE_ACTION     = 0x0000000000000000000000000000000000000000000000000000000000000002;
+	bytes32 constant PURPOSE_SIGN       = 0x0000000000000000000000000000000000000000000000000000000000000004;
 
 	mapping(bytes32 => bytes32) m_keyPurposes;
 	bytes32[]                   m_activeKeys;
 	uint256                     m_nonce;
-	uint256                     m_managementTreshold;
-	uint256                     m_actionTreshold;
+	uint256                     m_managementThreshold;
+	uint256                     m_actionThreshold;
 
 	// This is a delegate contract, lock it
 	constructor()
@@ -40,8 +48,8 @@ contract ERC734Delegate is ERC1xxxDelegate, ECDSA
 			}
 		}
 		require(countManagement >= _managementThreshold);
-		m_managementTreshold = _managementThreshold;
-		m_actionTreshold     = _actionThreshold;
+		m_managementThreshold = _managementThreshold;
+		m_actionThreshold     = _actionThreshold;
 	}
 
 	function updateDelegate(address _newDelegate, bytes calldata _callback)
@@ -54,8 +62,8 @@ contract ERC734Delegate is ERC1xxxDelegate, ECDSA
 		}
 		delete m_activeKeys;
 		delete m_nonce;
-		delete m_managementTreshold;
-		delete m_actionTreshold;
+		delete m_managementThreshold;
+		delete m_actionThreshold;
 
 		// set next delegate
 		setDelegate(_newDelegate, _callback);
@@ -70,13 +78,13 @@ contract ERC734Delegate is ERC1xxxDelegate, ECDSA
 	}
 
 	function nonce()
-	external view returns (uint256)
+	public view returns (uint256)
 	{
 		return m_nonce;
 	}
 
 	function getKey(bytes32 _key)
-	external view returns (bytes32)
+	public view returns (bytes32)
 	{
 		return m_keyPurposes[_key];
 	}
@@ -88,7 +96,7 @@ contract ERC734Delegate is ERC1xxxDelegate, ECDSA
 	}
 
 	function setKey(bytes32 _key, bytes32 _purpose)
-	external protected
+	public protected
 	{
 		_setKey(_key, _purpose);
 	}
@@ -124,39 +132,65 @@ contract ERC734Delegate is ERC1xxxDelegate, ECDSA
 	, uint256        _value
 	, bytes   memory _data
 	, uint256        _nonce
+	, address        _gasToken
+	, uint256        _gasPrice
 	, bytes[] memory _sigs
 	)
 	public
 	{
-		require(++m_nonce == _nonce, "invalid-nonce");
+		uint256 gasBefore = gasleft();
+
+		++m_nonce;
+		require(_nonce == 0 || _nonce == nonce(), "invalid-nonce");
 
 		bytes32 neededPurpose;
 		if (_to == address(this))
 		{
-			require(_sigs.length >= m_managementTreshold, "missing-signers");
+			require(_sigs.length >= m_managementThreshold, "missing-signers");
 			neededPurpose = PURPOSE_MANAGEMENT;
 		}
 		else
 		{
-			require(_sigs.length >= m_actionTreshold, "missing-signers");
+			require(_sigs.length >= m_actionThreshold, "missing-signers");
 			neededPurpose = PURPOSE_ACTION;
 		}
 
-		bytes32 executionID = toEthSignedMessageHash(keccak256(abi.encode(
+		bytes32 executionID = keccak256(abi.encode(
 				address(this),
 				_operationType,
 				_to,
 				_value,
 				_data,
 				_nonce
-			)));
+			)).toEthSignedMessageHash();
 
 		for (uint256 i = 0; i < _sigs.length; ++i)
 		{
-			require(keyHasPurpose(addrToKey(recover(executionID, _sigs[i])), neededPurpose), "invalid-signature");
+			require(keyHasPurpose(addrToKey(executionID.recover(_sigs[i])), neededPurpose), "invalid-signature");
 		}
 
 		_execute(_operationType, _to, _value, _data);
+
+		refund(gasBefore.sub(gasleft()), _gasPrice, _gasToken);
+	}
+
+	function refund(uint256 _gasUsed, uint256 _gasPrice, address _gasToken)
+	internal
+	{
+		if (_gasToken == address(0))
+		{
+			msg.sender.transfer(_gasUsed.mul(_gasPrice));
+		}
+		else
+		{
+			IERC20(_gasToken).transfer(msg.sender, _gasUsed.mul(_gasPrice));
+		}
+	}
+
+	function isValidSignature(bytes32 _data, bytes memory _signature)
+	public view returns (bool)
+	{
+		return keyHasPurpose(addrToKey(_data.recover(_signature)), PURPOSE_SIGN);
 	}
 
 }

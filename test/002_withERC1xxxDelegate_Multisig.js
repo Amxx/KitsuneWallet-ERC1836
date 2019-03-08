@@ -1,6 +1,6 @@
-const ERC1xxx        = artifacts.require("ERC1xxx");
-const ERC725Delegate = artifacts.require("ERC725Delegate");
-const GenericTarget  = artifacts.require("GenericTarget");
+const ERC1xxx                  = artifacts.require("ERC1xxx");
+const ERC1xxxDelegate_Multisig = artifacts.require("ERC1xxxDelegate_Multisig");
+const GenericTarget            = artifacts.require("GenericTarget");
 
 const { shouldFail } = require('openzeppelin-test-helpers');
 const utils          = require('./utils.js');
@@ -31,24 +31,30 @@ contract('ERC1xxx', async (accounts) => {
 
 	it ("Create proxy", async () => {
 		Proxy = await ERC1xxx.new(
-			(await ERC725Delegate.deployed()).address,
-			utils.prepareData(ERC725Delegate, "initialize", [
-				user1
+			(await ERC1xxxDelegate_Multisig.deployed()).address,
+			utils.prepareData(ERC1xxxDelegate_Multisig, "initialize", [
+				[ utils.addressToBytes32(user1) ],
+				[ "0x0000000000000000000000000000000000000000000000000000000000000003" ],
+				1,
+				1
 			]),
 			{ from: relayer }
 		);
-		Ident = await ERC725Delegate.at(Proxy.address);
+		Ident = await ERC1xxxDelegate_Multisig.at(Proxy.address);
 	});
 
 	it ("Verify proxy initialization", async () => {
-		assert.equal(await Ident.owner(), user1);
+		assert.isTrue (await Ident.keyHasPurpose(utils.addressToBytes32(user1), "0x0000000000000000000000000000000000000000000000000000000000000001"));
+		assert.isTrue (await Ident.keyHasPurpose(utils.addressToBytes32(user1), "0x0000000000000000000000000000000000000000000000000000000000000002"));
+		assert.isFalse(await Ident.keyHasPurpose(utils.addressToBytes32(user1), "0x0000000000000000000000000000000000000000000000000000000000000004"));
+		assert.isFalse(await Ident.keyHasPurpose(utils.addressToBytes32(user2), "0x0000000000000000000000000000000000000000000000000000000000000001"));
+		assert.isFalse(await Ident.keyHasPurpose(utils.addressToBytes32(user2), "0x0000000000000000000000000000000000000000000000000000000000000002"));
+		assert.isFalse(await Ident.keyHasPurpose(utils.addressToBytes32(user2), "0x0000000000000000000000000000000000000000000000000000000000000004"));
 	});
 
 	it("Deposit on proxy", async () => {
 		assert.equal(await web3.eth.getBalance(Ident.address), 0);
-
 		txMined = await Ident.send(web3.utils.toWei("1.00", "ether"), { from: user1 });
-
 		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("1.00", "ether"));
 	});
 
@@ -56,12 +62,17 @@ contract('ERC1xxx', async (accounts) => {
 		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("1.00", "ether"));
 		assert.equal(await web3.eth.getBalance(dest1        ), web3.utils.toWei("0.00", "ether"));
 
-		txMined = await Ident.execute(
-			0,
-			dest1,
-			web3.utils.toWei("0.50", "ether"),
-			"0x",
-			{ from: user1 }
+		await utils.sendMetaTX_Multisig(
+			Ident,
+			{
+				type:  0,
+				to:    dest1,
+				value: web3.utils.toWei("0.50", "ether"),
+				data:  [],
+				// nonce: 1
+			},
+			user1,
+			relayer
 		);
 
 		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.50", "ether"));
@@ -71,12 +82,17 @@ contract('ERC1xxx', async (accounts) => {
 	it("Execute - Call with proxy", async () => {
 		randomdata = web3.utils.randomHex(32);
 
-		txMined = await Ident.execute(
-			0,
-			Target.address,
-			0,
-			utils.prepareData(GenericTarget, "call", [ randomdata ]),
-			{ from: user1 }
+		await utils.sendMetaTX_Multisig(
+			Ident,
+			{
+				type:  0,
+				to:    Target.address,
+				value: 0,
+				data:  utils.prepareData(GenericTarget, "call", [ randomdata ]),
+				// nonce: 2
+			},
+			user1,
+			relayer
 		);
 
 		assert.equal(await Target.lastSender(), Ident.address);
@@ -86,76 +102,20 @@ contract('ERC1xxx', async (accounts) => {
 	it("Unauthorized execute", async () => {
 		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.50", "ether"));
 
-		await shouldFail.reverting(Ident.execute(
-			0,
+		await shouldFail.reverting(utils.sendMetaTX_Multisig(
+			Ident,
+			{
+				type:  0,
+				to:    user2,
+				value: 0,
+				data:  utils.prepareData(GenericTarget, "call", [ randomdata ]),
+				// nonce: 3
+			},
 			user2,
-			web3.utils.toWei("0.50", "ether"),
-			"0x",
-			{ from: user2 }
+			relayer
 		));
 
 		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.50", "ether"));
-	});
-
-	it("Unauthorized transferOwnership", async () => {
-		await shouldFail.reverting(Ident.transferOwnership(
-			user2,
-			{ from: user2 }
-		));
-	});
-
-	it("Authorized transferOwnership", async () => {
-		await Ident.transferOwnership(
-			user2,
-			{ from: user1 }
-		);
-	});
-
-	it("Authorized execute", async () => {
-		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.50", "ether"));
-
-		await Ident.execute(
-			0,
-			user2,
-			web3.utils.toWei("0.50", "ether"),
-			"0x",
-			{ from: user2 }
-		);
-
-		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.00", "ether"));
-	});
-
-	it("updateDelegate", async () => {
-		await Ident.execute(
-			0,
-			Ident.address,
-			0,
-			utils.prepareData(ERC725Delegate, "updateDelegate", [
-				(await ERC725Delegate.deployed()).address,
-				utils.prepareData(ERC725Delegate, "initialize", [
-					user1
-				])
-			]),
-			{ from: user2 }
-		)
-		assert.equal(await Ident.owner(), user1);
-	});
-
-	it ("initialization - protected", async () => {
-		await shouldFail.reverting(Ident.initialize(
-			user2,
-			{ from: user1 }
-		));
-	});
-
-	it ("updateDelegate - protected", async () => {
-		await shouldFail.reverting(Ident.updateDelegate(
-			(await ERC725Delegate.deployed()).address,
-			utils.prepareData(ERC725Delegate, "initialize", [
-				user2
-			]),
-			{ from: user1 }
-		));
 	});
 
 });

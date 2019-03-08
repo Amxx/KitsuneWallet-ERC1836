@@ -54,7 +54,7 @@ contract('ERC1xxxDelegate_Universal', async (accounts) => {
 		Proxy = await ERC1xxx.new(
 			(await ERC1xxxDelegate_Universal.deployed()).address,
 			utils.prepareData(ERC1xxxDelegate_Universal, "initialize", [
-				user1,
+				utils.addressToBytes32Padding(user1),
 				labelHash,
 				newDomain,
 				nodeHash,
@@ -68,12 +68,14 @@ contract('ERC1xxxDelegate_Universal', async (accounts) => {
 	});
 
 	it ("Verify proxy initialization", async () => {
-		assert.isTrue (await Ident.keyHasPurpose(user1, "0x0000000000000000000000000000000000000000000000000000000000000001"));
-		assert.isFalse(await Ident.keyHasPurpose(user1, "0x0000000000000000000000000000000000000000000000000000000000000002"));
-		assert.isFalse(await Ident.keyHasPurpose(user1, "0x0000000000000000000000000000000000000000000000000000000000000004"));
-		assert.isFalse(await Ident.keyHasPurpose(user2, "0x0000000000000000000000000000000000000000000000000000000000000001"));
-		assert.isFalse(await Ident.keyHasPurpose(user2, "0x0000000000000000000000000000000000000000000000000000000000000002"));
-		assert.isFalse(await Ident.keyHasPurpose(user2, "0x0000000000000000000000000000000000000000000000000000000000000004"));
+		assert.isTrue (await Ident.keyExist(utils.addressToBytes32Padding(user1)));
+		assert.isFalse(await Ident.keyExist(utils.addressToBytes32Padding(user2)));
+		assert.isTrue (await Ident.keyHasPurpose(utils.addressToBytes32Padding(user1), "0x0000000000000000000000000000000000000000000000000000000000000001"));
+		assert.isFalse(await Ident.keyHasPurpose(utils.addressToBytes32Padding(user1), "0x0000000000000000000000000000000000000000000000000000000000000002"));
+		assert.isFalse(await Ident.keyHasPurpose(utils.addressToBytes32Padding(user1), "0x0000000000000000000000000000000000000000000000000000000000000004"));
+		assert.isFalse(await Ident.keyHasPurpose(utils.addressToBytes32Padding(user2), "0x0000000000000000000000000000000000000000000000000000000000000001"));
+		assert.isFalse(await Ident.keyHasPurpose(utils.addressToBytes32Padding(user2), "0x0000000000000000000000000000000000000000000000000000000000000002"));
+		assert.isFalse(await Ident.keyHasPurpose(utils.addressToBytes32Padding(user2), "0x0000000000000000000000000000000000000000000000000000000000000004"));
 	});
 
 	it ("Verify proxy registration", async () => {
@@ -83,70 +85,66 @@ contract('ERC1xxxDelegate_Universal', async (accounts) => {
 		assert.equal(await Resolver.name(await Reverse.node(Ident.address)), name);
 	});
 
-	// it("Deposit on proxy", async () => {
-	// 	assert.equal(await web3.eth.getBalance(Ident.address), 0);
-	// 	txMined = await Ident.send(web3.utils.toWei("1.00", "ether"), { from: user1 });
-	// 	assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("1.00", "ether"));
-	// });
-	//
-	// it("Execute - Pay with proxy", async () => {
-	// 	assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("1.00", "ether"));
-	// 	assert.equal(await web3.eth.getBalance(dest1        ), web3.utils.toWei("0.00", "ether"));
-	//
-	// 	await utils.sendMetaTX_MultisigRefund(
-	// 		Ident,
-	// 		{
-	// 			type:  0,
-	// 			to:    dest1,
-	// 			value: web3.utils.toWei("0.50", "ether"),
-	// 			data:  [],
-	// 			// nonce: 1
-	// 		},
-	// 		user1,
-	// 		relayer
-	// 	);
-	//
-	// 	assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.50", "ether"));
-	// 	assert.equal(await web3.eth.getBalance(dest1        ), web3.utils.toWei("0.50", "ether"));
-	// });
-	//
-	// it("Execute - Call with proxy", async () => {
-	// 	randomdata = web3.utils.randomHex(32);
-	//
-	// 	await utils.sendMetaTX_MultisigRefund(
-	// 		Ident,
-	// 		{
-	// 			type:  0,
-	// 			to:    Target.address,
-	// 			value: 0,
-	// 			data:  utils.prepareData(GenericTarget, "call", [ randomdata ]),
-	// 			// nonce: 2
-	// 		},
-	// 		user1,
-	// 		relayer
-	// 	);
-	//
-	// 	assert.equal(await Target.lastSender(), Ident.address);
-	// 	assert.equal(await Target.lastData(),   randomdata);
-	// });
-	//
-	// it("Unauthorized execute", async () => {
-	// 	assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.50", "ether"));
-	//
-	// 	await shouldFail.reverting(utils.sendMetaTX_MultisigRefund(
-	// 		Ident,
-	// 		{
-	// 			type:  0,
-	// 			to:    user2,
-	// 			value: 0,
-	// 			data:  utils.prepareData(GenericTarget, "call", [ randomdata ]),
-	// 			// nonce: 3
-	// 		},
-	// 		user2,
-	// 		relayer
-	// 	));
-	//
-	// 	assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.50", "ether"));
-	// });
+	it("Deposit on proxy", async () => {
+		assert.equal(await web3.eth.getBalance(Ident.address), 0);
+		txMined = await Ident.send(web3.utils.toWei("1.00", "ether"), { from: user1 });
+		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("1.00", "ether"));
+	});
+
+	it("Execute - Pay with proxy", async () => {
+		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("1.00", "ether"));
+		assert.equal(await web3.eth.getBalance(dest1        ), web3.utils.toWei("0.00", "ether"));
+
+		await utils.sendMetaTX_Universal(
+			Ident,
+			{
+				type:  0,
+				to:    dest1,
+				value: web3.utils.toWei("0.50", "ether"),
+				data:  [],
+			},
+			user1,
+			relayer
+		);
+
+		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.50", "ether"));
+		assert.equal(await web3.eth.getBalance(dest1        ), web3.utils.toWei("0.50", "ether"));
+	});
+
+	it("Execute - Call with proxy", async () => {
+		randomdata = web3.utils.randomHex(32);
+
+		await utils.sendMetaTX_Universal(
+			Ident,
+			{
+				type:  0,
+				to:    Target.address,
+				value: 0,
+				data:  utils.prepareData(GenericTarget, "call", [ randomdata ]),
+			},
+			user1,
+			relayer
+		);
+
+		assert.equal(await Target.lastSender(), Ident.address);
+		assert.equal(await Target.lastData(),   randomdata);
+	});
+	it("Unauthorized execute", async () => {
+		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.50", "ether"));
+
+		await shouldFail.reverting(utils.sendMetaTX_Universal(
+			Ident,
+			{
+				type:  0,
+				to:    user2,
+				value: 0,
+				data:  utils.prepareData(GenericTarget, "call", [ randomdata ]),
+			},
+			user2,
+			relayer
+		));
+
+		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.50", "ether"));
+	});
 
 });

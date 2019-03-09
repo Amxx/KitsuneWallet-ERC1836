@@ -1,4 +1,4 @@
-const ERC1836                  = artifacts.require("ERC1836");
+const ERC1836Proxy             = artifacts.require("ERC1836Proxy");
 const ERC1836Delegate_Multisig = artifacts.require("ERC1836Delegate_Multisig");
 const GenericTarget            = artifacts.require("GenericTarget");
 
@@ -30,7 +30,7 @@ contract('ERC1836Delegate_Multisig', async (accounts) => {
 	});
 
 	it ("Create proxy", async () => {
-		Proxy = await ERC1836.new(
+		Proxy = await ERC1836Proxy.new(
 			(await ERC1836Delegate_Multisig.deployed()).address,
 			utils.prepareData(ERC1836Delegate_Multisig, "initialize", [
 				[ utils.addressToBytes32(user1) ],

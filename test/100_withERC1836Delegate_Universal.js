@@ -3,7 +3,7 @@ const FIFSRegistrar             = artifacts.require("universal-login-contracts/F
 const ReverseRegistrar          = artifacts.require("universal-login-contracts/ReverseRegistrar")
 const PublicResolver            = artifacts.require("universal-login-contracts/PublicResolver")
 
-const ERC1836                   = artifacts.require("ERC1836");
+const ERC1836Proxy              = artifacts.require("ERC1836Proxy");
 const ERC1836Delegate_Universal = artifacts.require("ERC1836Delegate_Universal");
 const GenericTarget             = artifacts.require("GenericTarget");
 
@@ -51,7 +51,7 @@ contract('ERC1836Delegate_Universal', async (accounts) => {
 		const nodeHash  = ethers.utils.namehash(newDomain);
 		const registrar = await ENS.owner(ethers.utils.namehash(domain));
 
-		Proxy = await ERC1836.new(
+		Proxy = await ERC1836Proxy.new(
 			(await ERC1836Delegate_Universal.deployed()).address,
 			utils.prepareData(ERC1836Delegate_Universal, "initialize", [
 				utils.addressToBytes32Padding(user1),

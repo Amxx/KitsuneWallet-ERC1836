@@ -4,11 +4,11 @@ pragma experimental ABIEncoderV2;
 import "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 
-import "./ERC1836Delegate.sol";
+import "./ERC1836DelegateCall.sol";
 import "./ENSRegistered.sol";
 import "./interfaces/IERC1271.sol";
 
-contract ERC1836Delegate_Multisig is ERC1836Delegate, ENSRegistered, IERC1271
+contract ERC1836Delegate_Multisig is ERC1836DelegateCall, ENSRegistered, IERC1271
 {
 	using SafeMath for uint256;
 	using ECDSA    for bytes32;
@@ -26,7 +26,6 @@ contract ERC1836Delegate_Multisig is ERC1836Delegate, ENSRegistered, IERC1271
 	// This is a delegate contract, lock it
 	constructor()
 	public
-	ERC1836(address(0), bytes(""))
 	{
 	}
 

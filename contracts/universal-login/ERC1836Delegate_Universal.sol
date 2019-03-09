@@ -16,7 +16,6 @@ contract ERC1836Delegate_Universal is ERC1836Delegate, ERC1077
 	// This is a delegate contract, lock it
 	constructor()
 	public
-	ERC1836(address(0), bytes(""))
 	ERC1077(bytes32(0))
 	{
 	}

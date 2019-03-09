@@ -1,13 +1,13 @@
 pragma solidity ^0.5.5;
 pragma experimental ABIEncoderV2;
 
-import "../../node_modules/universal-login-contracts/contracts/ENS/ENSRegistry.sol";
-import "../../node_modules/universal-login-contracts/contracts/ENS/FIFSRegistrar.sol";
-import "../../node_modules/universal-login-contracts/contracts/ENS/PublicResolver.sol";
-import "../../node_modules/universal-login-contracts/contracts/ENS/ReverseRegistrar.sol";
-import "../../node_modules/universal-login-contracts/contracts/ERC1077.sol";
+import "../../../node_modules/universal-login-contracts/contracts/ENS/ENSRegistry.sol";
+import "../../../node_modules/universal-login-contracts/contracts/ENS/FIFSRegistrar.sol";
+import "../../../node_modules/universal-login-contracts/contracts/ENS/PublicResolver.sol";
+import "../../../node_modules/universal-login-contracts/contracts/ENS/ReverseRegistrar.sol";
+import "../../../node_modules/universal-login-contracts/contracts/ERC1077.sol";
 
-import "../ERC1836Delegate.sol";
+import "../../ERC1836Delegate.sol";
 
 contract ERC1836Delegate_Universal is ERC1836Delegate, ERC1077
 {

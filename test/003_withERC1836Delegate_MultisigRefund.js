@@ -1,6 +1,6 @@
 const ERC1836Proxy                   = artifacts.require("ERC1836Proxy");
 const ERC1836Delegate_MultisigRefund = artifacts.require("ERC1836Delegate_MultisigRefund");
-const GenericTarget                  = artifacts.require("GenericTarget");
+const TargetContract                 = artifacts.require("TargetContract");
 
 const { shouldFail } = require('openzeppelin-test-helpers');
 const utils          = require('./utils.js');
@@ -26,7 +26,7 @@ contract('ERC1836Delegate_MultisigRefund', async (accounts) => {
 	 ***************************************************************************/
 	before("configure", async () => {
 		console.log("# web3 version:", web3.version);
-		Target = await GenericTarget.deployed();
+		Target = await TargetContract.deployed();
 	});
 
 	it ("Create proxy", async () => {
@@ -88,7 +88,7 @@ contract('ERC1836Delegate_MultisigRefund', async (accounts) => {
 				type:  0,
 				to:    Target.address,
 				value: 0,
-				data:  utils.prepareData(GenericTarget, "call", [ randomdata ]),
+				data:  utils.prepareData(TargetContract, "call", [ randomdata ]),
 				// nonce: 2
 			},
 			user1,
@@ -108,7 +108,7 @@ contract('ERC1836Delegate_MultisigRefund', async (accounts) => {
 				type:  0,
 				to:    user2,
 				value: 0,
-				data:  utils.prepareData(GenericTarget, "call", [ randomdata ]),
+				data:  utils.prepareData(TargetContract, "call", [ randomdata ]),
 				// nonce: 3
 			},
 			user2,

@@ -12,16 +12,11 @@ contract ERC1836
 		require(msg.sender == address(this), "restricted-access");
 		_;
 	}
+
 	modifier initialization()
 	{
 		require(!m_initialized, "already-initialized");
 		_;
-	}
-
-	function delegate()
-	external view returns (address)
-	{
-		return m_delegate;
 	}
 
 	function setDelegate(address _newDelegate, bytes memory _initData)

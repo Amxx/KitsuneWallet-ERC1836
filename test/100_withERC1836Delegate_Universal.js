@@ -5,7 +5,7 @@ const PublicResolver            = artifacts.require("universal-login-contracts/P
 
 const ERC1836Proxy              = artifacts.require("ERC1836Proxy");
 const ERC1836Delegate_Universal = artifacts.require("ERC1836Delegate_Universal");
-const GenericTarget             = artifacts.require("GenericTarget");
+const TargetContract            = artifacts.require("TargetContract");
 
 const { shouldFail } = require('openzeppelin-test-helpers');
 const ethers         = require('ethers');
@@ -39,7 +39,7 @@ contract('ERC1836Delegate_Universal', async (accounts) => {
 		ENS      = await ENSRegistry.deployed();
 		Resolver = await PublicResolver.deployed();
 		Reverse  = await ReverseRegistrar.deployed();
-		Target   = await GenericTarget.deployed();
+		Target   = await TargetContract.deployed();
 	});
 
 	it ("Create proxy", async () => {
@@ -131,7 +131,7 @@ contract('ERC1836Delegate_Universal', async (accounts) => {
 				type:  0,
 				to:    Target.address,
 				value: 0,
-				data:  utils.prepareData(GenericTarget, "call", [ randomdata ]),
+				data:  utils.prepareData(TargetContract, "call", [ randomdata ]),
 			},
 			user1,
 			relayer
@@ -149,7 +149,7 @@ contract('ERC1836Delegate_Universal', async (accounts) => {
 				type:  0,
 				to:    user2,
 				value: 0,
-				data:  utils.prepareData(GenericTarget, "call", [ randomdata ]),
+				data:  utils.prepareData(TargetContract, "call", [ randomdata ]),
 			},
 			user2,
 			relayer

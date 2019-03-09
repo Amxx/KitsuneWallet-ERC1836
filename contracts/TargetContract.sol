@@ -1,6 +1,6 @@
 pragma solidity 0.5.5;
 
-contract GenericTarget
+contract TargetContract
 {
 	address public lastSender;
 	bytes32 public lastData;

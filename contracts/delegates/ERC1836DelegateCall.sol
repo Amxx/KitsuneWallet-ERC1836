@@ -1,6 +1,6 @@
 pragma solidity ^0.5.5;
 
-import "./ERC1836Delegate.sol";
+import "../ERC1836Delegate.sol";
 
 contract ERC1836DelegateCall is ERC1836Delegate
 {

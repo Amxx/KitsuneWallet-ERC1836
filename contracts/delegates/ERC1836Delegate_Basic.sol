@@ -1,12 +1,13 @@
 pragma solidity ^0.5.5;
 
-import "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
-import "../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "../../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "../../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
+import "../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
+
+import "../ENSRegistered.sol";
+import "../interfaces/IERC1271.sol";
 
 import "./ERC1836DelegateCall.sol";
-import "./ENSRegistered.sol";
-import "./interfaces/IERC1271.sol";
 
 contract ERC1836Delegate_Basic is ERC1836DelegateCall, ENSRegistered, IERC1271, Ownable
 {

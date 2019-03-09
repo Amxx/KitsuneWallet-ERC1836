@@ -6,7 +6,7 @@ module.exports = {
 	},
 	addressToBytes32Padding: function(address)
 	{
-		return "0x000000000000000000000000"+address.substr(-40);
+		return web3.utils.padLeft(address, 64);
 	},
 
 	prepareData: function(target, method, args)
@@ -20,7 +20,6 @@ module.exports = {
 			if (metatx.from     == undefined) metatx.from     = identity.address;
 			if (metatx.value    == undefined) metatx.value    = 0;
 			if (metatx.data     == undefined) metatx.data     = "";
-			// if (metatx.nonce    == undefined) metatx.nonce    = Number(await identity.nonce()) + 1;
 			if (metatx.nonce    == undefined) metatx.nonce    = 0;
 
 			web3.eth.sign(
@@ -78,7 +77,6 @@ module.exports = {
 			if (metatx.from     == undefined) metatx.from     = identity.address;
 			if (metatx.value    == undefined) metatx.value    = 0;
 			if (metatx.data     == undefined) metatx.data     = [];
-			// if (metatx.nonce    == undefined) metatx.nonce    = Number(await identity.nonce()) + 1;
 			if (metatx.nonce    == undefined) metatx.nonce    = 0;
 			if (metatx.gasPrice == undefined) metatx.gasPrice = 0;
 			if (metatx.gasToken == undefined) metatx.gasToken = "0x0000000000000000000000000000000000000000";

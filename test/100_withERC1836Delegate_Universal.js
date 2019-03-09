@@ -78,7 +78,7 @@ contract('ERC1836Delegate_Universal', async (accounts) => {
 		assert.isFalse(await Ident.keyHasPurpose(utils.addressToBytes32Padding(user2), "0x0000000000000000000000000000000000000000000000000000000000000004"));
 	});
 
-	it ("Verify forward proxy registration", async () => {
+	it ("Verify forward ens registration", async () => {
 		name = "hadrien.mylogin.eth";
 
 		nodeHash = ethers.utils.namehash(name);
@@ -87,9 +87,9 @@ contract('ERC1836Delegate_Universal', async (accounts) => {
 		assert.equal(address, Ident.address);
 	});
 
-	it ("Verify forward proxy registration", async () => {
+	it ("Verify reverse ens registration", async () => {
 		address  = Ident.address;
-		
+
 		nodeHash = await Reverse.node(address);
 		resolver = await PublicResolver.at(await ENS.resolver(nodeHash));
 		name     = await resolver.name(nodeHash);

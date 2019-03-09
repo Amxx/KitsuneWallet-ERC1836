@@ -1,7 +1,7 @@
-const ENSRegistry      = artifacts.require("universal-login-contracts/ENSRegistry")
-const PublicResolver   = artifacts.require("universal-login-contracts/PublicResolver")
-const ReverseRegistrar = artifacts.require("universal-login-contracts/ReverseRegistrar")
-const FIFSRegistrar    = artifacts.require("universal-login-contracts/FIFSRegistrar")
+const ENSRegistry      = artifacts.require("ENSRegistry")
+const ReverseRegistrar = artifacts.require("ReverseRegistrar")
+const FIFSRegistrar    = artifacts.require("FIFSRegistrar")
+const PublicResolver   = artifacts.require("PublicResolver")
 
 const utils = require('ethers').utils;
 

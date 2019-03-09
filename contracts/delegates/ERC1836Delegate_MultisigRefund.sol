@@ -5,7 +5,7 @@ import "../../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 import "../../node_modules/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-import "../ENSRegistered.sol";
+import "../ENS/ENSRegistered.sol";
 import "../interfaces/IERC1271.sol";
 
 import "./ERC1836DelegateCall.sol";

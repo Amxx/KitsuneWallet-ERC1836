@@ -1,11 +1,11 @@
 pragma solidity ^0.5.5;
 
-import "../node_modules/universal-login-contracts/contracts/ENS/ENSRegistry.sol";
-import "../node_modules/universal-login-contracts/contracts/ENS/FIFSRegistrar.sol";
-import "../node_modules/universal-login-contracts/contracts/ENS/PublicResolver.sol";
-import "../node_modules/universal-login-contracts/contracts/ENS/ReverseRegistrar.sol";
+import "../../node_modules/@ensdomains/ens/contracts/ENSRegistry.sol";
+import "../../node_modules/@ensdomains/ens/contracts/FIFSRegistrar.sol";
+import "../../node_modules/@ensdomains/ens/contracts/ReverseRegistrar.sol";
+import "./PublicResolver.sol";
 
-import "./ERC1836Delegate.sol";
+import "../ERC1836Delegate.sol";
 
 contract ENSRegistered is ERC1836Delegate
 {

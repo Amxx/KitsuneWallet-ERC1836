@@ -1,6 +1,6 @@
 {
 	"name": "erc1836",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "ERC1836, a upgradable proxy for universal identity through delegates",
 	"main": "truffle.js",
 	"scripts": {},
@@ -13,15 +13,15 @@
 	},
 	"files": [
 		"/contracts",
-    "/build"
-  ],
+		"/build"
+	],
 	"author": "Hadrien Croubois (hc@iex.ec)",
 	"license": "ISC",
 	"devDependencies": {
+		"@ensdomains/ens": "^0.3.4",
 		"ethers": "^4.0.26",
 		"openzeppelin-solidity": "^2.1.3",
 		"openzeppelin-test-helpers": "^0.1.2",
-		"truffle": "^5.0.7",
-		"universal-login-contracts": "^0.1.4"
+		"truffle": "^5.0.7"
 	}
 }

@@ -1,4 +1,4 @@
-pragma solidity ^0.5.5;
+pragma solidity ^0.5.0;
 
 import "../../node_modules/@ensdomains/ens/contracts/ENSRegistry.sol";
 import "../../node_modules/@ensdomains/ens/contracts/FIFSRegistrar.sol";

@@ -19,11 +19,11 @@ contract ERC1836Delegate_MultisigRefund is ERC1836DelegateCall, ENSRegistered, I
 	bytes32 constant PURPOSE_ACTION     = 0x0000000000000000000000000000000000000000000000000000000000000002;
 	bytes32 constant PURPOSE_SIGN       = 0x0000000000000000000000000000000000000000000000000000000000000004;
 
-	mapping(bytes32 => bytes32) m_keyPurposes;
-	bytes32[]                   m_activeKeys;
-	uint256                     m_nonce;
-	uint256                     m_managementThreshold;
-	uint256                     m_actionThreshold;
+	mapping(bytes32 => bytes32) private m_keyPurposes;
+	bytes32[]                   private m_activeKeys;
+	uint256                     private m_managementKeyCount;
+	uint256                     private m_managementThreshold;
+	uint256                     private m_actionThreshold;
 
 	// This is a delegate contract, lock it
 	constructor()
@@ -38,17 +38,17 @@ contract ERC1836Delegate_MultisigRefund is ERC1836DelegateCall, ENSRegistered, I
 		uint256            _actionThreshold)
 	external initialization
 	{
-		require(_keys.length == _purposes.length);
-		uint256 countManagement = 0;
+		require(_keys.length == _purposes.length, "key-and-purpose-array-must-have-same-size");
+		m_managementKeyCount = 0;
 		for (uint256 i = 0; i < _keys.length; ++i)
 		{
 			_setKey(_keys[i], _purposes[i]);
 			if (PURPOSE_MANAGEMENT & ~_purposes[i] == bytes32(0))
 			{
-				++countManagement;
+				++m_managementKeyCount;
 			}
 		}
-		require(countManagement >= _managementThreshold);
+		require(m_managementKeyCount >= _managementThreshold, "not-enough-management-keys");
 		m_managementThreshold = _managementThreshold;
 		m_actionThreshold     = _actionThreshold;
 	}
@@ -62,7 +62,7 @@ contract ERC1836Delegate_MultisigRefund is ERC1836DelegateCall, ENSRegistered, I
 			delete m_keyPurposes[m_activeKeys[i]];
 		}
 		delete m_activeKeys;
-		delete m_nonce;
+		delete m_managementKeyCount;
 		delete m_managementThreshold;
 		delete m_actionThreshold;
 
@@ -105,6 +105,10 @@ contract ERC1836Delegate_MultisigRefund is ERC1836DelegateCall, ENSRegistered, I
 	function _setKey(bytes32 _key, bytes32 _purpose)
 	internal
 	{
+		if (PURPOSE_MANAGEMENT & ~m_keyPurposes[_key] == bytes32(0) && PURPOSE_MANAGEMENT &  _purpose == bytes32(0)) { --m_managementKeyCount; }
+		if (PURPOSE_MANAGEMENT &  m_keyPurposes[_key] == bytes32(0) && PURPOSE_MANAGEMENT & ~_purpose == bytes32(0)) { ++m_managementKeyCount; }
+		require(m_managementKeyCount >= m_managementThreshold, "cannot-remove-critical-management-key");
+
 		if (m_keyPurposes[_key] == bytes32(0))
 		{
 			m_activeKeys.push(_key);
@@ -125,6 +129,30 @@ contract ERC1836Delegate_MultisigRefund is ERC1836DelegateCall, ENSRegistered, I
 				}
 			}
 		}
+	}
+
+	function getManagementThreshold()
+	external view returns (uint256)
+	{
+		return m_managementThreshold;
+	}
+	function getActionThreshold()
+	external view returns (uint256)
+	{
+		return m_actionThreshold;
+	}
+
+	function setManagementThreshold(uint256 _managementThreshold)
+	external protected
+	{
+		require(m_managementKeyCount >= _managementThreshold, "threshold-to-high");
+		m_managementThreshold = _managementThreshold;
+	}
+
+	function setActionThreshold(uint256 _actionThreshold)
+	external protected
+	{
+		m_actionThreshold = _actionThreshold;
 	}
 
 	function execute

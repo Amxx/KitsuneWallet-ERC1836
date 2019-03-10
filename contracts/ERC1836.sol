@@ -2,8 +2,10 @@ pragma solidity ^0.5.5;
 
 contract ERC1836
 {
-	address internal m_delegate;
-	bool    internal m_initialized;
+	address                  internal m_delegate;    // Address of the delegate
+	uint256                  internal m_nonce;       // Reserved for nonce. Delegate not using it should synchronize during init / cleanup
+	mapping(bytes32 => bool) internal m_replay;      // Reserved for replay protection
+	bool                     internal m_initialized; // Reserved for initialization protection
 
 	event DelegateChange(address indexed previousDelegate, address indexed newDelegate);
 

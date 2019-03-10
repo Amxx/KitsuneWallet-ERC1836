@@ -2,7 +2,7 @@ pragma solidity ^0.5.5;
 
 import "./ERC1836.sol";
 
-contract ERC1836Delegate is ERC1836
+contract ERC1836DelegateBase is ERC1836
 {
 	function delegate()
 	external view returns (address)

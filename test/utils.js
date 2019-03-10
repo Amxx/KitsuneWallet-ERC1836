@@ -20,7 +20,7 @@ module.exports = {
 			if (metatx.from     == undefined) metatx.from     = identity.address;
 			if (metatx.value    == undefined) metatx.value    = 0;
 			if (metatx.data     == undefined) metatx.data     = "";
-			if (metatx.nonce    == undefined) metatx.nonce    = 0;
+			if (metatx.nonce    == undefined) metatx.nonce    = (await identity.nonce()).toNumber() + 1;
 
 			web3.eth.sign(
 				web3.utils.keccak256(web3.eth.abi.encodeParameters([
@@ -77,7 +77,7 @@ module.exports = {
 			if (metatx.from     == undefined) metatx.from     = identity.address;
 			if (metatx.value    == undefined) metatx.value    = 0;
 			if (metatx.data     == undefined) metatx.data     = [];
-			if (metatx.nonce    == undefined) metatx.nonce    = 0;
+			if (metatx.nonce    == undefined) metatx.nonce    = (await identity.nonce()).toNumber() + 1;
 			if (metatx.gasPrice == undefined) metatx.gasPrice = 0;
 			if (metatx.gasToken == undefined) metatx.gasToken = "0x0000000000000000000000000000000000000000";
 

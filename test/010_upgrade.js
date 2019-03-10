@@ -1,5 +1,5 @@
 const ERC1836Proxy             = artifacts.require("ERC1836Proxy");
-const ERC1836Delegate_Basic    = artifacts.require("ERC1836Delegate_Basic");
+const ERC1836Delegate_Ownable  = artifacts.require("ERC1836Delegate_Ownable");
 const ERC1836Delegate_Multisig = artifacts.require("ERC1836Delegate_Multisig");
 const TargetContract           = artifacts.require("TargetContract");
 
@@ -31,13 +31,13 @@ contract('upgrade', async (accounts) => {
 
 	it ("Create proxy", async () => {
 		_proxy = await ERC1836Proxy.new(
-			(await ERC1836Delegate_Basic.deployed()).address,
-			utils.prepareData(ERC1836Delegate_Basic, "initialize", [
+			(await ERC1836Delegate_Ownable.deployed()).address,
+			utils.prepareData(ERC1836Delegate_Ownable, "initialize", [
 				user1
 			]),
 			{ from: relayer }
 		);
-		Ident = await ERC1836Delegate_Basic.at(_proxy.address);
+		Ident = await ERC1836Delegate_Ownable.at(_proxy.address);
 	});
 
 	it ("Verify proxy initialization", async () => {
@@ -73,7 +73,7 @@ contract('upgrade', async (accounts) => {
 			0,
 			Ident.address,
 			0,
-			utils.prepareData(ERC1836Delegate_Basic, "updateDelegate", [
+			utils.prepareData(ERC1836Delegate_Ownable, "updateDelegate", [
 				(await ERC1836Delegate_Multisig.deployed()).address,
 				utils.prepareData(ERC1836Delegate_Multisig, "initialize", [
 					[

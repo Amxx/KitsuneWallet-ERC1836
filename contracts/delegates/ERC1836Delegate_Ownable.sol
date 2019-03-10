@@ -9,7 +9,7 @@ import "../interfaces/IERC1271.sol";
 
 import "./ERC1836DelegateCall.sol";
 
-contract ERC1836Delegate_Basic is ERC1836DelegateCall, ENSRegistered, IERC1271, Ownable
+contract ERC1836Delegate_Ownable is ERC1836DelegateCall, ENSRegistered, IERC1271, Ownable
 {
 	using SafeMath for uint256;
 	using ECDSA    for bytes32;

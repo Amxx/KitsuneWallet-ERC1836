@@ -1,6 +1,6 @@
-const ERC1836Proxy          = artifacts.require("ERC1836Proxy");
-const ERC1836Delegate_Basic = artifacts.require("ERC1836Delegate_Basic");
-const TargetContract        = artifacts.require("TargetContract");
+const ERC1836Proxy            = artifacts.require("ERC1836Proxy");
+const ERC1836Delegate_Ownable = artifacts.require("ERC1836Delegate_Ownable");
+const TargetContract          = artifacts.require("TargetContract");
 
 const { shouldFail } = require('openzeppelin-test-helpers');
 const utils          = require('./utils.js');
@@ -10,7 +10,7 @@ function extractEvents(txMined, address, name)
 	return txMined.logs.filter((ev) => { return ev.address == address && ev.event == name });
 }
 
-contract('ERC1836Delegate_Basic', async (accounts) => {
+contract('ERC1836Delegate_Ownable', async (accounts) => {
 
 	assert.isAtLeast(accounts.length, 10, "should have at least 10 accounts");
 	relayer = accounts[1];
@@ -31,13 +31,13 @@ contract('ERC1836Delegate_Basic', async (accounts) => {
 
 	it ("Create proxy", async () => {
 		Proxy = await ERC1836Proxy.new(
-			(await ERC1836Delegate_Basic.deployed()).address,
-			utils.prepareData(ERC1836Delegate_Basic, "initialize", [
+			(await ERC1836Delegate_Ownable.deployed()).address,
+			utils.prepareData(ERC1836Delegate_Ownable, "initialize", [
 				user1
 			]),
 			{ from: relayer }
 		);
-		Ident = await ERC1836Delegate_Basic.at(Proxy.address);
+		Ident = await ERC1836Delegate_Ownable.at(Proxy.address);
 	});
 
 	it ("Verify proxy initialization", async () => {
@@ -130,9 +130,9 @@ contract('ERC1836Delegate_Basic', async (accounts) => {
 			0,
 			Ident.address,
 			0,
-			utils.prepareData(ERC1836Delegate_Basic, "updateDelegate", [
-				(await ERC1836Delegate_Basic.deployed()).address,
-				utils.prepareData(ERC1836Delegate_Basic, "initialize", [
+			utils.prepareData(ERC1836Delegate_Ownable, "updateDelegate", [
+				(await ERC1836Delegate_Ownable.deployed()).address,
+				utils.prepareData(ERC1836Delegate_Ownable, "initialize", [
 					user1
 				])
 			]),
@@ -150,8 +150,8 @@ contract('ERC1836Delegate_Basic', async (accounts) => {
 
 	it ("updateDelegate - protected", async () => {
 		await shouldFail.reverting(Ident.updateDelegate(
-			(await ERC1836Delegate_Basic.deployed()).address,
-			utils.prepareData(ERC1836Delegate_Basic, "initialize", [
+			(await ERC1836Delegate_Ownable.deployed()).address,
+			utils.prepareData(ERC1836Delegate_Ownable, "initialize", [
 				user2
 			]),
 			{ from: user1 }

@@ -7,7 +7,7 @@ import "../ENS/ENSRegistered.sol";
 import "./ERC1836DelegateCall.sol";
 import "./ERC1836DelegateKeys.sol";
 
-contract ERC1836Delegate_MultisigRefund is ERC1836DelegateCall, ERC1836DelegateKeys, ENSRegistered
+contract ERC1836Delegate_MultisigRefundOutOfOrder is ERC1836DelegateCall, ERC1836DelegateKeys, ENSRegistered
 {
 	// This is a delegate contract, lock it
 	constructor()

@@ -13,7 +13,7 @@ contract ERC1836Proxy is ERC1836
 	function ()
 	external payable
 	{
-		if (m_delegate != address(0) && msg.sig != bytes4(0))
+		if (m_delegate != address(0))
 		{
 			assembly
 			{

@@ -29,8 +29,7 @@ contract ERC1836Delegate_MultisigRefund is ERC1836DelegateCall, ERC1836DelegateK
 	{
 		uint256 gasBefore = gasleft();
 
-		++m_nonce;
-		require(_nonce == 0 || _nonce == nonce(), "invalid-nonce");
+		require(++m_nonce == _nonce, "invalid-nonce");
 
 		bytes32 neededPurpose;
 		if (_to == address(this))

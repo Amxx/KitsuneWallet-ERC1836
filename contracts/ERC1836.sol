@@ -21,6 +21,7 @@ contract ERC1836
 		_;
 	}
 
+	// TODO: make initializating call mandatory ?
 	function setDelegate(address _newDelegate, bytes memory _initData)
 	internal
 	{

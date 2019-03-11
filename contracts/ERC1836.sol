@@ -1,11 +1,13 @@
 pragma solidity ^0.5.0;
 
+import "./IERC1836Delegate.sol";
+
 contract ERC1836
 {
-	address                  internal m_delegate;    // Address of the delegate
-	uint256                  internal m_nonce;       // Reserved for nonce. Delegate not using it should synchronize during init / cleanup
-	mapping(bytes32 => bool) internal m_replay;      // Reserved for replay protection
-	bool                     internal m_initialized; // Reserved for initialization protection
+	address                  internal m_delegate;    // Address of the delegate.
+	uint256                  internal m_nonce;       // Reserved for nonce. Delegate using a local nonce should synchronize during init / cleanup, and erase their local nonce.
+	mapping(bytes32 => bool) internal m_replay;      // Reserved for replay protection. Registeres the hash of executed meta-tx that shouldn't be replayed. Persistant across updates.
+	bool                     internal m_initialized; // Reserved for initialization protection.
 
 	event DelegateChange(address indexed previousDelegate, address indexed newDelegate);
 
@@ -25,6 +27,9 @@ contract ERC1836
 	function setDelegate(address _newDelegate, bytes memory _initData)
 	internal
 	{
+		// keccak256("ERC1836Delegate")
+		require(IERC1836Delegate(_newDelegate).UUID() == 0xa1e3d116360d73112f374a2ed4cd95388cd39eaf5a7986eb95efa60ae0ffda4d);
+
 		emit DelegateChange(m_delegate, _newDelegate);
 		m_delegate = _newDelegate;
 

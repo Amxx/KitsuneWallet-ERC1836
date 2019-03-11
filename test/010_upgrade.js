@@ -14,7 +14,7 @@ function extractEvents(txMined, address, name)
 contract('upgrade', async (accounts) => {
 
 	assert.isAtLeast(accounts.length, 10, "should have at least 10 accounts");
-	relayer = accounts[1];
+	relayer = accounts[0];
 	user1   = accounts[1];
 	user2   = accounts[2];
 

@@ -4,10 +4,11 @@ import "./IERC1836Delegate.sol";
 
 contract ERC1836
 {
-	address                  internal m_delegate;    // Address of the delegate.
-	uint256                  internal m_nonce;       // Reserved for nonce. Delegate using a local nonce should synchronize during init / cleanup, and erase their local nonce.
-	mapping(bytes32 => bool) internal m_replay;      // Reserved for replay protection. Registeres the hash of executed meta-tx that shouldn't be replayed. Persistant across updates.
-	bool                     internal m_initialized; // Reserved for initialization protection.
+	address                     internal m_delegate;    // Address of the delegate.
+	uint256                     internal m_nonce;       // Reserved for nonce. Delegate using a local nonce should synchronize during init / cleanup, and erase their local nonce.
+	mapping(bytes32 => bool   ) internal m_replay;      // Reserved for replay protection. Registeres the hash of executed meta-tx that shouldn't be replayed. Persistant across updates.
+	mapping(bytes32 => bytes32) internal m_store;       // Generic purpose persistent store (ERC725).
+	bool                        internal m_initialized; // Reserved for initialization protection.
 
 	event DelegateChange(address indexed previousDelegate, address indexed newDelegate);
 

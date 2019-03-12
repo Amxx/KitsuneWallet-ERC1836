@@ -21,27 +21,26 @@ contract ERC1836
 	modifier initialization()
 	{
 		require(!m_initialized, "already-initialized");
+		m_initialized = true;
 		_;
 	}
 
-	// TODO: make initializating call mandatory ?
 	function setDelegate(address _newDelegate, bytes memory _initData)
 	internal
 	{
 		// keccak256("ERC1836Delegate")
 		require(IERC1836Delegate(_newDelegate).UUID() == 0xa1e3d116360d73112f374a2ed4cd95388cd39eaf5a7986eb95efa60ae0ffda4d);
 
+		// Update delegate pointer
 		emit DelegateChange(m_delegate, _newDelegate);
 		m_delegate = _newDelegate;
 
-		if (_initData.length > 0)
-		{
-			bool success;
-			bytes memory returndata;
-			m_initialized = false;
-			(success, returndata) = _newDelegate.delegatecall(_initData);
-			m_initialized = true;
-			require(success, "failed-to-initialize-delegate");
-		}
+		// Allows the run of an initialization method in the new delegate.
+		// Will be reset to true by the initialization modifier of the initialize methode.
+		m_initialized = false;
+
+		// Call the initialize method in the new delegate
+		(bool success, /*bytes memory returndata*/) = _newDelegate.delegatecall(_initData);
+		require(success, "failed-to-initialize-delegate");
 	}
 }

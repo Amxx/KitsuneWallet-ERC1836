@@ -1,8 +1,8 @@
 pragma solidity ^0.5.0;
 
-import "../ERC1836DelegateBase.sol";
+import "../MasterStorage.sol";
 
-contract ERC1836DelegateCall is ERC1836DelegateBase
+contract MasterCallBase is MasterStorage
 {
 	uint256 constant OPERATION_CALL   = 0;
 	uint256 constant OPERATION_CREATE = 1;

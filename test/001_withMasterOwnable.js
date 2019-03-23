@@ -1,6 +1,6 @@
-const ERC1836Proxy            = artifacts.require("ERC1836Proxy");
-const ERC1836Delegate_Ownable = artifacts.require("ERC1836Delegate_Ownable");
-const TargetContract          = artifacts.require("TargetContract");
+const Proxy          = artifacts.require("Proxy");
+const MasterOwnable  = artifacts.require("MasterOwnable");
+const TargetContract = artifacts.require("TargetContract");
 
 const { shouldFail } = require('openzeppelin-test-helpers');
 const utils          = require('./utils.js');
@@ -10,15 +10,14 @@ function extractEvents(txMined, address, name)
 	return txMined.logs.filter((ev) => { return ev.address == address && ev.event == name });
 }
 
-contract('ERC1836Delegate_Ownable', async (accounts) => {
+contract('MasterOwnable', async (accounts) => {
 
 	assert.isAtLeast(accounts.length, 10, "should have at least 10 accounts");
 	relayer = accounts[0];
 	user1   = accounts[1];
 	user2   = accounts[2];
 
-	var Proxy = null;
-	var Ident = null;
+	var ident = null;
 	var dest1 = web3.utils.randomHex(20);
 
 	/***************************************************************************
@@ -30,14 +29,14 @@ contract('ERC1836Delegate_Ownable', async (accounts) => {
 	});
 
 	it ("Create proxy", async () => {
-		Proxy = await ERC1836Proxy.new(
-			(await ERC1836Delegate_Ownable.deployed()).address,
-			utils.prepareData(ERC1836Delegate_Ownable, "initialize", [
+		let { address } = await Proxy.new(
+			(await MasterOwnable.deployed()).address,
+			utils.prepareData(MasterOwnable, "initialize", [
 				user1
 			]),
 			{ from: relayer }
 		);
-		Ident = await ERC1836Delegate_Ownable.at(Proxy.address);
+		Ident = await MasterOwnable.at(address);
 	});
 
 	it ("Verify proxy initialization", async () => {
@@ -125,14 +124,14 @@ contract('ERC1836Delegate_Ownable', async (accounts) => {
 		assert.equal(await web3.eth.getBalance(Ident.address), web3.utils.toWei("0.00", "ether"));
 	});
 
-	it("updateDelegate", async () => {
+	it("updateMaster", async () => {
 		await Ident.execute(
 			0,
 			Ident.address,
 			0,
-			utils.prepareData(ERC1836Delegate_Ownable, "updateDelegate", [
-				(await ERC1836Delegate_Ownable.deployed()).address,
-				utils.prepareData(ERC1836Delegate_Ownable, "initialize", [
+			utils.prepareData(MasterOwnable, "updateMaster", [
+				(await MasterOwnable.deployed()).address,
+				utils.prepareData(MasterOwnable, "initialize", [
 					user1
 				])
 			]),
@@ -148,10 +147,10 @@ contract('ERC1836Delegate_Ownable', async (accounts) => {
 		));
 	});
 
-	it ("updateDelegate - protected", async () => {
-		await shouldFail.reverting(Ident.updateDelegate(
-			(await ERC1836Delegate_Ownable.deployed()).address,
-			utils.prepareData(ERC1836Delegate_Ownable, "initialize", [
+	it ("updateMaster - protected", async () => {
+		await shouldFail.reverting(Ident.updateMaster(
+			(await MasterOwnable.deployed()).address,
+			utils.prepareData(MasterOwnable, "initialize", [
 				user2
 			]),
 			{ from: user1 }

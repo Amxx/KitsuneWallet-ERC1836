@@ -5,16 +5,18 @@ import "../../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.so
 import "../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 import "../ENS/ENSRegistered.sol";
+import "./MasterBase.sol";
+import "./MasterCallBase.sol";
 import "../interfaces/IERC1271.sol";
 
-import "./ERC1836DelegateCall.sol";
 
-contract ERC1836Delegate_Ownable is ERC1836DelegateCall, ENSRegistered, IERC1271, Ownable
+
+contract MasterOwnable is MasterBase, MasterCallBase, ENSRegistered, IERC1271, Ownable
 {
 	using SafeMath for uint256;
 	using ECDSA    for bytes32;
 
-	// This is a delegate contract, lock it
+	// This is a Master contract, lock it
 	constructor()
 	public
 	{
@@ -27,14 +29,14 @@ contract ERC1836Delegate_Ownable is ERC1836DelegateCall, ENSRegistered, IERC1271
 		_transferOwnership(_owner);
 	}
 
-	function updateDelegate(address _newDelegate, bytes calldata _callback)
+	function updateMaster(address _newMaster, bytes calldata _callback)
 	external protected
 	{
 		// set owner to 0
 		_transferOwnership(address(this));
 		renounceOwnership();
-		// set next delegate
-		setDelegate(_newDelegate, _callback);
+		// set next Master
+		setMaster(_newMaster, _callback);
 	}
 
 	function execute(uint256 _operationType, address _to, uint256 _value, bytes calldata _data)

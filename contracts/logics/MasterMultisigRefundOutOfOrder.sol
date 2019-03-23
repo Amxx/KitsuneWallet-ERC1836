@@ -4,10 +4,11 @@ pragma experimental ABIEncoderV2;
 import "../../node_modules/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 import "../ENS/ENSRegistered.sol";
-import "./ERC1836DelegateCall.sol";
-import "./ERC1836DelegateKeys.sol";
+import "./MasterBase.sol";
+import "./MasterCallBase.sol";
+import "./MasterKeysBase.sol";
 
-contract ERC1836Delegate_MultisigRefundOutOfOrder is ERC1836DelegateCall, ERC1836DelegateKeys, ENSRegistered
+contract MasterMultisigRefundOutOfOrder is MasterBase, MasterCallBase, MasterKeysBase, ENSRegistered
 {
 	// This is a delegate contract, lock it
 	constructor()

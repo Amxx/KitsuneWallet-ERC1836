@@ -1,23 +1,23 @@
 pragma solidity ^0.5.0;
 
-import "./ERC1836.sol";
+import "./MasterStorage.sol";
 
-contract ERC1836Proxy is ERC1836
+contract Proxy is MasterStorage
 {
-	constructor(address _delegate, bytes memory _initData)
+	constructor(address _master, bytes memory _initData)
 	public
 	{
-		setDelegate(_delegate, _initData);
+		setMaster(_master, _initData);
 	}
 
 	function ()
 	external payable
 	{
-		if (m_delegate != address(0))
+		if (m_master != address(0))
 		{
 			assembly
 			{
-				let to  := and(sload(0x0), 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF) // m_delegate
+				let to  := and(sload(0x0), 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF) // m_master
 				let ptr := mload(0x40)
 				calldatacopy(ptr, 0, calldatasize)
 				let result := delegatecall(gas, to, ptr, calldatasize, 0, 0)

@@ -1,11 +1,14 @@
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
-import "../ENS/ENSRegistered.sol";
-import "./ERC1836DelegateCall.sol";
-import "./ERC1836DelegateKeys.sol";
+import "../../node_modules/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-contract ERC1836Delegate_Multisig is ERC1836DelegateCall, ERC1836DelegateKeys, ENSRegistered
+import "../ENS/ENSRegistered.sol";
+import "./MasterBase.sol";
+import "./MasterCallBase.sol";
+import "./MasterKeysBase.sol";
+
+contract MasterMultisigRefund is MasterBase, MasterCallBase, MasterKeysBase, ENSRegistered
 {
 	// This is a delegate contract, lock it
 	constructor()
@@ -19,10 +22,14 @@ contract ERC1836Delegate_Multisig is ERC1836DelegateCall, ERC1836DelegateKeys, E
 	, uint256        _value
 	, bytes   memory _data
 	, uint256        _nonce
+	, address        _gasToken
+	, uint256        _gasPrice
 	, bytes[] memory _sigs
 	)
 	public
 	{
+		uint256 gasBefore = gasleft();
+
 		require(++m_nonce == _nonce, "invalid-nonce");
 
 		bytes32 neededPurpose;
@@ -43,7 +50,9 @@ contract ERC1836Delegate_Multisig is ERC1836DelegateCall, ERC1836DelegateKeys, E
 				_to,
 				_value,
 				keccak256(_data),
-				_nonce
+				_nonce,
+				_gasToken,
+				_gasPrice
 			)).toEthSignedMessageHash();
 
 		for (uint256 i = 0; i < _sigs.length; ++i)
@@ -52,6 +61,21 @@ contract ERC1836Delegate_Multisig is ERC1836DelegateCall, ERC1836DelegateKeys, E
 		}
 
 		_execute(_operationType, _to, _value, _data);
+
+		refund(gasBefore.sub(gasleft()), _gasPrice, _gasToken);
+	}
+
+	function refund(uint256 _gasUsed, uint256 _gasPrice, address _gasToken)
+	internal
+	{
+		if (_gasToken == address(0))
+		{
+			msg.sender.transfer(_gasUsed.mul(_gasPrice));
+		}
+		else
+		{
+			IERC20(_gasToken).transfer(msg.sender, _gasUsed.mul(_gasPrice));
+		}
 	}
 
 }

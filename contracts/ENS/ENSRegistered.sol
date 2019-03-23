@@ -3,22 +3,21 @@ pragma solidity ^0.5.0;
 import "../../node_modules/@ensdomains/ens/contracts/ENSRegistry.sol";
 import "../../node_modules/@ensdomains/ens/contracts/FIFSRegistrar.sol";
 import "../../node_modules/@ensdomains/ens/contracts/ReverseRegistrar.sol";
+// import "../../node_modules/@ensdomains/resolver/contracts/PublicResolver.sol";
 import "./PublicResolver.sol";
 
-import "../ERC1836.sol";
-
-contract ENSRegistered is ERC1836
+contract ENSRegistered
 {
 	bytes32 constant ADDR_REVERSE_NODE = 0x91d1777781884d03a6757a803996e38de2a42967fb37eeaca72729271025a9e2;
 
-	function setENS(
-		bytes32         _hashLabel,
-		string calldata _name,
-		bytes32         _node,
-		ENSRegistry     _ens,
-		FIFSRegistrar   _registrar,
-		PublicResolver  _resolver)
-	external protected
+	function ENSregister(
+		bytes32        _hashLabel,
+		string memory  _name,
+		bytes32        _node,
+		ENSRegistry    _ens,
+		FIFSRegistrar  _registrar,
+		PublicResolver _resolver)
+	internal
 	{
 		// ENSRegistered
 		_registrar.register(_hashLabel, address(this));

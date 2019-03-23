@@ -3,10 +3,10 @@ pragma solidity ^0.5.0;
 import "../../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 
-import "../ERC1836DelegateBase.sol";
+import "../MasterStorage.sol";
 import "../interfaces/IERC1271.sol";
 
-contract ERC1836DelegateKeys is ERC1836DelegateBase, IERC1271
+contract MasterKeysBase is MasterStorage, IERC1271
 {
 	using SafeMath for uint256;
 	using ECDSA    for bytes32;
@@ -43,7 +43,7 @@ contract ERC1836DelegateKeys is ERC1836DelegateBase, IERC1271
 		m_actionThreshold     = _actionThreshold;
 	}
 
-	function updateDelegate(address _newDelegate, bytes calldata _callback)
+	function updateMaster(address _newMaster, bytes calldata _callback)
 	external protected
 	{
 		// reset memory space
@@ -56,8 +56,8 @@ contract ERC1836DelegateKeys is ERC1836DelegateBase, IERC1271
 		delete m_managementThreshold;
 		delete m_actionThreshold;
 
-		// set next delegate
-		setDelegate(_newDelegate, _callback);
+		// set next Master
+		setMaster(_newMaster, _callback);
 	}
 
 	function addrToKey(address addr)

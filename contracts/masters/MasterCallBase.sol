@@ -1,9 +1,9 @@
 pragma solidity ^0.5.0;
 
-import "../common/Storage.sol";
+import "./MasterBase.sol";
 
 
-contract MasterCallBase is Storage
+contract MasterCallBase is MasterBase
 {
 	uint256 constant OPERATION_CALL   = 0;
 	uint256 constant OPERATION_CREATE = 1;

@@ -26,7 +26,7 @@ contract Storage
 		_;
 	}
 
-	function setMaster(address _newMaster, bytes memory _initData)
+	function __setMaster(address _newMaster, bytes memory _initData)
 	internal
 	{
 		require(IMaster(_newMaster).UUID() == 0x26b8c8548d7daec1fffc293834f2cee70c6b9ca8d5c456721fc1fdf9b10dd909, "invalid-master-uuid");

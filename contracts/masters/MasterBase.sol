@@ -6,6 +6,9 @@ import "../common/Storage.sol";
 
 contract MasterBase is IMaster, Storage
 {
+	// Need this to handle deposit call forwarded by the proxy
+	function () external payable {}
+
 	function UUID()
 	external pure returns (bytes32)
 	{
@@ -30,6 +33,9 @@ contract MasterBase is IMaster, Storage
 		m_store[_key] = _value;
 	}
 
-	// Need this to handle deposit call forwarded by the proxy
-	function () external payable {}
+	function updateMaster(address _newMaster, bytes memory _initData)
+	public protected
+	{
+		__setMaster(_newMaster, _initData);
+	}
 }

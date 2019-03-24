@@ -8,7 +8,7 @@ contract Proxy is Storage
 	constructor(address _master, bytes memory _initData)
 	public
 	{
-		setMaster(_master, _initData);
+		__setMaster(_master, _initData);
 	}
 
 	function ()

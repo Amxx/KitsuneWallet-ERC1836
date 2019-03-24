@@ -28,14 +28,14 @@ contract WalletOwnable is MasterBase, MasterCallBase, ENSRegistered, IERC1271, O
 		_transferOwnership(_owner);
 	}
 
-	function updateMaster(address _newMaster, bytes calldata _callback)
-	external protected
+	function resetUpdateMaster(address _newMaster, bytes memory _callback)
+	public protected
 	{
 		// set owner to 0
 		_transferOwnership(address(this));
 		renounceOwnership();
 		// set next Master
-		setMaster(_newMaster, _callback);
+		updateMaster(_newMaster, _callback);
 	}
 
 	function execute(uint256 _operationType, address _to, uint256 _value, bytes calldata _data)

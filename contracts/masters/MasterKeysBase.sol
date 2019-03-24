@@ -3,11 +3,11 @@ pragma solidity ^0.5.0;
 import "../../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 
-import "../common/Storage.sol";
+import "./MasterBase.sol";
 import "../interfaces/IERC1271.sol";
 
 
-contract MasterKeysBase is Storage, IERC1271
+contract MasterKeysBase is MasterBase, IERC1271
 {
 	using SafeMath for uint256;
 	using ECDSA    for bytes32;
@@ -44,8 +44,8 @@ contract MasterKeysBase is Storage, IERC1271
 		m_actionThreshold     = _actionThreshold;
 	}
 
-	function updateMaster(address _newMaster, bytes calldata _callback)
-	external protected
+	function resetUpdateMaster(address _newMaster, bytes memory _callback)
+	public protected
 	{
 		// reset memory space
 		for (uint256 i = 0; i < m_activeKeys.length; ++i)
@@ -58,7 +58,7 @@ contract MasterKeysBase is Storage, IERC1271
 		delete m_actionThreshold;
 
 		// set next Master
-		setMaster(_newMaster, _callback);
+		updateMaster(_newMaster, _callback);
 	}
 
 	function addrToKey(address addr)

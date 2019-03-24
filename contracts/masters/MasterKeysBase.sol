@@ -3,10 +3,11 @@ pragma solidity ^0.5.0;
 import "../../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 
-import "../MasterStorage.sol";
+import "../common/Storage.sol";
 import "../interfaces/IERC1271.sol";
 
-contract MasterKeysBase is MasterStorage, IERC1271
+
+contract MasterKeysBase is Storage, IERC1271
 {
 	using SafeMath for uint256;
 	using ECDSA    for bytes32;

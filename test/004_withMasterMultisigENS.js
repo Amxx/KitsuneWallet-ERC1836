@@ -1,5 +1,5 @@
 const Proxy          = artifacts.require("Proxy");
-const MasterMultisig = artifacts.require("MasterMultisig");
+const WalletMultisig = artifacts.require("WalletMultisig");
 const TargetContract = artifacts.require("TargetContract");
 
 const { shouldFail } = require('openzeppelin-test-helpers');
@@ -10,7 +10,7 @@ function extractEvents(txMined, address, name)
 	return txMined.logs.filter((ev) => { return ev.address == address && ev.event == name });
 }
 
-contract('MasterMultisig', async (accounts) => {
+contract('WalletMultisig', async (accounts) => {
 
 	assert.isAtLeast(accounts.length, 10, "should have at least 10 accounts");
 	relayer = accounts[0];
@@ -30,8 +30,8 @@ contract('MasterMultisig', async (accounts) => {
 
 	it ("Create proxy", async () => {
 		let { address } = await Proxy.new(
-			(await MasterMultisig.deployed()).address,
-			utils.prepareData(MasterMultisig, "initialize", [
+			(await WalletMultisig.deployed()).address,
+			utils.prepareData(WalletMultisig, "initialize", [
 				[ utils.addressToBytes32(user1) ],
 				[ "0x0000000000000000000000000000000000000000000000000000000000000003" ],
 				1,
@@ -39,7 +39,7 @@ contract('MasterMultisig', async (accounts) => {
 			]),
 			{ from: relayer }
 		);
-		ident = await MasterMultisig.at(address);
+		ident = await WalletMultisig.at(address);
 	});
 
 	it ("Verify proxy initialization", async () => {

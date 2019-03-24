@@ -2,7 +2,8 @@ pragma solidity ^0.5.0;
 
 import "./IMaster.sol";
 
-contract MasterStorage
+
+contract Storage
 {
 	address                     internal m_master;      // Address of the master.
 	uint256                     internal m_nonce;       // Reserved for nonce. Masters using a local nonce should synchronize during init / cleanup, and erase their local nonce.

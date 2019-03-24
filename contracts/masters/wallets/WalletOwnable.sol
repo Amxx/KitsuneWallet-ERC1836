@@ -1,17 +1,16 @@
 pragma solidity ^0.5.0;
 
-import "../../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
-import "../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "../../../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "../../../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
+import "../../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
-import "../ENS/ENSRegistered.sol";
-import "./MasterBase.sol";
-import "./MasterCallBase.sol";
-import "../interfaces/IERC1271.sol";
+import "../../ENS/ENSRegistered.sol";
+import "../../interfaces/IERC1271.sol";
+import "../MasterBase.sol";
+import "../MasterCallBase.sol";
 
 
-
-contract MasterOwnable is MasterBase, MasterCallBase, ENSRegistered, IERC1271, Ownable
+contract WalletOwnable is MasterBase, MasterCallBase, ENSRegistered, IERC1271, Ownable
 {
 	using SafeMath for uint256;
 	using ECDSA    for bytes32;

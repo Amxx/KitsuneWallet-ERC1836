@@ -1,14 +1,15 @@
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
-import "../../node_modules/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "../../../node_modules/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-import "../ENS/ENSRegistered.sol";
-import "./MasterBase.sol";
-import "./MasterCallBase.sol";
-import "./MasterKeysBase.sol";
+import "../../ENS/ENSRegistered.sol";
+import "../MasterBase.sol";
+import "../MasterCallBase.sol";
+import "../MasterKeysBase.sol";
 
-contract MasterMultisigRefundOutOfOrder is MasterBase, MasterCallBase, MasterKeysBase, ENSRegistered
+
+contract WalletMultisigRefundOutOfOrder is MasterBase, MasterCallBase, MasterKeysBase, ENSRegistered
 {
 	// This is a delegate contract, lock it
 	constructor()

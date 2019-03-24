@@ -1,6 +1,6 @@
 const Proxy             = artifacts.require("Proxy");
-const MasterOwnable  = artifacts.require("MasterOwnable");
-const MasterMultisig = artifacts.require("MasterMultisig");
+const WalletOwnable  = artifacts.require("WalletOwnable");
+const WalletMultisig = artifacts.require("WalletMultisig");
 const TargetContract           = artifacts.require("TargetContract");
 
 const { shouldFail } = require('openzeppelin-test-helpers');
@@ -31,13 +31,13 @@ contract('upgrade', async (accounts) => {
 
 	it ("Create proxy", async () => {
 		let { address } = await Proxy.new(
-			(await MasterOwnable.deployed()).address,
-			utils.prepareData(MasterOwnable, "initialize", [
+			(await WalletOwnable.deployed()).address,
+			utils.prepareData(WalletOwnable, "initialize", [
 				user1
 			]),
 			{ from: relayer }
 		);
-		ident = await MasterOwnable.at(address);
+		ident = await WalletOwnable.at(address);
 	});
 
 	it ("Verify proxy initialization", async () => {
@@ -73,9 +73,9 @@ contract('upgrade', async (accounts) => {
 			0,
 			ident.address,
 			0,
-			utils.prepareData(MasterOwnable, "updateMaster", [
-				(await MasterMultisig.deployed()).address,
-				utils.prepareData(MasterMultisig, "initialize", [
+			utils.prepareData(WalletOwnable, "updateMaster", [
+				(await WalletMultisig.deployed()).address,
+				utils.prepareData(WalletMultisig, "initialize", [
 					[
 						utils.addressToBytes32(user1),
 						utils.addressToBytes32(user2)
@@ -90,7 +90,7 @@ contract('upgrade', async (accounts) => {
 			]),
 			{ from: user1 }
 		);
-		ident = await MasterMultisig.at(ident.address);
+		ident = await WalletMultisig.at(ident.address);
 	});
 
 	it ("Verify proxy initialization", async () => {

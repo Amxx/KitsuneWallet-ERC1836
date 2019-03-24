@@ -1,5 +1,5 @@
 const Proxy          = artifacts.require("Proxy");
-const MasterOwnable  = artifacts.require("MasterOwnable");
+const WalletOwnable  = artifacts.require("WalletOwnable");
 const TargetContract = artifacts.require("TargetContract");
 
 const { shouldFail } = require('openzeppelin-test-helpers');
@@ -10,7 +10,7 @@ function extractEvents(txMined, address, name)
 	return txMined.logs.filter((ev) => { return ev.address == address && ev.event == name });
 }
 
-contract('MasterOwnable', async (accounts) => {
+contract('WalletOwnable', async (accounts) => {
 
 	assert.isAtLeast(accounts.length, 10, "should have at least 10 accounts");
 	relayer = accounts[0];
@@ -30,13 +30,13 @@ contract('MasterOwnable', async (accounts) => {
 
 	it ("Create proxy", async () => {
 		let { address } = await Proxy.new(
-			(await MasterOwnable.deployed()).address,
-			utils.prepareData(MasterOwnable, "initialize", [
+			(await WalletOwnable.deployed()).address,
+			utils.prepareData(WalletOwnable, "initialize", [
 				user1
 			]),
 			{ from: relayer }
 		);
-		Ident = await MasterOwnable.at(address);
+		Ident = await WalletOwnable.at(address);
 	});
 
 	it ("Verify proxy initialization", async () => {
@@ -129,9 +129,9 @@ contract('MasterOwnable', async (accounts) => {
 			0,
 			Ident.address,
 			0,
-			utils.prepareData(MasterOwnable, "updateMaster", [
-				(await MasterOwnable.deployed()).address,
-				utils.prepareData(MasterOwnable, "initialize", [
+			utils.prepareData(WalletOwnable, "updateMaster", [
+				(await WalletOwnable.deployed()).address,
+				utils.prepareData(WalletOwnable, "initialize", [
 					user1
 				])
 			]),
@@ -149,8 +149,8 @@ contract('MasterOwnable', async (accounts) => {
 
 	it ("updateMaster - protected", async () => {
 		await shouldFail.reverting(Ident.updateMaster(
-			(await MasterOwnable.deployed()).address,
-			utils.prepareData(MasterOwnable, "initialize", [
+			(await WalletOwnable.deployed()).address,
+			utils.prepareData(WalletOwnable, "initialize", [
 				user2
 			]),
 			{ from: user1 }

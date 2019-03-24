@@ -1,9 +1,10 @@
 pragma solidity ^0.5.0;
 
-import "../IMaster.sol";
-import "../MasterStorage.sol";
+import "../common/IMaster.sol";
+import "../common/Storage.sol";
 
-contract MasterBase is IMaster, MasterStorage
+
+contract MasterBase is IMaster, Storage
 {
 	function UUID()
 	external pure returns (bytes32)

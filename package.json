@@ -1,6 +1,6 @@
 {
 	"name": "erc1836",
-	"version": "0.0.8-1",
+	"version": "0.0.9",
 	"description": "ERC1836, a upgradable proxy for universal identity through delegates",
 	"main": "truffle.js",
 	"scripts": {},

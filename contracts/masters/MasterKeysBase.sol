@@ -44,8 +44,14 @@ contract MasterKeysBase is MasterBase, IERC1271
 		m_actionThreshold     = _actionThreshold;
 	}
 
-	function resetUpdateMaster(address _newMaster, bytes memory _callback)
-	public protected
+	function updateMaster(address _newMaster, bytes calldata _initData)
+	external protected
+	{
+		setMaster(_newMaster, _initData);
+	}
+
+	function resetUpdateMaster(address _newMaster, bytes calldata _callback)
+	external protected
 	{
 		// reset memory space
 		for (uint256 i = 0; i < m_activeKeys.length; ++i)
@@ -58,7 +64,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 		delete m_actionThreshold;
 
 		// set next Master
-		updateMaster(_newMaster, _callback);
+		setMaster(_newMaster, _callback);
 	}
 
 	function addrToKey(address addr)

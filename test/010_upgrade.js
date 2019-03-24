@@ -73,7 +73,7 @@ contract('upgrade', async (accounts) => {
 			0,
 			ident.address,
 			0,
-			utils.prepareData(WalletOwnable, "updateMaster", [
+			utils.prepareData(WalletOwnable, "resetUpdateMaster", [
 				(await WalletMultisig.deployed()).address,
 				utils.prepareData(WalletMultisig, "initialize", [
 					[

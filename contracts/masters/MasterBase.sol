@@ -32,10 +32,4 @@ contract MasterBase is IMaster, Storage
 	{
 		m_store[_key] = _value;
 	}
-
-	function updateMaster(address _newMaster, bytes memory _initData)
-	public protected
-	{
-		__setMaster(_newMaster, _initData);
-	}
 }

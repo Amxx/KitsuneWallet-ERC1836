@@ -31,5 +31,6 @@ contract MasterBase is IMaster, Storage
 	external protected
 	{
 		m_store[_key] = _value;
+		emit DataChanged(_key, _value);
 	}
 }

@@ -11,6 +11,7 @@ contract Storage
 	mapping(bytes32 => bytes32) internal m_store;       // Generic purpose persistent store (ERC725).
 	bool                        internal m_initialized; // Reserved for initialization protection.
 
+	event DataChanged(bytes32 indexed key, bytes32 indexed value);
 	event MasterChange(address indexed previousMaster, address indexed newMaster);
 
 	modifier protected()

@@ -133,7 +133,8 @@ contract('WalletOwnable', async (accounts) => {
 				(await WalletOwnable.deployed()).address,
 				utils.prepareData(WalletOwnable, "initialize", [
 					user1
-				])
+				]),
+				true
 			]),
 			{ from: user2 }
 		)

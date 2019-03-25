@@ -22,6 +22,12 @@ contract MasterKeysBase is MasterBase, IERC1271
 	uint256                     internal m_managementThreshold;
 	uint256                     internal m_actionThreshold;
 
+	function owner()
+	external view returns(address)
+	{
+		return address(this);
+	}
+
 	function initialize(
 		bytes32[] calldata _keys,
 		bytes32[] calldata _purposes,
@@ -44,27 +50,23 @@ contract MasterKeysBase is MasterBase, IERC1271
 		m_actionThreshold     = _actionThreshold;
 	}
 
-	function updateMaster(address _newMaster, bytes calldata _initData)
+	function updateMaster(address _newMaster, bytes calldata _initData, bool _reset)
 	external protected
 	{
-		setMaster(_newMaster, _initData);
-	}
-
-	function resetUpdateMaster(address _newMaster, bytes calldata _callback)
-	external protected
-	{
-		// reset memory space
-		for (uint256 i = 0; i < m_activeKeys.length; ++i)
+		if (_reset)
 		{
-			delete m_keyPurposes[m_activeKeys[i]];
+			// reset memory space
+			for (uint256 i = 0; i < m_activeKeys.length; ++i)
+			{
+				delete m_keyPurposes[m_activeKeys[i]];
+			}
+			delete m_activeKeys;
+			delete m_managementKeyCount;
+			delete m_managementThreshold;
+			delete m_actionThreshold;
 		}
-		delete m_activeKeys;
-		delete m_managementKeyCount;
-		delete m_managementThreshold;
-		delete m_actionThreshold;
-
-		// set next Master
-		setMaster(_newMaster, _callback);
+		// setMaster
+		setMaster(_newMaster, _initData);
 	}
 
 	function addrToKey(address addr)

@@ -56,7 +56,7 @@ module.exports = {
 	{
 		return new Promise(async (resolve, reject) => {
 			this.signMetaTX_Multisig(identity, metatx, signer).then((signedmetatx) => {
-				identity.execute(
+				identity.methods['execute(uint256,address,uint256,bytes,uint256,bytes[])'](
 					signedmetatx.type,
 					signedmetatx.to,
 					signedmetatx.value,
@@ -119,7 +119,7 @@ module.exports = {
 	{
 		return new Promise(async (resolve, reject) => {
 			this.signMetaTX_MultisigRefund(identity, metatx, signer).then((signedmetatx) => {
-				identity.execute(
+				identity.methods['execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'](
 					signedmetatx.type,
 					signedmetatx.to,
 					signedmetatx.value,

@@ -5,11 +5,10 @@ import "../../../node_modules/openzeppelin-solidity/contracts/token/ERC20/IERC20
 
 import "../../ENS/ENSRegistered.sol";
 import "../MasterBase.sol";
-import "../MasterCallBase.sol";
 import "../MasterKeysBase.sol";
 
 
-contract WalletMultisigRefund is MasterBase, MasterCallBase, MasterKeysBase, ENSRegistered
+contract WalletMultisigRefund is MasterBase, MasterKeysBase, ENSRegistered
 {
 	// This is a delegate contract, lock it
 	constructor()
@@ -61,7 +60,7 @@ contract WalletMultisigRefund is MasterBase, MasterCallBase, MasterKeysBase, ENS
 			require(keyHasPurpose(addrToKey(executionID.recover(_sigs[i])), neededPurpose), "invalid-signature");
 		}
 
-		_execute(_operationType, _to, _value, _data);
+		this.execute(_operationType, _to, _value, _data);
 
 		refund(gasBefore.sub(gasleft()), _gasPrice, _gasToken);
 	}

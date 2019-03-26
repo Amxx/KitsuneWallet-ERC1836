@@ -3,11 +3,10 @@ pragma experimental ABIEncoderV2;
 
 import "../../ENS/ENSRegistered.sol";
 import "../MasterBase.sol";
-import "../MasterCallBase.sol";
 import "../MasterKeysBase.sol";
 
 
-contract WalletMultisig is MasterBase, MasterCallBase, MasterKeysBase, ENSRegistered
+contract WalletMultisig is MasterBase, MasterKeysBase, ENSRegistered
 {
 	// This is a delegate contract, lock it
 	constructor()
@@ -53,7 +52,7 @@ contract WalletMultisig is MasterBase, MasterCallBase, MasterKeysBase, ENSRegist
 			require(keyHasPurpose(addrToKey(executionID.recover(_sigs[i])), neededPurpose), "invalid-signature");
 		}
 
-		_execute(_operationType, _to, _value, _data);
+		this.execute(_operationType, _to, _value, _data);
 	}
 
 }

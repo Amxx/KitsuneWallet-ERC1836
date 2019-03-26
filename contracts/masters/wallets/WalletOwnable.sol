@@ -7,10 +7,9 @@ import "../../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.
 import "../../ENS/ENSRegistered.sol";
 import "../../interfaces/IERC1271.sol";
 import "../MasterBase.sol";
-import "../MasterCallBase.sol";
 
 
-contract WalletOwnable is MasterBase, MasterCallBase, ENSRegistered, IERC1271, Ownable
+contract WalletOwnable is MasterBase, ENSRegistered, IERC1271, Ownable
 {
 	using SafeMath for uint256;
 	using ECDSA    for bytes32;
@@ -38,12 +37,6 @@ contract WalletOwnable is MasterBase, MasterCallBase, ENSRegistered, IERC1271, O
 			renounceOwnership();
 		}
 		setMaster(_newMaster, _initData);
-	}
-
-	function execute(uint256 _operationType, address _to, uint256 _value, bytes calldata _data)
-	external onlyOwner
-	{
-		_execute(_operationType, _to, _value, _data);
 	}
 
 	function isValidSignature(bytes32 _data, bytes memory _signature)

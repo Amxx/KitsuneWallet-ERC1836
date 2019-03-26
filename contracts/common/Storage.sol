@@ -13,9 +13,6 @@ contract Storage
 	mapping(bytes32 => bool   ) internal m_replay;      // Reserved for replay protection. Registeres the hash of executed meta-tx that shouldn't be replayed. Persistant across updates.
 	mapping(bytes32 => bytes32) internal m_store;       // Generic purpose persistent store (ERC725).
 
-	event DataChanged(bytes32 indexed key, bytes32 indexed value);
-	event MasterChange(address indexed previousMaster, address indexed newMaster);
-
 	modifier protected()
 	{
 		require(msg.sender == address(this), "restricted-access");
@@ -28,6 +25,8 @@ contract Storage
 		m_initialized = true;
 		_;
 	}
+
+	event MasterChange(address indexed previousMaster, address indexed newMaster);
 
 	function setMaster(address _newMaster, bytes memory _initData)
 	internal

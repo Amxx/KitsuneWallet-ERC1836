@@ -18,7 +18,7 @@ contract MasterBase is IMaster, Storage
 	function masterId()
 	external pure returns (bytes32)
 	{
-		return 0x26b8c8548d7daec1fffc293834f2cee70c6b9ca8d5c456721fc1fdf9b10dd909;
+		return MASTER_ID;
 	}
 
 	function getData(bytes32 _key)

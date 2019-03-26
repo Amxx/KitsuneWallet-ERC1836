@@ -1,10 +1,10 @@
 pragma solidity ^0.5.0;
 
-import "../common/IMaster.sol";
+import "./IMaster.sol";
 import "./ERC725Base.sol";
 
 
-contract MasterBase is IMaster, ERC725Base
+contract MasterBase is IMaster, ERC725Base // ERC725Base is Core
 {
 	function master()
 	external view returns (address)

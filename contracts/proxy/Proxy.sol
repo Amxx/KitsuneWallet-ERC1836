@@ -1,9 +1,9 @@
 pragma solidity ^0.5.0;
 
-import "../common/Storage.sol";
+import "../common/Core.sol";
 
 
-contract Proxy is Storage
+contract Proxy is Core
 {
 	constructor(address _master, bytes memory _initData)
 	public

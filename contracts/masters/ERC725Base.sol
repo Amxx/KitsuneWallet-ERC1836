@@ -1,10 +1,10 @@
 pragma solidity ^0.5.0;
 
-import "../common/IERC725.sol";
-import "../common/Storage.sol";
+import "../interfaces/IERC725.sol";
+import "../common/Core.sol";
 
 
-contract ERC725Base is IERC725, Storage
+contract ERC725Base is IERC725, Core
 {
 	uint256 constant OPERATION_CALL   = 0;
 	uint256 constant OPERATION_CREATE = 1;
@@ -13,12 +13,12 @@ contract ERC725Base is IERC725, Storage
 	function () external payable {}
 
 	function getData(bytes32 _key)
-	external view returns (bytes32)
+	external view returns (bytes memory)
 	{
 		return m_store[_key];
 	}
 
-	function setData(bytes32 _key, bytes32 _value)
+	function setData(bytes32 _key, bytes calldata _value)
 	external protected
 	{
 		m_store[_key] = _value;

@@ -6,10 +6,11 @@ import "../../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.
 
 import "../../ENS/ENSRegistered.sol";
 import "../../interfaces/IERC1271.sol";
+import "../ERC725Base.sol";
 import "../MasterBase.sol";
 
 
-contract WalletOwnable is MasterBase, ENSRegistered, IERC1271, Ownable
+contract WalletOwnable is ERC725Base, MasterBase, ENSRegistered, IERC1271, Ownable
 {
 	using SafeMath for uint256;
 	using ECDSA    for bytes32;

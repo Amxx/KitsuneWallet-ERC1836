@@ -1,6 +1,6 @@
 const Proxy          = artifacts.require("Proxy");
 const WalletOwnable  = artifacts.require("WalletOwnable");
-const TargetContract = artifacts.require("TargetContract");
+const Target         = artifacts.require("Target");
 
 const { shouldFail } = require('openzeppelin-test-helpers');
 const utils          = require('./utils.js');
@@ -25,7 +25,7 @@ contract('WalletOwnable', async (accounts) => {
 	 ***************************************************************************/
 	before("configure", async () => {
 		console.log("# web3 version:", web3.version);
-		Target = await TargetContract.deployed();
+		target = await Target.deployed();
 	});
 
 	it ("Create proxy", async () => {
@@ -72,14 +72,14 @@ contract('WalletOwnable', async (accounts) => {
 
 		txMined = await Ident.execute(
 			0,
-			Target.address,
+			target.address,
 			0,
-			utils.prepareData(TargetContract, "call", [ randomdata ]),
+			utils.prepareData(Target, "call", [ randomdata ]),
 			{ from: user1 }
 		);
 
-		assert.equal(await Target.lastSender(), Ident.address);
-		assert.equal(await Target.lastData(),   randomdata);
+		assert.equal(await target.lastSender(), Ident.address);
+		assert.equal(await target.lastData(),   randomdata);
 	});
 
 	it("Unauthorized execute", async () => {

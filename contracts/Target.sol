@@ -1,6 +1,6 @@
 pragma solidity ^0.5.0;
 
-contract TargetContract
+contract Target
 {
 	address public lastSender;
 	bytes32 public lastData;

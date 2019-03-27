@@ -1,7 +1,6 @@
-const Proxy             = artifacts.require("Proxy");
+const Proxy          = artifacts.require("Proxy");
 const WalletOwnable  = artifacts.require("WalletOwnable");
 const WalletMultisig = artifacts.require("WalletMultisig");
-const TargetContract           = artifacts.require("TargetContract");
 
 const { shouldFail } = require('openzeppelin-test-helpers');
 const utils          = require('./utils.js');
@@ -26,7 +25,6 @@ contract('upgrade', async (accounts) => {
 	 ***************************************************************************/
 	before("configure", async () => {
 		console.log("# web3 version:", web3.version);
-		Target = await TargetContract.deployed();
 	});
 
 	it ("Create proxy", async () => {

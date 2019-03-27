@@ -1,6 +1,6 @@
 const Proxy          = artifacts.require("Proxy");
 const WalletMultisig = artifacts.require("WalletMultisig");
-const TargetContract = artifacts.require("TargetContract");
+const Target         = artifacts.require("Target");
 
 const { shouldFail } = require('openzeppelin-test-helpers');
 const utils          = require('./utils.js');
@@ -25,7 +25,7 @@ contract('WalletMultisig', async (accounts) => {
 	 ***************************************************************************/
 	before("configure", async () => {
 		console.log("# web3 version:", web3.version);
-		Target = await TargetContract.deployed();
+		target = await Target.deployed();
 	});
 
 	it ("Create proxy", async () => {
@@ -85,17 +85,17 @@ contract('WalletMultisig', async (accounts) => {
 			ident,
 			{
 				type:  0,
-				to:    Target.address,
+				to:    target.address,
 				value: 0,
-				data:  utils.prepareData(TargetContract, "call", [ randomdata ]),
+				data:  utils.prepareData(Target, "call", [ randomdata ]),
 				// nonce: 2
 			},
 			user1,
 			relayer
 		);
 
-		assert.equal(await Target.lastSender(), ident.address);
-		assert.equal(await Target.lastData(),   randomdata);
+		assert.equal(await target.lastSender(), ident.address);
+		assert.equal(await target.lastData(),   randomdata);
 	});
 
 	it("Unauthorized execute", async () => {
@@ -107,7 +107,7 @@ contract('WalletMultisig', async (accounts) => {
 				type:  0,
 				to:    user2,
 				value: 0,
-				data:  utils.prepareData(TargetContract, "call", [ randomdata ]),
+				data:  utils.prepareData(Target, "call", [ randomdata ]),
 				// nonce: 3
 			},
 			user2,

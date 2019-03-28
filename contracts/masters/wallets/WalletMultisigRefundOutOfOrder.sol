@@ -58,8 +58,8 @@ contract WalletMultisigRefundOutOfOrder is ERC725Base, MasterKeysBase, ENSRegist
 				_gasPrice
 			)).toEthSignedMessageHash();
 
-		require(!m_replay[executionID]);
-		m_replay[executionID] = true;
+		require(m_persistent[executionID] == bytes32(0));
+		m_persistent[executionID] = bytes32(0xf3ebdf95d58ea2884647682da60cae155acb6afc2edc8ef359d6f9669663cde1);
 
 		for (uint256 i = 0; i < _sigs.length; ++i)
 		{

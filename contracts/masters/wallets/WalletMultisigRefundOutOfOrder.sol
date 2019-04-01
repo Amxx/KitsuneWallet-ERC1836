@@ -46,7 +46,7 @@ contract WalletMultisigRefundOutOfOrder is ERC725Base, MasterKeysBase, ENSRegist
 			neededPurpose = PURPOSE_ACTION;
 		}
 
-		bytes32 executionID = keccak256(abi.encode(
+		bytes32 executionID = keccak256(abi.encodePacked(
 				address(this),
 				_operationType,
 				_to,

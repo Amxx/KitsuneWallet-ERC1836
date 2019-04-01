@@ -44,7 +44,7 @@ contract WalletMultisigRefund is ERC725Base, MasterKeysBase, ENSRegistered
 			neededPurpose = PURPOSE_ACTION;
 		}
 
-		bytes32 executionID = keccak256(abi.encode(
+		bytes32 executionID = keccak256(abi.encodePacked(
 				address(this),
 				_operationType,
 				_to,

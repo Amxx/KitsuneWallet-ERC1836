@@ -1,7 +1,7 @@
 {
 	"scripts": {
 		"build": "waffle",
-		"test": "waffle && mocha",
+		"test": "waffle && mocha \"test/**/*.{js,ts}\"",
 		"clean": "rm -rf node_modules build"
 	},
 	"dependencies": {

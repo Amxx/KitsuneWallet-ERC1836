@@ -18,7 +18,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 
 	mapping(bytes32 => bytes32) internal m_keyPurposes;
 	bytes32[]                   internal m_activeKeys;
-	uint256                     internal m_managementKeyCount;
+	uint256                     public m_managementKeyCount;
 	uint256                     internal m_managementThreshold;
 	uint256                     internal m_actionThreshold;
 
@@ -40,10 +40,6 @@ contract MasterKeysBase is MasterBase, IERC1271
 		for (uint256 i = 0; i < _keys.length; ++i)
 		{
 			_setKey(_keys[i], _purposes[i]);
-			if (PURPOSE_MANAGEMENT & ~_purposes[i] == bytes32(0))
-			{
-				++m_managementKeyCount;
-			}
 		}
 		require(m_managementKeyCount >= _managementThreshold, "not-enough-management-keys");
 		m_managementThreshold = _managementThreshold;
@@ -87,6 +83,12 @@ contract MasterKeysBase is MasterBase, IERC1271
 		return m_keyPurposes[_key];
 	}
 
+	function getActiveKeys()
+	public view returns (bytes32[] memory)
+	{
+		return m_activeKeys;
+	}
+
 	function keyHasPurpose(bytes32 _key, bytes32 _purpose)
 	public view returns (bool)
 	{
@@ -102,17 +104,21 @@ contract MasterKeysBase is MasterBase, IERC1271
 	function _setKey(bytes32 _key, bytes32 _purpose)
 	internal
 	{
+		// Update management key count
 		if (PURPOSE_MANAGEMENT & ~m_keyPurposes[_key] == bytes32(0) && PURPOSE_MANAGEMENT &  _purpose == bytes32(0)) { --m_managementKeyCount; }
 		if (PURPOSE_MANAGEMENT &  m_keyPurposes[_key] == bytes32(0) && PURPOSE_MANAGEMENT & ~_purpose == bytes32(0)) { ++m_managementKeyCount; }
 		require(m_managementKeyCount >= m_managementThreshold, "cannot-remove-critical-management-key");
 
+		// Update list of active keys (add)
 		if (m_keyPurposes[_key] == bytes32(0))
 		{
 			m_activeKeys.push(_key);
 		}
 
+		// Set key purpose
 		m_keyPurposes[_key] = _purpose;
 
+		// Update list of active keys (rem)
 		if (m_keyPurposes[_key] == bytes32(0))
 		{
 			for (uint256 i = 0; i < m_activeKeys.length; ++i)

@@ -497,14 +497,152 @@ describe('WalletMultisig', () => {
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(2);
 			});
 		});
-		// describe('Change execution threshold', async () => {
-		// 	it('valid', async () => {});
-		// 	it('invalid', async () => {});
-		// });
-		// describe('Execute with multiple signatures', async () => {
-		// 	it('valid', async () => {});
-		// 	it('invalid', async () => {});
-		// });
+		describe('Change execution threshold', async () => {
+			it('valid', async () => {
+				expect(await proxyAsWallet.getActionThreshold()).to.eq(1);
+
+				await sendMetaTx(
+					proxyAsWallet,
+					[
+						0,                                                                // type
+						proxyAsWallet.address,                                            // to
+						0,                                                                // value
+						proxyAsWallet.interface.functions.setActionThreshold.encode([2]), // data
+						1,                                                                // nonce
+					],
+					[ user1 ],
+					relayer,
+					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				);
+
+				expect(await proxyAsWallet.getActionThreshold()).to.eq(2);
+			});
+
+			it('invalid', async () => {
+				expect(await proxyAsWallet.getActionThreshold()).to.eq(1);
+
+				expect(sendMetaTx(
+					proxyAsWallet,
+					[
+						0,                                                                // type
+						proxyAsWallet.address,                                            // to
+						0,                                                                // value
+						proxyAsWallet.interface.functions.setActionThreshold.encode([0]), // data
+						1,                                                                // nonce
+					],
+					[ user1 ],
+					relayer,
+					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				)).to.be.revertedWith('threshold-too-low');
+
+				expect(await proxyAsWallet.getActionThreshold()).to.eq(1);
+			});
+		});
+
+		describe('Execute with multiple signatures', async () => {
+			it('valid', async () => {
+				await sendMetaTx(
+					proxyAsWallet,
+					[
+						0,                                                // type
+						proxyAsWallet.address,                            // to
+						0,                                                // value
+						proxyAsWallet.interface.functions.setKey.encode([
+							ethers.utils.keccak256(user2.address),
+							'0x0000000000000000000000000000000000000000000000000000000000000006'
+						]),                                               // data
+						1,                                                // nonce
+					],
+					[ user1 ],
+					relayer,
+					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				);
+				await sendMetaTx(
+					proxyAsWallet,
+					[
+						0,                                                                // type
+						proxyAsWallet.address,                                            // to
+						0,                                                                // value
+						proxyAsWallet.interface.functions.setActionThreshold.encode([2]), // data
+						2,                                                                // nonce
+					],
+					[ user1 ],
+					relayer,
+					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				);
+				await sendMetaTx(
+					proxyAsWallet,
+					[
+						0,    // type
+						dest, // to
+						0,  // value
+						[],   // data
+						3,    // nonce
+					],
+					[ user1, user2 ],
+					relayer,
+					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				);
+			});
+
+			it('invalid - unauthorized signer', async () => {
+				await sendMetaTx(
+					proxyAsWallet,
+					[
+						0,                                                                // type
+						proxyAsWallet.address,                                            // to
+						0,                                                                // value
+						proxyAsWallet.interface.functions.setActionThreshold.encode([2]), // data
+						1,                                                                // nonce
+					],
+					[ user1 ],
+					relayer,
+					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				);
+				expect(sendMetaTx(
+					proxyAsWallet,
+					[
+						0,    // type
+						dest, // to
+						0,  // value
+						[],   // data
+						2,    // nonce
+					],
+					[ user1, user2 ],
+					relayer,
+					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				)).to.be.revertedWith('invalid-signature');
+			});
+
+			it('invalid - multiple signer', async () => {
+				await sendMetaTx(
+					proxyAsWallet,
+					[
+						0,                                                                // type
+						proxyAsWallet.address,                                            // to
+						0,                                                                // value
+						proxyAsWallet.interface.functions.setActionThreshold.encode([2]), // data
+						1,                                                                // nonce
+					],
+					[ user1 ],
+					relayer,
+					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				);
+				expect(sendMetaTx(
+					proxyAsWallet,
+					[
+						0,    // type
+						dest, // to
+						0,  // value
+						[],   // data
+						2,    // nonce
+					],
+					[ user1, user1 ],
+					relayer,
+					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				)).to.be.revertedWith('duplicated-signature');
+			});
+		});
 
 	});
 

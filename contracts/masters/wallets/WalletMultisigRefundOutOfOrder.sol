@@ -58,12 +58,16 @@ contract WalletMultisigRefundOutOfOrder is ERC725Base, MasterKeysBase, ENSRegist
 				_gasPrice
 			)).toEthSignedMessageHash();
 
-		require(m_persistent[executionID] == bytes32(0));
-		m_persistent[executionID] = bytes32(0xf3ebdf95d58ea2884647682da60cae155acb6afc2edc8ef359d6f9669663cde1);
+		require(m_persistent[executionID] == bytes32(0), 'transaction-replay');
+		m_persistent[executionID] = bytes32(0xa50daf8ffad995556f094fb7bb26ec5c7aadc7f574c741d0237ea13300bc1dd7);
 
 		for (uint256 i = 0; i < _sigs.length; ++i)
 		{
-			require(keyHasPurpose(addrToKey(executionID.recover(_sigs[i])), neededPurpose), "invalid-signature");
+			bytes32 key  = addrToKey(executionID.recover(_sigs[i]));
+			bytes32 auth = keccak256(abi.encode(executionID, key));
+			require(m_persistent[auth] == bytes32(0), 'duplicated-signature');
+			m_persistent[auth] = bytes32(0xa50daf8ffad995556f094fb7bb26ec5c7aadc7f574c741d0237ea13300bc1dd7); // keccak256("ERC1836_EXECUTION_REPLAY")
+			require(keyHasPurpose(key, neededPurpose), "invalid-signature");
 		}
 
 		this.execute(_operationType, _to, _value, _data);

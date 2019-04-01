@@ -10,7 +10,7 @@ contract Core is Store
 	event MasterChange(address indexed previousMaster, address indexed newMaster);
 
 	// Constants
-	bytes32 constant MASTER_ID = bytes32(0x26b8c8548d7daec1fffc293834f2cee70c6b9ca8d5c456721fc1fdf9b10dd909);
+	bytes32 constant MASTER_ID = bytes32(0x1618fcec65bce0693e931d337fc12424ee920bf56c4a74bc8ddb1361328af236); // keccak256("ERC1836_MASTER_ID")
 
 	// Modifiers
 	modifier protected()

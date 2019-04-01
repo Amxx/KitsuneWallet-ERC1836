@@ -148,13 +148,15 @@ contract MasterKeysBase is MasterBase, IERC1271
 	function setManagementThreshold(uint256 _managementThreshold)
 	external protected
 	{
-		require(m_managementKeyCount >= _managementThreshold, "threshold-to-high");
+		require(0 != _managementThreshold, "threshold-too-low");
+		require(m_managementKeyCount >= _managementThreshold, "threshold-too-high");
 		m_managementThreshold = _managementThreshold;
 	}
 
 	function setActionThreshold(uint256 _actionThreshold)
 	external protected
 	{
+		require(0 != _actionThreshold, "threshold-too-low");
 		m_actionThreshold = _actionThreshold;
 	}
 

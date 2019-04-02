@@ -33,7 +33,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 		bytes32[] calldata _purposes,
 		uint256            _managementThreshold,
 		uint256            _actionThreshold)
-	external initialization
+	external onlyInitializing
 	{
 		require(_keys.length == _purposes.length, "key-and-purpose-array-must-have-same-size");
 		m_managementKeyCount = 0;

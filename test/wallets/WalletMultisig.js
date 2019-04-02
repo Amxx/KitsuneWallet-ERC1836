@@ -41,7 +41,7 @@ describe('WalletMultisig', () => {
 		await wallet.sendTransaction({to: proxyAsWallet.address, value: 1000});
 	});
 
-	it ('Verify proxy initialization', async () => {
+	it('Verify proxy initialization', async () => {
 		expect(await proxyAsWallet.owner()).to.eq(proxyAsWallet.address);
 		expect(await proxyAsWallet.master()).to.eq(walletContract.address);
 		expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
@@ -50,7 +50,7 @@ describe('WalletMultisig', () => {
 
 	describe('Execute', async () => {
 
-		it ('authorized - pay with proxy', async () => {
+		it('authorized - pay with proxy', async () => {
 			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(1000);
 			expect(await provider.getBalance(dest                 )).to.eq(   0);
 
@@ -72,7 +72,7 @@ describe('WalletMultisig', () => {
 			expect(await provider.getBalance(dest                 )).to.eq(500);
 		});
 
-		it ('authorized - call with proxy', async () => {
+		it('authorized - call with proxy', async () => {
 			randomdata = ethers.utils.hexlify(ethers.utils.randomBytes(32));
 
 			const transaction = await sendMetaTx(
@@ -646,53 +646,77 @@ describe('WalletMultisig', () => {
 
 	});
 
+	describe('UpdateMaster', async () => {
 
+		it('authorized', async () => {
+			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+			expect(await proxyAsWallet.nonce()).to.be.eq(0);
 
+			await sendMetaTx(
+				proxyAsWallet,
+				[
+					0,
+					proxyAsWallet.address,
+					0,
+					proxyAsWallet.interface.functions.updateMaster.encode([
+						walletContract.address,
+						walletContract.interface.functions.initialize.encode([
+							[ ethers.utils.keccak256(user2.address) ],
+							[ "0x0000000000000000000000000000000000000000000000000000000000000007" ],
+							1,
+							1,
+						]),
+						true,
+					]),
+					1,
+				],
+				[ user1 ],
+				relayer,
+				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+			);
 
+			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxyAsWallet.nonce()).to.be.eq(1);
+		});
 
+		it('protected', async () => {
+			expect(proxyAsWallet.connect(user2).execute(
+				0,
+				proxyAsWallet.address,
+				0,
+				proxyAsWallet.interface.functions.updateMaster.encode([
+					walletContract.address,
+					walletContract.interface.functions.initialize.encode([
+						[ ethers.utils.keccak256(user2.address) ],
+						[ "0x000000000000000000000000000000000000000000000000000000000000000f" ],
+						1,
+						1,
+					]),
+					true,
+				]),
+				{ gasLimit: 800000 }
+			)).to.be.revertedWith('access-forbidden');
+		});
+	});
 
-	// describe('UpdateMaster', async () => {
-	//
-	// 	it('authorized', async () => {
-	// 		const transaction = await proxyAsWallet.connect(user1).execute(
-	// 			0,
-	// 			proxyAsWallet.address,
-	// 			0,
-	// 			proxyAsWallet.interface.functions.updateMaster.encode([
-	// 				walletContract.address,
-	// 				walletContract.interface.functions.initialize.encode([ user2.address ]),
-	// 				true,
-	// 			]),
-	// 			{ gasLimit: 800000 }
-	// 		)
-	// 		const {gasUsed} = await provider.getTransactionReceipt(transaction.hash);
-	//
-	// 		expect(await proxyAsWallet.owner()).to.eq(user2.address);
-	// 	});
-	//
-	// 	it ('protected', async () => {
-	// 		expect(proxyAsWallet.connect(user2).execute(
-	// 			0,
-	// 			proxyAsWallet.address,
-	// 			0,
-	// 			proxyAsWallet.interface.functions.updateMaster.encode([
-	// 				walletContract.address,
-	// 				walletContract.interface.functions.initialize.encode([ user2.address ]),
-	// 				true,
-	// 			]),
-	// 			{ gasLimit: 800000 }
-	// 		)).to.be.revertedWith('access-forbidden');
-	// 	});
-	//
-	// });
-	//
-	// describe('Initialize', async () => {
-	//
-	// 	it ('reintrance protection', async () => {
-	// 		expect(proxyAsWallet.connect(user1).initialize(user2.address)).to.be.revertedWith('already-initialized');
-	// 	});
-	//
-	// });
+	describe('Initialize', async () => {
+
+		it('reintrance protection', async () => {
+			expect(proxyAsWallet.connect(user1).initialize(
+				[
+					ethers.utils.keccak256(user1.address),
+				],
+				[
+					'0x0000000000000000000000000000000000000000000000000000000000000007',
+				],
+				1,
+				1,
+			)).to.be.revertedWith('already-initialized');
+		});
+
+	});
 
 
 

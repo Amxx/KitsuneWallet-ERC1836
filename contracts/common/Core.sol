@@ -19,11 +19,11 @@ contract Core is Store
 		_;
 	}
 
-	modifier initialization()
+	modifier onlyInitializing()
 	{
 		require(!m_initialized, "already-initialized");
-		m_initialized = true;
 		_;
+		m_initialized = true;
 	}
 
 	// Internal functions

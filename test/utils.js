@@ -41,7 +41,7 @@ const HASHING_METATX = {
 				tx[6],                  // gasPrice
 		]);
 	},
-	'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])': function (proxyAddress, tx)
+	'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])': function (proxyAddress, tx)
 	{
 		return utils.solidityKeccak256([
 				'address',

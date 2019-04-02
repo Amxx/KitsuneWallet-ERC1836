@@ -4,7 +4,7 @@ const {createMockProvider, deployContract, getWallets, solidity} = require('ethe
 const {sendMetaTx} = require('../utils.js')
 
 const Proxy  = require('../../build/Proxy');
-const Wallet = require('../../build/WalletMultisig');
+const Wallet = require('../../build/WalletMultisigRefund');
 const Target = require('../../build/Target');
 
 const {expect} = chai;
@@ -57,15 +57,17 @@ describe('Wallet', () => {
 			const transaction = await sendMetaTx(
 				proxyAsWallet,
 				[
-					0,    // type
-					dest, // to
-					500,  // value
-					[],   // data
-					1,    // nonce
+					0,                                            // type
+					dest,                                         // to
+					500,                                          // value
+					[],                                           // data
+					1,                                            // nonce
+					"0x0000000000000000000000000000000000000000", // gasTokenAddress
+					0,                                            // gasTokenPrice
 				],
 				[ user1 ],
 				relayer,
-				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 			);
 
 			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(500);
@@ -83,10 +85,12 @@ describe('Wallet', () => {
 					0,                                                              // value
 					targetContract.interface.functions.call.encode([ randomdata ]), // data
 					1,                                                              // nonce
+					"0x0000000000000000000000000000000000000000",                   // gasTokenAddress
+					0,                                                              // gasTokenPrice
 				],
 				[ user1 ],
 				relayer,
-				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 			);
 
 			expect(await targetContract.lastSender()).to.eq(proxyAsWallet.address);
@@ -153,10 +157,12 @@ describe('Wallet', () => {
 						'0x0000000000000000000000000000000000000000000000000000000000000004'
 					]),                                               // data
 					1,                                                // nonce
+					"0x0000000000000000000000000000000000000000",     // gasTokenAddress
+					0,                                                // gasTokenPrice
 				],
 				[ user1 ],
 				relayer,
-				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 			);
 
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
@@ -182,10 +188,12 @@ describe('Wallet', () => {
 						'0x000000000000000000000000000000000000000000000000000000000000000f',
 					]),                                               // data
 					1,                                                // nonce
+					"0x0000000000000000000000000000000000000000",     // gasTokenAddress
+					0,                                                // gasTokenPrice
 				],
 				[ user1 ],
 				relayer,
-				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 			);
 
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x000000000000000000000000000000000000000000000000000000000000000f');
@@ -211,10 +219,12 @@ describe('Wallet', () => {
 						'0x0000000000000000000000000000000000000000000000000000000000000006',
 					]),                                               // data
 					1,                                                // nonce
+					"0x0000000000000000000000000000000000000000",     // gasTokenAddress
+					0,                                                // gasTokenPrice
 				],
 				[ user1 ],
 				relayer,
-				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 			)).to.be.revertedWith('cannot-remove-critical-management-key');
 
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
@@ -241,10 +251,12 @@ describe('Wallet', () => {
 						'0x0000000000000000000000000000000000000000000000000000000000000007',
 					]),                                               // data
 					1,                                                // nonce
+					"0x0000000000000000000000000000000000000000",     // gasTokenAddress
+					0,                                                // gasTokenPrice
 				],
 				[ user1 ],
 				relayer,
-				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 			);
 
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
@@ -263,10 +275,12 @@ describe('Wallet', () => {
 						'0x0000000000000000000000000000000000000000000000000000000000000000',
 					]),                                               // data
 					2,                                                // nonce
+					"0x0000000000000000000000000000000000000000",     // gasTokenAddress
+					0,                                                // gasTokenPrice
 				],
 				[ user1 ],
 				relayer,
-				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 			);
 
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
@@ -285,15 +299,17 @@ describe('Wallet', () => {
 				const transaction = await sendMetaTx(
 					proxyAsWallet,
 					[
-						0,    // type
-						dest, // to
-						0,  // value
-						[],   // data
-						1,    // nonce
+						0,                                            // type
+						dest,                                         // to
+						0,                                            // value
+						[],                                           // data
+						1,                                            // nonce
+						"0x0000000000000000000000000000000000000000", // gasTokenAddress
+						0,                                            // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				);
 
 				expect(await proxyAsWallet.nonce()).to.be.eq(1);
@@ -305,15 +321,17 @@ describe('Wallet', () => {
 				expect(sendMetaTx(
 					proxyAsWallet,
 					[
-						0,    // type
-						dest, // to
-						500,  // value
-						[],   // data
-						42,    // nonce
+						0,                                            // type
+						dest,                                         // to
+						500,                                          // value
+						[],                                           // data
+						42,                                           // nonce
+						"0x0000000000000000000000000000000000000000", // gasTokenAddress
+						0,                                            // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				)).to.be.revertedWith('invalid-nonce');
 
 				expect(await proxyAsWallet.nonce()).to.be.eq(0);
@@ -335,10 +353,12 @@ describe('Wallet', () => {
 							'0x0000000000000000000000000000000000000000000000000000000000000001',
 						]),                                               // data
 						1,                                                // nonce
+						"0x0000000000000000000000000000000000000000",     // gasTokenAddress
+						0,                                                // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				);
 				await sendMetaTx(
 					proxyAsWallet,
@@ -348,10 +368,12 @@ describe('Wallet', () => {
 						0,                                                                    // value
 						proxyAsWallet.interface.functions.setManagementThreshold.encode([2]), // data
 						2,                                                                    // nonce
+						"0x0000000000000000000000000000000000000000",                         // gasTokenAddress
+						0,                                                                    // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				);
 
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(2);
@@ -368,10 +390,12 @@ describe('Wallet', () => {
 						0,                                                                    // value
 						proxyAsWallet.interface.functions.setManagementThreshold.encode([0]), // data
 						1,                                                                    // nonce
+						"0x0000000000000000000000000000000000000000",                         // gasTokenAddress
+						0,                                                                    // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				)).to.be.revertedWith('threshold-too-low');
 
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
@@ -388,10 +412,12 @@ describe('Wallet', () => {
 						0,                                                                    // value
 						proxyAsWallet.interface.functions.setManagementThreshold.encode([2]), // data
 						1,                                                                    // nonce
+						"0x0000000000000000000000000000000000000000",                         // gasTokenAddress
+						0,                                                                    // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				)).to.be.revertedWith('threshold-too-high');
 
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
@@ -413,10 +439,12 @@ describe('Wallet', () => {
 							'0x0000000000000000000000000000000000000000000000000000000000000001',
 						]),                                               // data
 						1,                                                // nonce
+						"0x0000000000000000000000000000000000000000",     // gasTokenAddress
+						0,                                                // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				);
 				await sendMetaTx(
 					proxyAsWallet,
@@ -426,10 +454,12 @@ describe('Wallet', () => {
 						0,                                                                    // value
 						proxyAsWallet.interface.functions.setManagementThreshold.encode([2]), // data
 						2,                                                                    // nonce
+						"0x0000000000000000000000000000000000000000",                         // gasTokenAddress
+						0,                                                                    // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				);
 				await sendMetaTx(
 					proxyAsWallet,
@@ -439,10 +469,12 @@ describe('Wallet', () => {
 						0,                                                                    // value
 						proxyAsWallet.interface.functions.setManagementThreshold.encode([1]), // data
 						3,                                                                    // nonce
+						"0x0000000000000000000000000000000000000000",                         // gasTokenAddress
+						0,                                                                    // gasTokenPrice
 					],
 					[ user1, user2 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				);
 
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
@@ -462,10 +494,12 @@ describe('Wallet', () => {
 							'0x0000000000000000000000000000000000000000000000000000000000000001',
 						]),                                               // data
 						1,                                                // nonce
+						"0x0000000000000000000000000000000000000000",     // gasTokenAddress
+						0,                                                // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				);
 				await sendMetaTx(
 					proxyAsWallet,
@@ -475,10 +509,12 @@ describe('Wallet', () => {
 						0,                                                                    // value
 						proxyAsWallet.interface.functions.setManagementThreshold.encode([2]), // data
 						2,                                                                    // nonce
+						"0x0000000000000000000000000000000000000000",                         // gasTokenAddress
+						0,                                                                    // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				);
 				expect(sendMetaTx(
 					proxyAsWallet,
@@ -488,10 +524,12 @@ describe('Wallet', () => {
 						0,                                                                    // value
 						proxyAsWallet.interface.functions.setManagementThreshold.encode([1]), // data
 						3,                                                                    // nonce
+						"0x0000000000000000000000000000000000000000",                         // gasTokenAddress
+						0,                                                                    // gasTokenPrice
 					],
 					[ user2 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				)).to.be.revertedWith('missing-signers');
 
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(2);
@@ -509,10 +547,12 @@ describe('Wallet', () => {
 						0,                                                                // value
 						proxyAsWallet.interface.functions.setActionThreshold.encode([2]), // data
 						1,                                                                // nonce
+						"0x0000000000000000000000000000000000000000",                     // gasTokenAddress
+						0,                                                                // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				);
 
 				expect(await proxyAsWallet.getActionThreshold()).to.eq(2);
@@ -529,10 +569,12 @@ describe('Wallet', () => {
 						0,                                                                // value
 						proxyAsWallet.interface.functions.setActionThreshold.encode([0]), // data
 						1,                                                                // nonce
+						"0x0000000000000000000000000000000000000000",                     // gasTokenAddress
+						0,                                                                // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				)).to.be.revertedWith('threshold-too-low');
 
 				expect(await proxyAsWallet.getActionThreshold()).to.eq(1);
@@ -552,10 +594,12 @@ describe('Wallet', () => {
 							'0x0000000000000000000000000000000000000000000000000000000000000006'
 						]),                                               // data
 						1,                                                // nonce
+						"0x0000000000000000000000000000000000000000",     // gasTokenAddress
+						0,                                                // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				);
 				await sendMetaTx(
 					proxyAsWallet,
@@ -565,23 +609,27 @@ describe('Wallet', () => {
 						0,                                                                // value
 						proxyAsWallet.interface.functions.setActionThreshold.encode([2]), // data
 						2,                                                                // nonce
+						"0x0000000000000000000000000000000000000000",                     // gasTokenAddress
+						0,                                                                // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				);
 				await sendMetaTx(
 					proxyAsWallet,
 					[
-						0,    // type
-						dest, // to
-						0,  // value
-						[],   // data
-						3,    // nonce
+						0,                                            // type
+						dest,                                         // to
+						0,                                            // value
+						[],                                           // data
+						3,                                            // nonce
+						"0x0000000000000000000000000000000000000000", // gasTokenAddress
+						0,                                            // gasTokenPrice
 					],
 					[ user1, user2 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				);
 			});
 
@@ -594,23 +642,27 @@ describe('Wallet', () => {
 						0,                                                                // value
 						proxyAsWallet.interface.functions.setActionThreshold.encode([2]), // data
 						1,                                                                // nonce
+						"0x0000000000000000000000000000000000000000",                     // gasTokenAddress
+						0,                                                                // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				);
 				expect(sendMetaTx(
 					proxyAsWallet,
 					[
-						0,    // type
-						dest, // to
-						0,  // value
-						[],   // data
-						2,    // nonce
+						0,                                            // type
+						dest,                                         // to
+						0,                                            // value
+						[],                                           // data
+						2,                                            // nonce
+						"0x0000000000000000000000000000000000000000", // gasTokenAddress
+						0,                                            // gasTokenPrice
 					],
 					[ user1, user2 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				)).to.be.revertedWith('invalid-signature');
 			});
 
@@ -623,23 +675,27 @@ describe('Wallet', () => {
 						0,                                                                // value
 						proxyAsWallet.interface.functions.setActionThreshold.encode([2]), // data
 						1,                                                                // nonce
+						"0x0000000000000000000000000000000000000000",                     // gasTokenAddress
+						0,                                                                // gasTokenPrice
 					],
 					[ user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				);
 				expect(sendMetaTx(
 					proxyAsWallet,
 					[
-						0,    // type
-						dest, // to
-						0,  // value
-						[],   // data
-						2,    // nonce
+						0,                                            // type
+						dest,                                         // to
+						0,                                            // value
+						[],                                           // data
+						2,                                            // nonce
+						"0x0000000000000000000000000000000000000000", // gasTokenAddress
+						0,                                            // gasTokenPrice
 					],
 					[ user1, user1 ],
 					relayer,
-					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+					'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 				)).to.be.revertedWith('duplicated-signature');
 			});
 		});
@@ -670,10 +726,12 @@ describe('Wallet', () => {
 						true,
 					]),
 					1,
+					"0x0000000000000000000000000000000000000000",
+					0,
 				],
 				[ user1 ],
 				relayer,
-				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])'
 			);
 
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');

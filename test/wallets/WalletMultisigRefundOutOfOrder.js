@@ -655,6 +655,22 @@ describe('Wallet', () => {
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])'
 				);
+				await sendMetaTx(
+					proxyAsWallet,
+					[
+						0,                                            // type
+						dest,                                         // to
+						0,                                            // value
+						[],                                           // data
+						4,                                            // nonce
+						ethers.utils.randomBytes(32),                 // salt
+						"0x0000000000000000000000000000000000000000", // gasTokenAddress
+						0,                                            // gasTokenPrice
+					],
+					[ user2, user1 ],
+					relayer,
+					'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])'
+				);
 			});
 
 			it('invalid - unauthorized signer', async () => {
@@ -724,7 +740,7 @@ describe('Wallet', () => {
 					[ user1, user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])'
-				)).to.be.revertedWith('duplicated-signature');
+				)).to.be.revertedWith('invalid-signatures-ordering');
 			});
 		});
 

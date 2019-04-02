@@ -575,11 +575,24 @@ describe('Wallet', () => {
 					[
 						0,    // type
 						dest, // to
-						0,  // value
+						0,    // value
 						[],   // data
 						3,    // nonce
 					],
 					[ user1, user2 ],
+					relayer,
+					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
+				);
+				await sendMetaTx(
+					proxyAsWallet,
+					[
+						0,    // type
+						dest, // to
+						0,    // value
+						[],   // data
+						4,    // nonce
+					],
+					[ user2, user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
 				);
@@ -640,7 +653,7 @@ describe('Wallet', () => {
 					[ user1, user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				)).to.be.revertedWith('duplicated-signature');
+				)).to.be.revertedWith('invalid-signatures-ordering');
 			});
 		});
 

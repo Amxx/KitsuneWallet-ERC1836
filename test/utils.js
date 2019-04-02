@@ -71,7 +71,7 @@ module.exports = {
 	sendMetaTx: async function (proxy, tx, signers, relayer, executeABI)
 	{
 		const txHash = utils.arrayify(HASHING_METATX[executeABI](proxy.address, tx));
-		const signatures = await Promise.all(signers.map(signer => signer.signMessage(txHash)));
+		const signatures = await Promise.all(signers.sort((a,b) => a.address-b.address).map(signer => signer.signMessage(txHash)));
 		return proxy.connect(relayer).functions[executeABI](...tx, signatures, { gasLimit: 1000000 });
 	},
 }

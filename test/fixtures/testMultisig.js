@@ -55,6 +55,44 @@ function testMultisig(provider, executeabi, extra = [])
 
 				expect(await proxyAsWallet.nonce()).to.be.eq(0);
 			});
+
+			it('replay protection', async () => {
+				expect(await proxyAsWallet.nonce()).to.be.eq(0);
+
+				await expect(sendMetaTx(
+					proxyAsWallet,
+					[
+						0,    // type
+						dest, // to
+						0,    // value
+						[],   // data
+						1,    // nonce
+						...extra
+					],
+					[ user1 ],
+					relayer,
+					executeabi
+				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
+
+				expect(await proxyAsWallet.nonce()).to.be.eq(1);
+
+				await expect(sendMetaTx(
+					proxyAsWallet,
+					[
+						0,    // type
+						dest, // to
+						0,    // value
+						[],   // data
+						1,    // nonce
+						...extra
+					],
+					[ user1 ],
+					relayer,
+					executeabi
+				)).to.be.revertedWith('invalid-nonce');
+
+				expect(await proxyAsWallet.nonce()).to.be.eq(1);
+			});
 		});
 
 		describe('Change management threshold', async () => {

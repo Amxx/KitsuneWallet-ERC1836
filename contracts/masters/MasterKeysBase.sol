@@ -16,14 +16,24 @@ contract MasterKeysBase is MasterBase, IERC1271
 
 	mapping(bytes32 => bytes32) internal m_keyPurposes;
 	bytes32[]                   internal m_activeKeys;
-	uint256                     public m_managementKeyCount;
+	uint256                     internal m_managementKeyCount;
 	uint256                     internal m_managementThreshold;
 	uint256                     internal m_actionThreshold;
+
+	event SetKey(bytes32 indexed key, bytes32 indexed previousPurpose, bytes32 indexed newPurpose);
+	event ManagementThresholdChange(uint256 previousThreshold, uint256 newThreshold);
+	event ActionThresholdChange(uint256 previousThreshold, uint256 newThreshold);
 
 	function owner()
 	external view returns(address)
 	{
 		return address(this);
+	}
+
+	function managementKeyCount()
+	external view returns(uint256)
+	{
+		return m_managementKeyCount;
 	}
 
 	function initialize(
@@ -113,6 +123,9 @@ contract MasterKeysBase is MasterBase, IERC1271
 			m_activeKeys.push(_key);
 		}
 
+		// emit event
+		emit SetKey(_key, m_keyPurposes[_key], _purpose);
+
 		// Set key purpose
 		m_keyPurposes[_key] = _purpose;
 
@@ -148,6 +161,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 	{
 		require(0 != _managementThreshold, "threshold-too-low");
 		require(m_managementKeyCount >= _managementThreshold, "threshold-too-high");
+		emit ManagementThresholdChange(m_managementThreshold, _managementThreshold);
 		m_managementThreshold = _managementThreshold;
 	}
 
@@ -155,6 +169,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 	external protected
 	{
 		require(0 != _actionThreshold, "threshold-too-low");
+		emit ActionThresholdChange(m_actionThreshold, _actionThreshold);
 		m_actionThreshold = _actionThreshold;
 	}
 

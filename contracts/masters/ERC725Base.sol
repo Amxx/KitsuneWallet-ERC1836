@@ -34,7 +34,17 @@ contract ERC725Base is IERC725, Core
 			bool success;
 			bytes memory returndata;
 			(success, returndata) = _to.call.value(_value)(_data);
-			require(success, string(returndata));
+			// Don't revert if call reverted, just log the failure
+			// require(success, string(returndata));
+			if (success)
+			{
+				emit CallSuccess(_to);
+			}
+			else
+			{
+				emit CallFailure(_to, returndata);
+				// emit CallFailure(_to, string(returndata));
+			}
 		}
 		else if (_operationType == OPERATION_CREATE)
 		{

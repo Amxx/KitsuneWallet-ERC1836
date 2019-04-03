@@ -18,7 +18,7 @@ describe('WalletOwnable', () => {
 	before(async () => {
 		walletContract = await deployContract(wallet, WalletOwnable, []);
 		targetContract = await deployContract(wallet, Target, []);
-		dest = ethers.utils.hexlify(ethers.utils.randomBytes(20));
+		dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 	});
 
 	beforeEach(async () => {
@@ -42,14 +42,13 @@ describe('WalletOwnable', () => {
 			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(1000);
 			expect(await provider.getBalance(dest                 )).to.eq(   0);
 
-			const transaction = await proxyAsWallet.connect(user1).execute(
+			await expect(proxyAsWallet.connect(user1).execute(
 				0,
 				dest,
 				500,
 				[],
 				{ gasLimit: 80000 }
-			);
-			const {gasUsed} = await provider.getTransactionReceipt(transaction.hash);
+			)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
 
 			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(500);
 			expect(await provider.getBalance(dest                 )).to.eq(500);
@@ -58,14 +57,13 @@ describe('WalletOwnable', () => {
 		it ("authorized - call with proxy", async () => {
 			randomdata = ethers.utils.hexlify(ethers.utils.randomBytes(32));
 
-			const transaction = await proxyAsWallet.connect(user1).execute(
+			await expect(proxyAsWallet.connect(user1).execute(
 				0,
 				targetContract.address,
 				0,
 				targetContract.interface.functions.call.encode([ randomdata ]),
 				{ gasLimit: 80000 }
-			);
-			const {gasUsed} = await provider.getTransactionReceipt(transaction.hash);
+			)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(targetContract.address);
 
 			expect(await targetContract.lastSender()).to.eq(proxyAsWallet.address);
 			expect(await targetContract.lastData()).to.eq(randomdata);
@@ -74,7 +72,7 @@ describe('WalletOwnable', () => {
 		it("protected", async () => {
 			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(1000);
 
-			expect(proxyAsWallet.connect(user2).execute(
+			await expect(proxyAsWallet.connect(user2).execute(
 				0,
 				user2.address,
 				500,
@@ -89,17 +87,16 @@ describe('WalletOwnable', () => {
 	describe('TransferOwnership', async () => {
 
 		it("authorized", async () => {
-			const transaction = await proxyAsWallet.connect(user1).transferOwnership(
+			await expect(proxyAsWallet.connect(user1).transferOwnership(
 				user2.address,
 				{ gasLimit: 80000 }
-			);
-			const {gasUsed} = await provider.getTransactionReceipt(transaction.hash);
+			)).to.emit(proxyAsWallet, 'OwnershipTransferred').withArgs(user1.address, user2.address);
 
 			expect(await proxyAsWallet.owner()).to.eq(user2.address);
 		});
 
 		it("protected", async () => {
-			expect(proxyAsWallet.connect(user2).transferOwnership(
+			await expect(proxyAsWallet.connect(user2).transferOwnership(
 				user2.address,
 				{ gasLimit: 80000 }
 			)).to.be.reverted;
@@ -110,7 +107,7 @@ describe('WalletOwnable', () => {
 	describe('UpdateMaster', async () => {
 
 		it("authorized", async () => {
-			const transaction = await proxyAsWallet.connect(user1).execute(
+			await expect(proxyAsWallet.connect(user1).execute(
 				0,
 				proxyAsWallet.address,
 				0,
@@ -120,14 +117,15 @@ describe('WalletOwnable', () => {
 					true,
 				]),
 				{ gasLimit: 800000 }
-			)
-			const {gasUsed} = await provider.getTransactionReceipt(transaction.hash);
+			)).to
+			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
+			.emit(proxyAsWallet, 'MasterChange').withArgs(walletContract.address, walletContract.address);
 
 			expect(await proxyAsWallet.owner()).to.eq(user2.address);
 		});
 
 		it ("protected", async () => {
-			expect(proxyAsWallet.connect(user2).execute(
+			await expect(proxyAsWallet.connect(user2).execute(
 				0,
 				proxyAsWallet.address,
 				0,
@@ -145,7 +143,7 @@ describe('WalletOwnable', () => {
 	describe('Initialize', async () => {
 
 		it ("reintrance protection", async () => {
-			expect(proxyAsWallet.connect(user1).initialize(user2.address)).to.be.revertedWith('already-initialized');
+			await expect(proxyAsWallet.connect(user1).initialize(user2.address)).to.be.revertedWith('already-initialized');
 		});
 
 	});

@@ -19,7 +19,7 @@ describe('Wallet', () => {
 	before(async () => {
 		walletContract = await deployContract(wallet, Wallet, []);
 		targetContract = await deployContract(wallet, Target, []);
-		dest = ethers.utils.hexlify(ethers.utils.randomBytes(20));
+		dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 	});
 
 	beforeEach(async () => {
@@ -54,7 +54,7 @@ describe('Wallet', () => {
 			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(1000);
 			expect(await provider.getBalance(dest                 )).to.eq(   0);
 
-			const transaction = await sendMetaTx(
+			await expect(sendMetaTx(
 				proxyAsWallet,
 				[
 					0,    // type
@@ -66,7 +66,7 @@ describe('Wallet', () => {
 				[ user1 ],
 				relayer,
 				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-			);
+			)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
 
 			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(500);
 			expect(await provider.getBalance(dest                 )).to.eq(500);
@@ -75,7 +75,7 @@ describe('Wallet', () => {
 		it('authorized - call with proxy', async () => {
 			randomdata = ethers.utils.hexlify(ethers.utils.randomBytes(32));
 
-			const transaction = await sendMetaTx(
+			await expect(sendMetaTx(
 				proxyAsWallet,
 				[
 					0,                                                              // type
@@ -87,7 +87,7 @@ describe('Wallet', () => {
 				[ user1 ],
 				relayer,
 				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-			);
+			)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(targetContract.address);
 
 			expect(await targetContract.lastSender()).to.eq(proxyAsWallet.address);
 			expect(await targetContract.lastData()).to.eq(randomdata);
@@ -96,7 +96,7 @@ describe('Wallet', () => {
 		it('protected', async () => {
 			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(1000);
 
-			expect(proxyAsWallet.connect(user1).execute(
+			await expect(proxyAsWallet.connect(user1).execute(
 				0,
 				user1.address,
 				500,
@@ -140,9 +140,9 @@ describe('Wallet', () => {
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxyAsWallet.getActiveKeys()).to.deep.eq([ethers.utils.keccak256(user1.address)]);
-			expect(await proxyAsWallet.m_managementKeyCount()).to.be.eq(1);
+			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 
-			const transaction = await sendMetaTx(
+			await expect(sendMetaTx(
 				proxyAsWallet,
 				[
 					0,                                                // type
@@ -157,21 +157,23 @@ describe('Wallet', () => {
 				[ user1 ],
 				relayer,
 				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-			);
+			)).to
+			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
+			.emit(proxyAsWallet, 'SetKey').withArgs(ethers.utils.keccak256(user2.address), "0x0000000000000000000000000000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000004");
 
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000004');
 			expect(await proxyAsWallet.getActiveKeys()).to.deep.eq([ethers.utils.keccak256(user1.address),ethers.utils.keccak256(user2.address)]);
-			expect(await proxyAsWallet.m_managementKeyCount()).to.be.eq(1);
+			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 		});
 
 		it('UpdateKey', async () => {
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxyAsWallet.getActiveKeys()).to.deep.eq([ethers.utils.keccak256(user1.address)]);
-			expect(await proxyAsWallet.m_managementKeyCount()).to.be.eq(1);
+			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 
-			const transaction = await sendMetaTx(
+			await expect(sendMetaTx(
 				proxyAsWallet,
 				[
 					0,                                                // type
@@ -186,21 +188,23 @@ describe('Wallet', () => {
 				[ user1 ],
 				relayer,
 				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-			);
+			)).to
+			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
+			.emit(proxyAsWallet, 'SetKey').withArgs(ethers.utils.keccak256(user1.address), "0x0000000000000000000000000000000000000000000000000000000000000007", "0x000000000000000000000000000000000000000000000000000000000000000f");
 
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x000000000000000000000000000000000000000000000000000000000000000f');
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxyAsWallet.getActiveKeys()).to.deep.eq([ethers.utils.keccak256(user1.address)]);
-			expect(await proxyAsWallet.m_managementKeyCount()).to.be.eq(1);
+			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 		});
 
 		it('Cannot remove last management key', async () => {
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxyAsWallet.getActiveKeys()).to.deep.eq([ethers.utils.keccak256(user1.address)]);
-			expect(await proxyAsWallet.m_managementKeyCount()).to.be.eq(1);
+			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 
-			expect(sendMetaTx(
+			await expect(sendMetaTx(
 				proxyAsWallet,
 				[
 					0,                                                // type
@@ -215,12 +219,12 @@ describe('Wallet', () => {
 				[ user1 ],
 				relayer,
 				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-			)).to.be.revertedWith('cannot-remove-critical-management-key');
+			)).to.emit(proxyAsWallet, 'CallFailure'); //.withArgs(proxyAsWallet.address, 'cannot-remove-critical-management-key');
 
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxyAsWallet.getActiveKeys()).to.deep.eq([ethers.utils.keccak256(user1.address)]);
-			expect(await proxyAsWallet.m_managementKeyCount()).to.be.eq(1);
+			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 		});
 
 		it('Add then Remove', async () => {
@@ -228,9 +232,9 @@ describe('Wallet', () => {
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxyAsWallet.getActiveKeys()).to.deep.eq([ethers.utils.keccak256(user1.address)]);
-			expect(await proxyAsWallet.m_managementKeyCount()).to.be.eq(1);
+			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 
-			await sendMetaTx(
+			await expect(sendMetaTx(
 				proxyAsWallet,
 				[
 					0,                                                // type
@@ -245,14 +249,17 @@ describe('Wallet', () => {
 				[ user1 ],
 				relayer,
 				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-			);
+			)).to
+			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
+			.emit(proxyAsWallet, 'SetKey').withArgs(ethers.utils.keccak256(user2.address), "0x0000000000000000000000000000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000007");
+
 
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxyAsWallet.getActiveKeys()).to.deep.eq([ethers.utils.keccak256(user1.address),ethers.utils.keccak256(user2.address)]);
-			expect(await proxyAsWallet.m_managementKeyCount()).to.be.eq(2);
+			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(2);
 
-			await sendMetaTx(
+			await expect(sendMetaTx(
 				proxyAsWallet,
 				[
 					0,                                                // type
@@ -267,12 +274,14 @@ describe('Wallet', () => {
 				[ user1 ],
 				relayer,
 				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-			);
+			)).to
+			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
+			.emit(proxyAsWallet, 'SetKey').withArgs(ethers.utils.keccak256(user1.address), "0x0000000000000000000000000000000000000000000000000000000000000007", "0x0000000000000000000000000000000000000000000000000000000000000000");
 
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxyAsWallet.getActiveKeys()).to.deep.eq([ethers.utils.keccak256(user2.address)]);
-			expect(await proxyAsWallet.m_managementKeyCount()).to.be.eq(1);
+			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 		});
 	});
 
@@ -282,7 +291,7 @@ describe('Wallet', () => {
 			it('valid', async () => {
 				expect(await proxyAsWallet.nonce()).to.be.eq(0);
 
-				const transaction = await sendMetaTx(
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,    // type
@@ -294,7 +303,7 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
+				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
 
 				expect(await proxyAsWallet.nonce()).to.be.eq(1);
 			});
@@ -302,7 +311,7 @@ describe('Wallet', () => {
 			it('invalid', async () => {
 				expect(await proxyAsWallet.nonce()).to.be.eq(0);
 
-				expect(sendMetaTx(
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,    // type
@@ -324,7 +333,7 @@ describe('Wallet', () => {
 			it('valid', async () => {
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
 
-				await sendMetaTx(
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                // type
@@ -339,8 +348,8 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
-				await sendMetaTx(
+				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                                    // type
@@ -352,7 +361,9 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
+				)).to
+				.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
+				.emit(proxyAsWallet, 'ManagementThresholdChange').withArgs(1, 2);
 
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(2);
 			});
@@ -360,7 +371,7 @@ describe('Wallet', () => {
 			it('invalid (too low)', async () => {
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
 
-				expect(sendMetaTx(
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                                    // type
@@ -372,7 +383,7 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				)).to.be.revertedWith('threshold-too-low');
+				)).to.emit(proxyAsWallet, 'CallFailure'); //.withArgs(proxyAsWallet.address, 'threshold-too-low');
 
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
 			});
@@ -380,7 +391,7 @@ describe('Wallet', () => {
 			it('invalid (too high)', async () => {
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
 
-				expect(sendMetaTx(
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                                    // type
@@ -392,7 +403,7 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				)).to.be.revertedWith('threshold-too-high');
+				)).to.emit(proxyAsWallet, 'CallFailure'); //.withArgs(proxyAsWallet.address, 'threshold-too-high');
 
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
 			});
@@ -402,7 +413,7 @@ describe('Wallet', () => {
 			it('valid', async () => {
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
 
-				await sendMetaTx(
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                // type
@@ -417,8 +428,8 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
-				await sendMetaTx(
+				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                                    // type
@@ -430,8 +441,10 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
-				await sendMetaTx(
+				)).to
+				.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
+				.emit(proxyAsWallet, 'ManagementThresholdChange').withArgs(1, 2);
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                                    // type
@@ -443,7 +456,10 @@ describe('Wallet', () => {
 					[ user1, user2 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
+				)).to
+				.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
+				.emit(proxyAsWallet, 'ManagementThresholdChange').withArgs(2, 1);
+
 
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
 			});
@@ -451,7 +467,7 @@ describe('Wallet', () => {
 			it('invalid', async () => {
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
 
-				await sendMetaTx(
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                // type
@@ -466,8 +482,8 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
-				await sendMetaTx(
+				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                                    // type
@@ -479,8 +495,10 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
-				expect(sendMetaTx(
+				)).to
+				.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
+				.emit(proxyAsWallet, 'ManagementThresholdChange').withArgs(1, 2);
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                                    // type
@@ -501,7 +519,7 @@ describe('Wallet', () => {
 			it('valid', async () => {
 				expect(await proxyAsWallet.getActionThreshold()).to.eq(1);
 
-				await sendMetaTx(
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                                // type
@@ -513,7 +531,9 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
+				)).to
+				.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
+				.emit(proxyAsWallet, 'ActionThresholdChange').withArgs(1, 2);
 
 				expect(await proxyAsWallet.getActionThreshold()).to.eq(2);
 			});
@@ -521,7 +541,7 @@ describe('Wallet', () => {
 			it('invalid', async () => {
 				expect(await proxyAsWallet.getActionThreshold()).to.eq(1);
 
-				expect(sendMetaTx(
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                                // type
@@ -533,7 +553,7 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				)).to.be.revertedWith('threshold-too-low');
+				)).to.emit(proxyAsWallet, 'CallFailure'); //.withArgs(proxyAsWallet.address, 'threshold-too-low');
 
 				expect(await proxyAsWallet.getActionThreshold()).to.eq(1);
 			});
@@ -541,7 +561,7 @@ describe('Wallet', () => {
 
 		describe('Execute with multiple signatures', async () => {
 			it('valid', async () => {
-				await sendMetaTx(
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                // type
@@ -556,8 +576,8 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
-				await sendMetaTx(
+				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                                // type
@@ -569,8 +589,8 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
-				await sendMetaTx(
+				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,    // type
@@ -582,8 +602,8 @@ describe('Wallet', () => {
 					[ user1, user2 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
-				await sendMetaTx(
+				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,    // type
@@ -595,11 +615,11 @@ describe('Wallet', () => {
 					[ user2, user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
+				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
 			});
 
 			it('invalid - unauthorized signer', async () => {
-				await sendMetaTx(
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                                // type
@@ -611,8 +631,8 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
-				expect(sendMetaTx(
+				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,    // type
@@ -628,7 +648,7 @@ describe('Wallet', () => {
 			});
 
 			it('invalid - multiple signer', async () => {
-				await sendMetaTx(
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,                                                                // type
@@ -640,8 +660,8 @@ describe('Wallet', () => {
 					[ user1 ],
 					relayer,
 					'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-				);
-				expect(sendMetaTx(
+				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
+				await expect(sendMetaTx(
 					proxyAsWallet,
 					[
 						0,    // type
@@ -666,7 +686,7 @@ describe('Wallet', () => {
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxyAsWallet.nonce()).to.be.eq(0);
 
-			await sendMetaTx(
+			await expect(sendMetaTx(
 				proxyAsWallet,
 				[
 					0,
@@ -687,7 +707,10 @@ describe('Wallet', () => {
 				[ user1 ],
 				relayer,
 				'execute(uint256,address,uint256,bytes,uint256,bytes[])'
-			);
+			)).to
+			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
+			.emit(proxyAsWallet, 'MasterChange').withArgs(walletContract.address, walletContract.address);
+
 
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
@@ -695,7 +718,7 @@ describe('Wallet', () => {
 		});
 
 		it('protected', async () => {
-			expect(proxyAsWallet.connect(user2).execute(
+			await expect(proxyAsWallet.connect(user2).execute(
 				0,
 				proxyAsWallet.address,
 				0,
@@ -717,7 +740,7 @@ describe('Wallet', () => {
 	describe('Initialize', async () => {
 
 		it('reintrance protection', async () => {
-			expect(proxyAsWallet.connect(user1).initialize(
+			await expect(proxyAsWallet.connect(user1).initialize(
 				[
 					ethers.utils.keccak256(user1.address),
 				],
@@ -730,7 +753,6 @@ describe('Wallet', () => {
 		});
 
 	});
-
 
 
 });

@@ -1,7 +1,8 @@
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
-import "../../../node_modules/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 import "../../ENS/ENSRegistered.sol";
 import "../ERC725Base.sol";
@@ -10,6 +11,8 @@ import "../MasterKeysBase.sol";
 
 contract WalletMultisigRefundOutOfOrder is ERC725Base, MasterKeysBase, ENSRegistered
 {
+	using SafeMath for uint256;
+
 	// This is a delegate contract, lock it
 	constructor()
 	public

@@ -1,8 +1,7 @@
 pragma solidity ^0.5.0;
 
-import "../../../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../../../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
-import "../../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 import "../../ENS/ENSRegistered.sol";
 import "../../interfaces/IERC1271.sol";
@@ -12,8 +11,7 @@ import "../MasterBase.sol";
 
 contract WalletOwnable is ERC725Base, MasterBase, ENSRegistered, IERC1271, Ownable
 {
-	using SafeMath for uint256;
-	using ECDSA    for bytes32;
+	using ECDSA for bytes32;
 
 	// This is a Master contract, lock it
 	constructor()

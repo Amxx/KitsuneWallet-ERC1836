@@ -1,7 +1,6 @@
 pragma solidity ^0.5.0;
 
-import "../../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../../node_modules/openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
+import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 
 import "./MasterBase.sol";
 import "../interfaces/IERC1271.sol";
@@ -9,8 +8,7 @@ import "../interfaces/IERC1271.sol";
 
 contract MasterKeysBase is MasterBase, IERC1271
 {
-	using SafeMath for uint256;
-	using ECDSA    for bytes32;
+	using ECDSA for bytes32;
 
 	bytes32 constant PURPOSE_MANAGEMENT = 0x0000000000000000000000000000000000000000000000000000000000000001;
 	bytes32 constant PURPOSE_ACTION     = 0x0000000000000000000000000000000000000000000000000000000000000002;

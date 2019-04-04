@@ -6,7 +6,7 @@ const {sendMetaTx} = require('../utils.js')
 const {expect} = chai;
 chai.use(solidity);
 
-function testUpdateMaster(provider, executeabi, extra = [])
+function testUpdateMaster(provider, executeabi)
 {
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
 	const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
@@ -20,11 +20,9 @@ function testUpdateMaster(provider, executeabi, extra = [])
 
 			await expect(sendMetaTx(
 				proxyAsWallet,
-				[
-					0,
-					proxyAsWallet.address,
-					0,
-					proxyAsWallet.interface.functions.updateMaster.encode([
+				{
+					to: proxyAsWallet.address,
+					data: proxyAsWallet.interface.functions.updateMaster.encode([
 						walletContract.address,
 						walletContract.interface.functions.initialize.encode([
 							[ ethers.utils.keccak256(user2.address) ],
@@ -34,9 +32,8 @@ function testUpdateMaster(provider, executeabi, extra = [])
 						]),
 						true,
 					]),
-					1,
-					...extra
-				],
+					nonce: 1,
+				},
 				[ user1 ],
 				relayer,
 				executeabi

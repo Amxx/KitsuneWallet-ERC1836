@@ -13,9 +13,6 @@ const testKeyManagement = require("../fixtures/testKeyManagement.js");
 const testMultisig      = require("../fixtures/testMultisig.js");
 const testUpdateMaster  = require("../fixtures/testUpdateMaster.js");
 
-const executeabi   = 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])';
-const executeextra = [ "0x0000000000000000000000000000000000000000", 0 ];
-
 ethers.errors.setLogLevel('error');
 
 describe('Wallet', () => {
@@ -47,9 +44,10 @@ describe('Wallet', () => {
 		await wallet.sendTransaction({to: proxyAsWallet.address, value: 1000});
 	});
 
-	testInitialize   (provider, executeabi, executeextra);
-	testExecute      (provider, executeabi, executeextra);
-	testKeyManagement(provider, executeabi, executeextra);
-	testMultisig     (provider, executeabi, executeextra);
+	testInitialize   (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
+	testExecute      (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
+	testKeyManagement(provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
+	testMultisig     (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
+	testUpdateMaster (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
 
 });

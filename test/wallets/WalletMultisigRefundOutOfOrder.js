@@ -11,10 +11,8 @@ const testInitialize    = require("../fixtures/testInitialize.js");
 const testExecute       = require("../fixtures/testExecute.js");
 const testKeyManagement = require("../fixtures/testKeyManagement.js");
 const testMultisig      = require("../fixtures/testMultisig.js");
+const testOutOfOrder    = require("../fixtures/testOutOfOrder.js");
 const testUpdateMaster  = require("../fixtures/testUpdateMaster.js");
-
-const executeabi   = 'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])';
-const executeextra = [ ethers.utils.randomBytes(32), "0x0000000000000000000000000000000000000000", 0 ];
 
 ethers.errors.setLogLevel('error');
 
@@ -47,9 +45,11 @@ describe('Wallet', () => {
 		await wallet.sendTransaction({to: proxyAsWallet.address, value: 1000});
 	});
 
-	testInitialize   (provider, executeabi, executeextra);
-	testExecute      (provider, executeabi, executeextra);
-	testKeyManagement(provider, executeabi, executeextra);
-	testMultisig     (provider, executeabi, executeextra);
+	testInitialize   (provider, 'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])');
+	testExecute      (provider, 'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])');
+	testKeyManagement(provider, 'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])');
+	testOutOfOrder   (provider, 'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])');
+	testMultisig     (provider, 'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])');
+	testUpdateMaster (provider, 'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])');
 
 });

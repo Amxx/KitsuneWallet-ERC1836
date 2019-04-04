@@ -6,7 +6,7 @@ const {sendMetaTx} = require('../utils.js')
 const {expect} = chai;
 chai.use(solidity);
 
-function testMultisig(provider, executeabi, extra = [])
+function testMultisig(provider, executeabi)
 {
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
 	const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
@@ -19,14 +19,7 @@ function testMultisig(provider, executeabi, extra = [])
 
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,    // type
-						dest, // to
-						0,    // value
-						[],   // data
-						1,    // nonce
-						...extra
-					],
+					{ to: dest, nonce: 1 },
 					[ user1 ],
 					relayer,
 					executeabi
@@ -40,14 +33,7 @@ function testMultisig(provider, executeabi, extra = [])
 
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,    // type
-						dest, // to
-						500,  // value
-						[],   // data
-						42,   // nonce
-						...extra
-					],
+					{ to: dest, nonce: 2 },
 					[ user1 ],
 					relayer,
 					executeabi
@@ -61,14 +47,7 @@ function testMultisig(provider, executeabi, extra = [])
 
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,    // type
-						dest, // to
-						0,    // value
-						[],   // data
-						1,    // nonce
-						...extra
-					],
+					{ to: dest, nonce: 1 },
 					[ user1 ],
 					relayer,
 					executeabi
@@ -78,14 +57,7 @@ function testMultisig(provider, executeabi, extra = [])
 
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,    // type
-						dest, // to
-						0,    // value
-						[],   // data
-						1,    // nonce
-						...extra
-					],
+					{ to: dest, nonce: 1 },
 					[ user1 ],
 					relayer,
 					executeabi
@@ -101,31 +73,25 @@ function testMultisig(provider, executeabi, extra = [])
 
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                // type
-						proxyAsWallet.address,                            // to
-						0,                                                // value
-						proxyAsWallet.interface.functions.setKey.encode([
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setKey.encode([
 							ethers.utils.keccak256(user2.address),
 							'0x0000000000000000000000000000000000000000000000000000000000000001',
-						]),                                               // data
-						1,                                                // nonce
-						...extra
-					],
+						]),
+						nonce: 1,
+					},
 					[ user1 ],
 					relayer,
 					executeabi
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                                    // type
-						proxyAsWallet.address,                                                // to
-						0,                                                                    // value
-						proxyAsWallet.interface.functions.setManagementThreshold.encode([2]), // data
-						2,                                                                    // nonce
-						...extra
-					],
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setManagementThreshold.encode([2]),
+						nonce: 2,
+					},
 					[ user1 ],
 					relayer,
 					executeabi
@@ -141,14 +107,11 @@ function testMultisig(provider, executeabi, extra = [])
 
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                                    // type
-						proxyAsWallet.address,                                                // to
-						0,                                                                    // value
-						proxyAsWallet.interface.functions.setManagementThreshold.encode([0]), // data
-						1,                                                                    // nonce
-						...extra
-					],
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setManagementThreshold.encode([0]),
+						nonce: 1,
+					},
 					[ user1 ],
 					relayer,
 					executeabi
@@ -162,14 +125,11 @@ function testMultisig(provider, executeabi, extra = [])
 
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                                    // type
-						proxyAsWallet.address,                                                // to
-						0,                                                                    // value
-						proxyAsWallet.interface.functions.setManagementThreshold.encode([2]), // data
-						1,                                                                    // nonce
-						...extra
-					],
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setManagementThreshold.encode([2]),
+						nonce: 1,
+					},
 					[ user1 ],
 					relayer,
 					executeabi
@@ -185,31 +145,25 @@ function testMultisig(provider, executeabi, extra = [])
 
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                // type
-						proxyAsWallet.address,                            // to
-						0,                                                // value
-						proxyAsWallet.interface.functions.setKey.encode([
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setKey.encode([
 							ethers.utils.keccak256(user2.address),
 							'0x0000000000000000000000000000000000000000000000000000000000000001',
-						]),                                               // data
-						1,                                                // nonce
-						...extra
-					],
+						]),
+						nonce: 1,
+					},
 					[ user1 ],
 					relayer,
 					executeabi
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                                    // type
-						proxyAsWallet.address,                                                // to
-						0,                                                                    // value
-						proxyAsWallet.interface.functions.setManagementThreshold.encode([2]), // data
-						2,                                                                    // nonce
-						...extra
-					],
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setManagementThreshold.encode([2]),
+						nonce: 2,
+					},
 					[ user1 ],
 					relayer,
 					executeabi
@@ -218,14 +172,11 @@ function testMultisig(provider, executeabi, extra = [])
 				.emit(proxyAsWallet, 'ManagementThresholdChange').withArgs(1, 2);
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                                    // type
-						proxyAsWallet.address,                                                // to
-						0,                                                                    // value
-						proxyAsWallet.interface.functions.setManagementThreshold.encode([1]), // data
-						3,                                                                    // nonce
-						...extra
-					],
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setManagementThreshold.encode([1]),
+						nonce: 3,
+					},
 					[ user1, user2 ],
 					relayer,
 					executeabi
@@ -242,31 +193,25 @@ function testMultisig(provider, executeabi, extra = [])
 
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                // type
-						proxyAsWallet.address,                            // to
-						0,                                                // value
-						proxyAsWallet.interface.functions.setKey.encode([
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setKey.encode([
 							ethers.utils.keccak256(user2.address),
 							'0x0000000000000000000000000000000000000000000000000000000000000001',
-						]),                                               // data
-						1,                                                // nonce
-						...extra
-					],
+						]),
+						nonce: 1,
+					},
 					[ user1 ],
 					relayer,
 					executeabi
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                                    // type
-						proxyAsWallet.address,                                                // to
-						0,                                                                    // value
-						proxyAsWallet.interface.functions.setManagementThreshold.encode([2]), // data
-						2,                                                                    // nonce
-						...extra
-					],
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setManagementThreshold.encode([2]),
+						nonce: 2,
+					},
 					[ user1 ],
 					relayer,
 					executeabi
@@ -275,14 +220,11 @@ function testMultisig(provider, executeabi, extra = [])
 				.emit(proxyAsWallet, 'ManagementThresholdChange').withArgs(1, 2);
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                                    // type
-						proxyAsWallet.address,                                                // to
-						0,                                                                    // value
-						proxyAsWallet.interface.functions.setManagementThreshold.encode([1]), // data
-						3,                                                                    // nonce
-						...extra
-					],
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setManagementThreshold.encode([1]),
+						nonce: 3,
+					},
 					[ user2 ],
 					relayer,
 					executeabi
@@ -297,14 +239,11 @@ function testMultisig(provider, executeabi, extra = [])
 
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                                // type
-						proxyAsWallet.address,                                            // to
-						0,                                                                // value
-						proxyAsWallet.interface.functions.setActionThreshold.encode([2]), // data
-						1,                                                                // nonce
-						...extra
-					],
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setActionThreshold.encode([2]),
+						nonce: 1,
+					},
 					[ user1 ],
 					relayer,
 					executeabi
@@ -320,14 +259,11 @@ function testMultisig(provider, executeabi, extra = [])
 
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                                // type
-						proxyAsWallet.address,                                            // to
-						0,                                                                // value
-						proxyAsWallet.interface.functions.setActionThreshold.encode([0]), // data
-						1,                                                                // nonce
-						...extra
-					],
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setActionThreshold.encode([0]),
+						nonce: 1,
+					},
 					[ user1 ],
 					relayer,
 					executeabi
@@ -341,59 +277,45 @@ function testMultisig(provider, executeabi, extra = [])
 			it('valid', async () => {
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                // type
-						proxyAsWallet.address,                            // to
-						0,                                                // value
-						proxyAsWallet.interface.functions.setKey.encode([
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setKey.encode([
 							ethers.utils.keccak256(user2.address),
 							'0x0000000000000000000000000000000000000000000000000000000000000006'
-						]),                                               // data
-						1,                                                // nonce
-						...extra
-					],
+						]),
+						nonce: 1,
+					},
 					[ user1 ],
 					relayer,
 					executeabi
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                                // type
-						proxyAsWallet.address,                                            // to
-						0,                                                                // value
-						proxyAsWallet.interface.functions.setActionThreshold.encode([2]), // data
-						2,                                                                // nonce
-						...extra
-					],
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setActionThreshold.encode([2]),
+						nonce: 2,
+					},
 					[ user1 ],
 					relayer,
 					executeabi
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,    // type
-						dest, // to
-						0,    // value
-						[],   // data
-						3,    // nonce
-						...extra
-					],
+					{
+						to: dest,
+						nonce: 3,
+					},
 					[ user1, user2 ],
 					relayer,
 					executeabi
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,    // type
-						dest, // to
-						0,    // value
-						[],   // data
-						4,    // nonce
-						...extra
-					],
+					{
+						to: dest,
+						nonce: 4,
+					},
 					[ user2, user1 ],
 					relayer,
 					executeabi
@@ -403,28 +325,21 @@ function testMultisig(provider, executeabi, extra = [])
 			it('invalid - unauthorized signer', async () => {
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                                // type
-						proxyAsWallet.address,                                            // to
-						0,                                                                // value
-						proxyAsWallet.interface.functions.setActionThreshold.encode([2]), // data
-						1,                                                                // nonce
-						...extra
-					],
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setActionThreshold.encode([2]),
+						nonce: 1,
+					},
 					[ user1 ],
 					relayer,
 					executeabi
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,    // type
-						dest, // to
-						0,  // value
-						[],   // data
-						2,    // nonce
-						...extra
-					],
+					{
+						to: dest,
+						nonce: 2,
+					},
 					[ user1, user2 ],
 					relayer,
 					executeabi
@@ -434,28 +349,21 @@ function testMultisig(provider, executeabi, extra = [])
 			it('invalid - multiple signer', async () => {
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,                                                                // type
-						proxyAsWallet.address,                                            // to
-						0,                                                                // value
-						proxyAsWallet.interface.functions.setActionThreshold.encode([2]), // data
-						1,                                                                // nonce
-						...extra
-					],
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setActionThreshold.encode([2]),
+						nonce: 1,
+					},
 					[ user1 ],
 					relayer,
 					executeabi
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 				await expect(sendMetaTx(
 					proxyAsWallet,
-					[
-						0,    // type
-						dest, // to
-						0,  // value
-						[],   // data
-						2,    // nonce
-						...extra
-					],
+					{
+						to: dest,
+						nonce: 2,
+					},
 					[ user1, user1 ],
 					relayer,
 					executeabi

@@ -15,6 +15,7 @@ const testUpdateMaster  = require("../fixtures/testUpdateMaster.js");
 
 ethers.errors.setLogLevel('error');
 
+eth = x => ethers.utils.parseEther(x.toString())
 describe('Wallet', () => {
 
 	const provider = createMockProvider();
@@ -41,7 +42,7 @@ describe('Wallet', () => {
 		]);
 		proxyAsWallet = new ethers.Contract(proxyContract.address, Wallet.abi, provider);
 
-		await wallet.sendTransaction({to: proxyAsWallet.address, value: 1000});
+		await wallet.sendTransaction({to: proxyAsWallet.address, value: eth(1)});
 	});
 
 	testInitialize   (provider, 'execute(uint256,address,uint256,bytes,uint256,bytes[])');

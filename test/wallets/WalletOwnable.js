@@ -10,6 +10,7 @@ const {expect} = chai;
 chai.use(solidity);
 ethers.errors.setLogLevel('error');
 
+eth = x => ethers.utils.parseEther(x.toString())
 describe('WalletOwnable', () => {
 
 	const provider = createMockProvider();
@@ -28,7 +29,7 @@ describe('WalletOwnable', () => {
 		]);
 		proxyAsWallet = new ethers.Contract(proxyContract.address, WalletOwnable.abi, provider);
 
-		await wallet.sendTransaction({to: proxyAsWallet.address, value: 1000});
+		await wallet.sendTransaction({to: proxyAsWallet.address, value: eth(1.0)});
 	});
 
 	it ("Verify proxy initialization", async () => {
@@ -39,19 +40,19 @@ describe('WalletOwnable', () => {
 	describe('Execute', async () => {
 
 		it ("authorized - pay with proxy", async () => {
-			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(1000);
-			expect(await provider.getBalance(dest                 )).to.eq(   0);
+			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(1.0));
+			expect(await provider.getBalance(dest                 )).to.eq(eth(0.0));
 
 			await expect(proxyAsWallet.connect(user1).execute(
 				0,
 				dest,
-				500,
+				eth(0.1),
 				[],
 				{ gasLimit: 80000 }
 			)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
 
-			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(500);
-			expect(await provider.getBalance(dest                 )).to.eq(500);
+			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(0.9));
+			expect(await provider.getBalance(dest                 )).to.eq(eth(0.1));
 		});
 
 		it ("authorized - call with proxy", async () => {
@@ -70,17 +71,17 @@ describe('WalletOwnable', () => {
 		});
 
 		it("protected", async () => {
-			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(1000);
+			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(1.0));
 
 			await expect(proxyAsWallet.connect(user2).execute(
 				0,
 				user2.address,
-				500,
+				eth(0.1),
 				[],
 				{ gasLimit: 80000 }
 			)).to.be.revertedWith('access-forbidden');
 
-			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(1000);
+			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(1.0));
 		});
 	});
 

@@ -6,6 +6,7 @@ const {sendMetaTx} = require('../utils.js')
 const {expect} = chai;
 chai.use(solidity);
 
+eth = x => ethers.utils.parseEther(x.toString())
 function testExecute(provider, executeabi)
 {
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
@@ -13,14 +14,14 @@ function testExecute(provider, executeabi)
 
 	describe('Execute', async () => {
 		it('authorized - pay with proxy', async () => {
-			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(1000);
-			expect(await provider.getBalance(dest                 )).to.eq(   0);
+			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(1.0));
+			expect(await provider.getBalance(dest                 )).to.eq(eth(0.0));
 
 			await expect(sendMetaTx(
 				proxyAsWallet,
 				{
 					to:    dest,
-					value: 500,
+					value: eth(0.1),
 					nonce: 1,
 				},
 				[ user1 ],
@@ -28,8 +29,8 @@ function testExecute(provider, executeabi)
 				executeabi
 			)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
 
-			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(500);
-			expect(await provider.getBalance(dest                 )).to.eq(500);
+			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(0.9));
+			expect(await provider.getBalance(dest                 )).to.eq(eth(0.1));
 		});
 
 		it('authorized - call with proxy', async () => {
@@ -52,17 +53,17 @@ function testExecute(provider, executeabi)
 		});
 
 		it('protected', async () => {
-			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(1000);
+			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(1.0));
 
 			await expect(proxyAsWallet.connect(user1).execute(
 				0,
 				user1.address,
-				500,
+				eth(0.1),
 				[],
 				{ gasLimit: 80000 }
 			)).to.be.revertedWith('access-forbidden');
 
-			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(1000);
+			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(1.0));
 		});
 	});
 }

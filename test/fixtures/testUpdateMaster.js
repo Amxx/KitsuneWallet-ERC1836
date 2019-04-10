@@ -1,7 +1,7 @@
 const chai   = require('chai');
 const ethers = require('ethers');
 const {getWallets, solidity} = require('ethereum-waffle');
-const {sendMetaTx} = require('../utils.js')
+const {relayMetaTx,prepareMetaTx} = require('../utils.js');
 
 const {expect} = chai;
 chai.use(solidity);
@@ -18,25 +18,28 @@ function testUpdateMaster(provider, executeabi)
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxyAsWallet.nonce()).to.be.eq(0);
 
-			await expect(sendMetaTx(
+			await expect(relayMetaTx(
 				proxyAsWallet,
-				{
-					to: proxyAsWallet.address,
-					data: proxyAsWallet.interface.functions.updateMaster.encode([
-						walletContract.address,
-						walletContract.interface.functions.initialize.encode([
-							[ ethers.utils.keccak256(user2.address) ],
-							[ "0x0000000000000000000000000000000000000000000000000000000000000007" ],
-							1,
-							1,
+				await prepareMetaTx(
+					proxyAsWallet,
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.updateMaster.encode([
+							walletContract.address,
+							walletContract.interface.functions.initialize.encode([
+								[ ethers.utils.keccak256(user2.address) ],
+								[ "0x0000000000000000000000000000000000000000000000000000000000000007" ],
+								1,
+								1,
+							]),
+							true,
 						]),
-						true,
-					]),
-					nonce: 1,
-				},
-				[ user1 ],
+						nonce: 1,
+					},
+					[ user1 ],
+					executeabi,
+				),
 				relayer,
-				executeabi
 			)).to
 			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
 			.emit(proxyAsWallet, 'MasterChange').withArgs(walletContract.address, walletContract.address);

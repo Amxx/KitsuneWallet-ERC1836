@@ -1,7 +1,7 @@
 const chai   = require('chai');
 const ethers = require('ethers');
 const {getWallets, solidity} = require('ethereum-waffle');
-const {sendMetaTx} = require('../utils.js')
+const {relayMetaTx,prepareMetaTx} = require('../utils.js');
 
 const {expect} = chai;
 chai.use(solidity);

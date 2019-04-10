@@ -1,7 +1,7 @@
 const chai   = require('chai');
 const ethers = require('ethers');
 const {getWallets, solidity} = require('ethereum-waffle');
-const {sendMetaTx,metaTxAsData} = require('../utils.js')
+const {relayMetaTx,prepareMetaTx} = require('../utils.js');
 
 const {expect} = chai;
 chai.use(solidity);
@@ -22,26 +22,29 @@ function testExecute(provider, executeabi)
 			expect(await provider.getBalance(dest                        )).to.eq(eth(0.0));
 
 			const gasPrice = 20 * 10**9; // 20gwai
-			await expect(sendMetaTx(
+			await expect(relayMetaTx(
 				relayerProxyAsWallet,
-				{
-					to:    proxyAsWallet.address,
-					data:  await metaTxAsData(
-						proxyAsWallet,
-						{
-							to:       dest,
-							value:    eth(0.1),
-							nonce:    1,
-							gasPrice,
-						},
-						[user1],
-						executeabi
-					),
-					nonce: 1,
-				},
-				[ relayer ],
+				await prepareMetaTx(
+					relayerProxyAsWallet,
+					{
+						to:    proxyAsWallet.address,
+						data:  await prepareMetaTx(
+							proxyAsWallet,
+							{
+								to:       dest,
+								value:    eth(0.1),
+								nonce:    1,
+								gasPrice,
+							},
+							[user1],
+							executeabi
+						),
+						nonce: 1,
+					},
+					[ relayer ],
+					executeabi
+				),
 				relayer,
-				executeabi
 			)).to
 			// .emit(relayerProxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 			.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);

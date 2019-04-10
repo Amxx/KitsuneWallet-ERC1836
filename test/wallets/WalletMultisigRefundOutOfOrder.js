@@ -9,6 +9,7 @@ const Target = require('../../build/Target');
 
 const testInitialize    = require("../fixtures/testInitialize.js");
 const testExecute       = require("../fixtures/testExecute.js");
+const testRefund        = require("../fixtures/testRefund.js");
 const testKeyManagement = require("../fixtures/testKeyManagement.js");
 const testMultisig      = require("../fixtures/testMultisig.js");
 const testOutOfOrder    = require("../fixtures/testOutOfOrder.js");
@@ -41,13 +42,28 @@ describe('Wallet', () => {
 				1,
 			])
 		]);
+		relayerProxyContract = await deployContract(wallet, Proxy, [
+			walletContract.address,
+			walletContract.interface.functions.initialize.encode([
+				[
+					ethers.utils.keccak256(relayer.address),
+				],
+				[
+					'0x0000000000000000000000000000000000000000000000000000000000000007',
+				],
+				1,
+				1,
+			])
+		]);
 		proxyAsWallet = new ethers.Contract(proxyContract.address, Wallet.abi, provider);
+		relayerProxyAsWallet = new ethers.Contract(relayerProxyContract.address, Wallet.abi, provider);
 
 		await wallet.sendTransaction({to: proxyAsWallet.address, value: eth(1)});
 	});
 
 	testInitialize   (provider, 'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])');
 	testExecute      (provider, 'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])');
+	testRefund       (provider, 'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])');
 	testKeyManagement(provider, 'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])');
 	testOutOfOrder   (provider, 'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])');
 	testMultisig     (provider, 'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])');

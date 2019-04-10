@@ -1,7 +1,7 @@
 const chai   = require('chai');
 const ethers = require('ethers');
 const {getWallets, solidity} = require('ethereum-waffle');
-const {sendMetaTx} = require('../utils.js')
+const {relayMetaTx,prepareMetaTx} = require('../utils.js');
 
 const {expect} = chai;
 chai.use(solidity);
@@ -17,16 +17,19 @@ function testExecute(provider, executeabi)
 			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(1.0));
 			expect(await provider.getBalance(dest                 )).to.eq(eth(0.0));
 
-			await expect(sendMetaTx(
+			await expect(relayMetaTx(
 				proxyAsWallet,
-				{
-					to:    dest,
-					value: eth(0.1),
-					nonce: 1,
-				},
-				[ user1 ],
+				await prepareMetaTx(
+					proxyAsWallet,
+					{
+						to:    dest,
+						value: eth(0.1),
+						nonce: 1,
+					},
+					[ user1 ],
+					executeabi
+				),
 				relayer,
-				executeabi
 			)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
 
 			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(0.9));
@@ -36,16 +39,19 @@ function testExecute(provider, executeabi)
 		it('authorized - call with proxy', async () => {
 			randomdata = ethers.utils.hexlify(ethers.utils.randomBytes(32));
 
-			await expect(sendMetaTx(
+			await expect(relayMetaTx(
 				proxyAsWallet,
-				{
-					to: targetContract.address,
-					data: targetContract.interface.functions.call.encode([ randomdata ]),
-					nonce: 1,
-				},
-				[ user1 ],
+				await prepareMetaTx(
+					proxyAsWallet,
+					{
+						to: targetContract.address,
+						data: targetContract.interface.functions.call.encode([ randomdata ]),
+						nonce: 1,
+					},
+					[ user1 ],
+					executeabi
+				),
 				relayer,
-				executeabi
 			)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(targetContract.address);
 
 			expect(await targetContract.lastSender()).to.eq(proxyAsWallet.address);

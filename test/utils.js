@@ -99,19 +99,16 @@ const INLINE_TX = {
 
 module.exports = {
 
-	metaTxAsData: async function (proxy, tx, signers, executeABI)
+	relayMetaTx: async function(proxy, txData, relayer)
+	{
+		return relayer.sendTransaction({ to: proxy.address, data: txData, gasLimit: 1000000 });
+	},
+
+	prepareMetaTx: async function (proxy, tx, signers, executeABI)
 	{
 		tx = PREPARE_TX[executeABI](tx);
 		const txHash = utils.arrayify(HASHING_METATX[executeABI](proxy.address, tx));
 		const signatures = await Promise.all(signers.sort((a,b) => a.address-b.address).map(signer => signer.signMessage(txHash)));
 		return proxy.interface.functions[executeABI].encode([...INLINE_TX[executeABI](tx), signatures]);
-	},
-
-	sendMetaTx: async function (proxy, tx, signers, relayer, executeABI)
-	{
-		tx = PREPARE_TX[executeABI](tx);
-		const txHash = utils.arrayify(HASHING_METATX[executeABI](proxy.address, tx));
-		const signatures = await Promise.all(signers.sort((a,b) => a.address-b.address).map(signer => signer.signMessage(txHash)));
-		return proxy.connect(relayer).functions[executeABI](...INLINE_TX[executeABI](tx), signatures, { gasLimit: 1000000 });
 	},
 }

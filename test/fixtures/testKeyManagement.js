@@ -1,7 +1,7 @@
 const chai   = require('chai');
 const ethers = require('ethers');
 const {getWallets, solidity} = require('ethereum-waffle');
-const {sendMetaTx} = require('../utils.js')
+const {relayMetaTx,prepareMetaTx} = require('../utils.js');
 
 const {expect} = chai;
 chai.use(solidity);
@@ -45,19 +45,22 @@ function testKeyManagement(provider, executeabi)
 			expect(await proxyAsWallet.getActiveKeys()).to.deep.eq([ethers.utils.keccak256(user1.address)]);
 			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 
-			await expect(sendMetaTx(
+			await expect(relayMetaTx(
 				proxyAsWallet,
-				{
-					to: proxyAsWallet.address,
-					data: proxyAsWallet.interface.functions.setKey.encode([
-						ethers.utils.keccak256(user2.address),
-						'0x0000000000000000000000000000000000000000000000000000000000000004'
-					]),
-					nonce: 1,
-				},
-				[ user1 ],
+				await prepareMetaTx(
+					proxyAsWallet,
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setKey.encode([
+							ethers.utils.keccak256(user2.address),
+							'0x0000000000000000000000000000000000000000000000000000000000000004'
+						]),
+						nonce: 1,
+					},
+					[ user1 ],
+					executeabi,
+				),
 				relayer,
-				executeabi
 			)).to
 			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
 			.emit(proxyAsWallet, 'SetKey').withArgs(ethers.utils.keccak256(user2.address), "0x0000000000000000000000000000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000004");
@@ -74,19 +77,22 @@ function testKeyManagement(provider, executeabi)
 			expect(await proxyAsWallet.getActiveKeys()).to.deep.eq([ethers.utils.keccak256(user1.address)]);
 			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 
-			await expect(sendMetaTx(
+			await expect(relayMetaTx(
 				proxyAsWallet,
-				{
-					to: proxyAsWallet.address,
-					data: proxyAsWallet.interface.functions.setKey.encode([
-						ethers.utils.keccak256(user1.address),
-						'0x000000000000000000000000000000000000000000000000000000000000000f',
-					]),
-					nonce: 1,
-				},
-				[ user1 ],
+				await prepareMetaTx(
+					proxyAsWallet,
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setKey.encode([
+							ethers.utils.keccak256(user1.address),
+							'0x000000000000000000000000000000000000000000000000000000000000000f',
+						]),
+						nonce: 1,
+					},
+					[ user1 ],
+					executeabi,
+				),
 				relayer,
-				executeabi
 			)).to
 			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
 			.emit(proxyAsWallet, 'SetKey').withArgs(ethers.utils.keccak256(user1.address), "0x0000000000000000000000000000000000000000000000000000000000000007", "0x000000000000000000000000000000000000000000000000000000000000000f");
@@ -103,19 +109,22 @@ function testKeyManagement(provider, executeabi)
 			expect(await proxyAsWallet.getActiveKeys()).to.deep.eq([ethers.utils.keccak256(user1.address)]);
 			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 
-			await expect(sendMetaTx(
+			await expect(relayMetaTx(
 				proxyAsWallet,
-				{
-					to: proxyAsWallet.address,
-					data: proxyAsWallet.interface.functions.setKey.encode([
-						ethers.utils.keccak256(user1.address),
-						'0x0000000000000000000000000000000000000000000000000000000000000006',
-					]),
-					nonce: 1,
-				},
-				[ user1 ],
+				await prepareMetaTx(
+					proxyAsWallet,
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setKey.encode([
+							ethers.utils.keccak256(user1.address),
+							'0x0000000000000000000000000000000000000000000000000000000000000006',
+						]),
+						nonce: 1,
+					},
+					[ user1 ],
+					executeabi,
+				),
 				relayer,
-				executeabi
 			)).to.emit(proxyAsWallet, 'CallFailure'); //.withArgs(proxyAsWallet.address, 'cannot-remove-critical-management-key');
 
 			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
@@ -131,19 +140,22 @@ function testKeyManagement(provider, executeabi)
 			expect(await proxyAsWallet.getActiveKeys()).to.deep.eq([ethers.utils.keccak256(user1.address)]);
 			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 
-			await expect(sendMetaTx(
+			await expect(relayMetaTx(
 				proxyAsWallet,
-				{
-					to: proxyAsWallet.address,
-					data: proxyAsWallet.interface.functions.setKey.encode([
-						ethers.utils.keccak256(user2.address),
-						'0x0000000000000000000000000000000000000000000000000000000000000007',
-					]),
-					nonce: 1,
-				},
-				[ user1 ],
+				await prepareMetaTx(
+					proxyAsWallet,
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setKey.encode([
+							ethers.utils.keccak256(user2.address),
+							'0x0000000000000000000000000000000000000000000000000000000000000007',
+						]),
+						nonce: 1,
+					},
+					[ user1 ],
+					executeabi,
+				),
 				relayer,
-				executeabi
 			)).to
 			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
 			.emit(proxyAsWallet, 'SetKey').withArgs(ethers.utils.keccak256(user2.address), "0x0000000000000000000000000000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000007");
@@ -154,19 +166,22 @@ function testKeyManagement(provider, executeabi)
 			expect(await proxyAsWallet.getActiveKeys()).to.deep.eq([ethers.utils.keccak256(user1.address),ethers.utils.keccak256(user2.address)]);
 			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(2);
 
-			await expect(sendMetaTx(
+			await expect(relayMetaTx(
 				proxyAsWallet,
-				{
-					to: proxyAsWallet.address,
-					data: proxyAsWallet.interface.functions.setKey.encode([
-						ethers.utils.keccak256(user1.address),
-						'0x0000000000000000000000000000000000000000000000000000000000000000',
-					]),
-					nonce: 2,
-				},
-				[ user1 ],
+				await prepareMetaTx(
+					proxyAsWallet,
+					{
+						to: proxyAsWallet.address,
+						data: proxyAsWallet.interface.functions.setKey.encode([
+							ethers.utils.keccak256(user1.address),
+							'0x0000000000000000000000000000000000000000000000000000000000000000',
+						]),
+						nonce: 2,
+					},
+					[ user1 ],
+					executeabi,
+				),
 				relayer,
-				executeabi
 			)).to
 			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
 			.emit(proxyAsWallet, 'SetKey').withArgs(ethers.utils.keccak256(user1.address), "0x0000000000000000000000000000000000000000000000000000000000000007", "0x0000000000000000000000000000000000000000000000000000000000000000");

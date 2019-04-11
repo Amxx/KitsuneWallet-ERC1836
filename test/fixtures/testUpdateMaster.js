@@ -19,7 +19,6 @@ function testUpdateMaster(provider, executeabi)
 			expect(await proxyAsWallet.nonce()).to.be.eq(0);
 
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{

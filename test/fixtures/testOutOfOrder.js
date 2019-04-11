@@ -16,7 +16,6 @@ function testOutOfOrder(provider, executeabi)
 		it('valid nonce', async () => {
 			expect(await proxyAsWallet.nonce()).to.be.eq(0);
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{ to: dest, nonce: 1 },
@@ -31,7 +30,6 @@ function testOutOfOrder(provider, executeabi)
 		it('invalid nonce', async () => {
 			expect(await proxyAsWallet.nonce()).to.be.eq(0);
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{ to: dest, nonce: 2 },
@@ -46,7 +44,6 @@ function testOutOfOrder(provider, executeabi)
 		it('out-of-order with salt', async () => {
 			expect(await proxyAsWallet.nonce()).to.be.eq(0);
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{ to: dest, nonce: 0 },
@@ -61,7 +58,6 @@ function testOutOfOrder(provider, executeabi)
 		it('out-of-order with salt (multiple)', async () => {
 			expect(await proxyAsWallet.nonce()).to.be.eq(0);
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{ to: dest, nonce: 0 },
@@ -71,7 +67,6 @@ function testOutOfOrder(provider, executeabi)
 				relayer,
 			)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{ to: dest, nonce: 0 },
@@ -87,7 +82,6 @@ function testOutOfOrder(provider, executeabi)
 			samesalt = ethers.utils.randomBytes(32);
 			expect(await proxyAsWallet.nonce()).to.be.eq(0);
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{ to: dest, nonce: 0, salt: samesalt },
@@ -97,7 +91,6 @@ function testOutOfOrder(provider, executeabi)
 				relayer,
 			)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{ to: dest, nonce: 0, salt: samesalt },
@@ -113,7 +106,6 @@ function testOutOfOrder(provider, executeabi)
 			samesalt = ethers.utils.randomBytes(32);
 			expect(await proxyAsWallet.nonce()).to.be.eq(0);
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{
@@ -132,7 +124,6 @@ function testOutOfOrder(provider, executeabi)
 			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
 			.emit(proxyAsWallet, 'SetKey').withArgs(ethers.utils.keccak256(user2.address), "0x0000000000000000000000000000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000007");
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{ to: dest, nonce: 0, salt: samesalt },
@@ -142,7 +133,6 @@ function testOutOfOrder(provider, executeabi)
 				relayer,
 			)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{ to: dest, nonce: 0, salt: samesalt },

@@ -46,7 +46,6 @@ function testKeyManagement(provider, executeabi)
 			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{
@@ -78,7 +77,6 @@ function testKeyManagement(provider, executeabi)
 			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{
@@ -110,7 +108,6 @@ function testKeyManagement(provider, executeabi)
 			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{
@@ -141,7 +138,6 @@ function testKeyManagement(provider, executeabi)
 			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(1);
 
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{
@@ -167,7 +163,6 @@ function testKeyManagement(provider, executeabi)
 			expect(await proxyAsWallet.managementKeyCount()).to.be.eq(2);
 
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{

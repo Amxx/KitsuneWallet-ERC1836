@@ -18,7 +18,6 @@ function testMultisig(provider, executeabi)
 				expect(await proxyAsWallet.nonce()).to.be.eq(0);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{ to: dest, nonce: 1 },
@@ -35,7 +34,6 @@ function testMultisig(provider, executeabi)
 				expect(await proxyAsWallet.nonce()).to.be.eq(0);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{ to: dest, nonce: 2 },
@@ -52,7 +50,6 @@ function testMultisig(provider, executeabi)
 				expect(await proxyAsWallet.nonce()).to.be.eq(0);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{ to: dest, nonce: 1 },
@@ -65,7 +62,6 @@ function testMultisig(provider, executeabi)
 				expect(await proxyAsWallet.nonce()).to.be.eq(1);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{ to: dest, nonce: 1 },
@@ -84,7 +80,6 @@ function testMultisig(provider, executeabi)
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -101,7 +96,6 @@ function testMultisig(provider, executeabi)
 					relayer,
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -124,7 +118,6 @@ function testMultisig(provider, executeabi)
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -145,7 +138,6 @@ function testMultisig(provider, executeabi)
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -168,7 +160,6 @@ function testMultisig(provider, executeabi)
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -186,7 +177,6 @@ function testMultisig(provider, executeabi)
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -203,7 +193,6 @@ function testMultisig(provider, executeabi)
 				.emit(proxyAsWallet, 'ManagementThresholdChange').withArgs(1, 2);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -226,7 +215,6 @@ function testMultisig(provider, executeabi)
 				expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -244,7 +232,6 @@ function testMultisig(provider, executeabi)
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -261,7 +248,6 @@ function testMultisig(provider, executeabi)
 				.emit(proxyAsWallet, 'ManagementThresholdChange').withArgs(1, 2);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -284,7 +270,6 @@ function testMultisig(provider, executeabi)
 				expect(await proxyAsWallet.getActionThreshold()).to.eq(1);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -307,7 +292,6 @@ function testMultisig(provider, executeabi)
 				expect(await proxyAsWallet.getActionThreshold()).to.eq(1);
 
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -328,7 +312,6 @@ function testMultisig(provider, executeabi)
 		describe('Execute with multiple signatures', async () => {
 			it('valid', async () => {
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -345,7 +328,6 @@ function testMultisig(provider, executeabi)
 					relayer,
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -359,7 +341,6 @@ function testMultisig(provider, executeabi)
 					relayer,
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -372,7 +353,6 @@ function testMultisig(provider, executeabi)
 					relayer,
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -388,7 +368,6 @@ function testMultisig(provider, executeabi)
 
 			it('invalid - unauthorized signer', async () => {
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -402,7 +381,6 @@ function testMultisig(provider, executeabi)
 					relayer,
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -418,7 +396,6 @@ function testMultisig(provider, executeabi)
 
 			it('invalid - multiple signer', async () => {
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{
@@ -432,7 +409,6 @@ function testMultisig(provider, executeabi)
 					relayer,
 				)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address);
 				await expect(relayMetaTx(
-					proxyAsWallet,
 					await prepareMetaTx(
 						proxyAsWallet,
 						{

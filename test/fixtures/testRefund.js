@@ -23,12 +23,10 @@ function testExecute(provider, executeabi)
 
 			const gasPrice = 20 * 10**9; // 20gwai
 			await expect(relayMetaTx(
-				relayerProxyAsWallet,
 				await prepareMetaTx(
 					relayerProxyAsWallet,
 					{
-						to:    proxyAsWallet.address,
-						data:  await prepareMetaTx(
+						...await prepareMetaTx(
 							proxyAsWallet,
 							{
 								to:       dest,

@@ -18,7 +18,6 @@ function testExecute(provider, executeabi)
 			expect(await provider.getBalance(dest                 )).to.eq(eth(0.0));
 
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{
@@ -40,7 +39,6 @@ function testExecute(provider, executeabi)
 			randomdata = ethers.utils.hexlify(ethers.utils.randomBytes(32));
 
 			await expect(relayMetaTx(
-				proxyAsWallet,
 				await prepareMetaTx(
 					proxyAsWallet,
 					{

@@ -62,7 +62,7 @@ describe('Wallet', () => {
 
 	testInitialize   (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
 	testExecute      (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
-	// testRefund       (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
+	testRefund       (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
 	testKeyManagement(provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
 	testMultisig     (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
 	testUpdateMaster (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');

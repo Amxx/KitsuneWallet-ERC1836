@@ -1,7 +1,7 @@
 const chai   = require('chai');
 const ethers = require('ethers');
 const {createMockProvider, deployContract, getWallets, solidity} = require('ethereum-waffle');
-const {sendMetaTx} = require('../utils.js')
+const {sendMetaTx} = require('../../utils/utils.js');
 
 const Proxy  = require('../../build/Proxy');
 const Wallet = require('../../build/WalletMultisig');

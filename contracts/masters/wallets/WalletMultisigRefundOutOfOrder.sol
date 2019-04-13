@@ -13,6 +13,9 @@ contract WalletMultisigRefundOutOfOrder is ERC725Base, MasterKeysBase, ENSRegist
 {
 	using SafeMath for uint256;
 
+	// for refund fine tunning
+	uint256 constant BASEGASE = 43600;
+
 	// This is a delegate contract, lock it
 	constructor()
 	public
@@ -75,19 +78,25 @@ contract WalletMultisigRefundOutOfOrder is ERC725Base, MasterKeysBase, ENSRegist
 
 		this.execute(_operationType, _to, _value, _data);
 
-		refund(gasBefore.sub(gasleft()), _gasPrice, _gasToken);
+		refund(
+			BASEGASE
+			.add(gasBefore)
+			.sub(gasleft())
+			.mul(_gasPrice),
+			_gasToken
+		);
 	}
 
-	function refund(uint256 _gasUsed, uint256 _gasPrice, address _gasToken)
+	function refund(uint256 _gasValue, address _gasToken)
 	internal
 	{
 		if (_gasToken == address(0))
 		{
-			msg.sender.transfer(_gasUsed.mul(_gasPrice));
+			msg.sender.transfer(_gasValue);
 		}
 		else
 		{
-			IERC20(_gasToken).transfer(msg.sender, _gasUsed.mul(_gasPrice));
+			IERC20(_gasToken).transfer(msg.sender, _gasValue);
 		}
 	}
 

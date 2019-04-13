@@ -6,6 +6,7 @@ const {sendMetaTx} = require('../../utils/utils.js');
 const Proxy  = require('../../build/Proxy');
 const Wallet = require('../../build/WalletMultisigRefund');
 const Target = require('../../build/Target');
+const Token  = require('../../contracts/Token');
 
 const testInitialize    = require("../fixtures/testInitialize.js");
 const testExecute       = require("../fixtures/testExecute.js");
@@ -25,6 +26,7 @@ describe('Wallet', () => {
 	before(async () => {
 		walletContract = await deployContract(wallet, Wallet, []);
 		targetContract = await deployContract(wallet, Target, []);
+		tokenContract  = await deployContract(wallet, Token,  []);
 	});
 
 	beforeEach(async () => {
@@ -58,6 +60,7 @@ describe('Wallet', () => {
 		relayerProxyAsWallet = new ethers.Contract(relayerProxyContract.address, Wallet.abi, provider);
 
 		await wallet.sendTransaction({to: proxyAsWallet.address, value: eth(1)});
+		await tokenContract.connect(wallet).transfer(proxyAsWallet.address, eth(1));
 	});
 
 	testInitialize   (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');

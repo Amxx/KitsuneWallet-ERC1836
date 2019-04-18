@@ -44,7 +44,6 @@ contract MasterKeysBase is MasterBase, IERC1271
 	external onlyInitializing
 	{
 		require(_keys.length == _purposes.length, "key-and-purpose-array-must-have-same-size");
-		m_managementKeyCount = 0;
 		for (uint256 i = 0; i < _keys.length; ++i)
 		{
 			_setKey(_keys[i], _purposes[i]);

@@ -12,13 +12,26 @@ function testKeyManagement(provider, executeabi, addrToKey = ethers.utils.keccak
 	const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 
 	describe('Key Management', async () => {
+		it('getKey', async () => {
+			expect(await proxyAsWallet.functions['getKey(bytes32)'](addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxyAsWallet.functions['getKey(bytes32)'](addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+			expect(await proxyAsWallet.functions['getKey(address)'](          user1.address )).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxyAsWallet.functions['getKey(address)'](          user2.address )).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+		});
+
 		it('keyHasPurpose', async () => {
-			expect(await proxyAsWallet.keyHasPurpose(addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000001')).to.be.eq(true);
-			expect(await proxyAsWallet.keyHasPurpose(addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000002')).to.be.eq(true);
-			expect(await proxyAsWallet.keyHasPurpose(addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000004')).to.be.eq(true);
-			expect(await proxyAsWallet.keyHasPurpose(addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000008')).to.be.eq(false);
-			expect(await proxyAsWallet.keyHasPurpose(addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000007')).to.be.eq(true);
-			expect(await proxyAsWallet.keyHasPurpose(addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000009')).to.be.eq(false);
+			expect(await proxyAsWallet.functions['keyHasPurpose(bytes32,bytes32)'](addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000001')).to.be.eq(true);
+			expect(await proxyAsWallet.functions['keyHasPurpose(bytes32,bytes32)'](addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000002')).to.be.eq(true);
+			expect(await proxyAsWallet.functions['keyHasPurpose(bytes32,bytes32)'](addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000004')).to.be.eq(true);
+			expect(await proxyAsWallet.functions['keyHasPurpose(bytes32,bytes32)'](addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000008')).to.be.eq(false);
+			expect(await proxyAsWallet.functions['keyHasPurpose(bytes32,bytes32)'](addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000007')).to.be.eq(true);
+			expect(await proxyAsWallet.functions['keyHasPurpose(bytes32,bytes32)'](addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000009')).to.be.eq(false);
+			expect(await proxyAsWallet.functions['keyHasPurpose(address,bytes32)'](          user1.address , '0x0000000000000000000000000000000000000000000000000000000000000001')).to.be.eq(true);
+			expect(await proxyAsWallet.functions['keyHasPurpose(address,bytes32)'](          user1.address , '0x0000000000000000000000000000000000000000000000000000000000000002')).to.be.eq(true);
+			expect(await proxyAsWallet.functions['keyHasPurpose(address,bytes32)'](          user1.address , '0x0000000000000000000000000000000000000000000000000000000000000004')).to.be.eq(true);
+			expect(await proxyAsWallet.functions['keyHasPurpose(address,bytes32)'](          user1.address , '0x0000000000000000000000000000000000000000000000000000000000000008')).to.be.eq(false);
+			expect(await proxyAsWallet.functions['keyHasPurpose(address,bytes32)'](          user1.address , '0x0000000000000000000000000000000000000000000000000000000000000007')).to.be.eq(true);
+			expect(await proxyAsWallet.functions['keyHasPurpose(address,bytes32)'](          user1.address , '0x0000000000000000000000000000000000000000000000000000000000000009')).to.be.eq(false);
 		});
 
 		it('AddKey', async () => {

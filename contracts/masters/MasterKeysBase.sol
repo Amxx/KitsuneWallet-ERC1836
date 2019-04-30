@@ -24,24 +24,6 @@ contract MasterKeysBase is MasterBase, IERC1271
 	event ManagementThresholdChange(uint256 previousThreshold, uint256 newThreshold);
 	event ActionThresholdChange(uint256 previousThreshold, uint256 newThreshold);
 
-	function owner()
-	external view returns(address)
-	{
-		return address(this);
-	}
-
-	function nonce()
-	public view returns (uint256)
-	{
-		return m_nonce;
-	}
-
-	function managementKeyCount()
-	external view returns(uint256)
-	{
-		return m_managementKeyCount;
-	}
-
 	function initialize(
 		bytes32[] calldata _keys,
 		bytes32[] calldata _purposes,
@@ -78,49 +60,48 @@ contract MasterKeysBase is MasterBase, IERC1271
 		setMaster(_newMaster, _initData);
 	}
 
-	// SIGNING
+	// ACCESSORS
+	function owner()
+	external view returns(address)
+	{
+		return address(this);
+	}
+
+	function nonce()
+	public view returns (uint256)
+	{
+		return m_nonce;
+	}
+
+	function managementKeyCount()
+	external view returns(uint256)
+	{
+		return m_managementKeyCount;
+	}
+
 	function addrToKey(address addr)
 	public pure returns (bytes32)
 	{
-		return keccak256(abi.encodePacked(addr));
+		return bytes32(uint256(addr));
 	}
 
-	function isValidSignature(bytes32 _data, bytes memory _signature)
-	public view returns (bool)
-	{
-		return keyHasPurpose(addrToKey(_data.recover(_signature)), PURPOSE_SIGN);
-	}
+	// KEYS
+	function getActiveKeys()                               public view returns (bytes32[] memory) { return m_activeKeys; }
+	function getKey       (bytes32 _key)                   public view returns (bytes32) { return m_keyPurposes[          _key ]; }
+	function getKey       (address _key)                   public view returns (bytes32) { return m_keyPurposes[addrToKey(_key)]; }
+	function keyHasPurpose(bytes32 _key, bytes32 _purpose) public view returns (bool) { return _keyHasPurpose(          _key ,         _purpose ); }
+	function keyHasPurpose(bytes32 _key, uint256 _purpose) public view returns (bool) { return _keyHasPurpose(          _key , bytes32(_purpose)); }
+	function keyHasPurpose(address _key, bytes32 _purpose) public view returns (bool) { return _keyHasPurpose(addrToKey(_key),         _purpose ); }
+	function keyHasPurpose(address _key, uint256 _purpose) public view returns (bool) { return _keyHasPurpose(addrToKey(_key), bytes32(_purpose)); }
+	function setKey       (bytes32 _key, bytes32 _purpose) public protected { _setKey(          _key ,         _purpose ); }
+	function setKey       (bytes32 _key, uint256 _purpose) public protected { _setKey(          _key , bytes32(_purpose)); }
+	function setKey       (address _key, bytes32 _purpose) public protected { _setKey(addrToKey(_key),         _purpose ); }
+	function setKey       (address _key, uint256 _purpose) public protected { _setKey(addrToKey(_key), bytes32(_purpose)); }
 
-	// KEY VIEW
-	function getKey(bytes32 _key)
-	public view returns (bytes32)
-	{
-		return m_keyPurposes[_key];
-	}
-
-	function getActiveKeys()
-	public view returns (bytes32[] memory)
-	{
-		return m_activeKeys;
-	}
-
-	function keyHasPurpose(bytes32 _key, bytes32 _purpose)
-	public view returns (bool)
+	function _keyHasPurpose(bytes32 _key, bytes32 _purpose)
+	internal view returns (bool)
 	{
 		return _purpose & ~m_keyPurposes[_key] == bytes32(0);
-	}
-
-	function keyHasPurpose(bytes32 _key, uint256 _purpose)
-	public view returns (bool)
-	{
-		return keyHasPurpose(_key, bytes32(_purpose));
-	}
-
-	// KEY UPDATE
-	function setKey(bytes32 _key, bytes32 _purpose)
-	public protected
-	{
-		_setKey(_key, _purpose);
 	}
 
 	function _setKey(bytes32 _key, bytes32 _purpose)
@@ -160,16 +141,8 @@ contract MasterKeysBase is MasterBase, IERC1271
 	}
 
 	// MULTISIG
-	function getManagementThreshold()
-	external view returns (uint256)
-	{
-		return m_managementThreshold;
-	}
-	function getActionThreshold()
-	external view returns (uint256)
-	{
-		return m_actionThreshold;
-	}
+	function getManagementThreshold() external view returns (uint256) { return m_managementThreshold; }
+	function getActionThreshold    () external view returns (uint256) { return m_actionThreshold;     }
 
 	function setManagementThreshold(uint256 _managementThreshold)
 	external protected
@@ -186,5 +159,12 @@ contract MasterKeysBase is MasterBase, IERC1271
 		require(0 != _actionThreshold, "threshold-too-low");
 		emit ActionThresholdChange(m_actionThreshold, _actionThreshold);
 		m_actionThreshold = _actionThreshold;
+	}
+
+	// ERC1271 SIGNING
+	function isValidSignature(bytes32 _data, bytes memory _signature)
+	public view returns (bool)
+	{
+		return keyHasPurpose(addrToKey(_data.recover(_signature)), PURPOSE_SIGN);
 	}
 }

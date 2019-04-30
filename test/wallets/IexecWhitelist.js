@@ -20,7 +20,7 @@ describe('IexecWhitelist', () => {
 
 	const provider = createMockProvider();
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
-	const addrToKey = addr => ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode([ 'address' ],[ addr ]))
+	const addrToKey = addr => ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode([ 'address' ],[ addr ]));
 
 	before(async () => {
 		walletContract = await deployContract(wallet, Wallet, []);

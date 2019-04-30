@@ -20,7 +20,8 @@ describe('Wallet', () => {
 
 	const provider = createMockProvider();
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
-	const addrToKey = ethers.utils.keccak256
+	const addrToKey = addr => ethers.utils.hexZeroPad(addr, 32).toString().toLowerCase();
+	// const addrToKey = ethers.utils.keccak256
 
 	before(async () => {
 		walletContract = await deployContract(wallet, Wallet, []);

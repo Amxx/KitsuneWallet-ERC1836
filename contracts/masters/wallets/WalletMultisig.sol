@@ -1,12 +1,11 @@
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
-import "../../ENS/ENSRegistered.sol";
 import "../ERC725Base.sol";
 import "../MasterKeysBase.sol";
 
 
-contract WalletMultisig is ERC725Base, MasterKeysBase, ENSRegistered
+contract WalletMultisig is ERC725Base, MasterKeysBase
 {
 	// This is a delegate contract, lock it
 	constructor()

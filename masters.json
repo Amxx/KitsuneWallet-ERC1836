@@ -1,6 +1,15 @@
 {
 	"kovan":
 	{
-		"WalletMultisig": "0x879AFd35912e586991646E2B9f6774d93856C262"
+		"contracts":
+		{
+			"WalletOwnable": "0xf9cd55adc8774ae5a977e574844a49789c55995d",
+			"WalletMultisig": "0x0b163638fe265d9c198d8b0687040b8d11ae9889",
+			"WalletMultisigRefund": "0x4b965eeb5b15ff4596e37ba0748f1f6a69e82cd4",
+			"WalletMultisigRefundOutOfOrder": "0xe231bad283b87bd647c49980bea21efe5872e5fd",
+			"IexecWhitelist": "0xd330efb0b9a76246d04dc98d51df9ba93f9c5d60",
+		},
+		"version": "0.0.22",
+		"compiler": "0.5.8+commit.23d335f2.Emscripten.clang",
 	}
 }

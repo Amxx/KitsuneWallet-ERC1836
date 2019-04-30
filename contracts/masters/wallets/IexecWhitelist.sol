@@ -1,12 +1,15 @@
 pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
 
 import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 
-import "./MasterBase.sol";
-import "../interfaces/IERC1271.sol";
+import "../ERC725Base.sol";
+import "../MasterBase.sol";
+import "../../interfaces/IERC1271.sol";
+import "../../ENS/ENSRegistered.sol";
 
 
-contract MasterKeysBase is MasterBase, IERC1271
+contract IexecWhitelist is ERC725Base, MasterBase, IERC1271, ENSRegistered
 {
 	using ECDSA for bytes32;
 
@@ -82,7 +85,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 	function addrToKey(address addr)
 	public pure returns (bytes32)
 	{
-		return keccak256(abi.encodePacked(addr));
+		return keccak256(abi.encode(addr));
 	}
 
 	function isValidSignature(bytes32 _data, bytes memory _signature)
@@ -186,5 +189,50 @@ contract MasterKeysBase is MasterBase, IERC1271
 		require(0 != _actionThreshold, "threshold-too-low");
 		emit ActionThresholdChange(m_actionThreshold, _actionThreshold);
 		m_actionThreshold = _actionThreshold;
+	}
+
+	function execute
+	( uint256        _operationType
+	, address        _to
+	, uint256        _value
+	, bytes   memory _data
+	, uint256        _nonce
+	, bytes[] memory _sigs
+	)
+	public
+	{
+		require(++m_nonce == _nonce, "invalid-nonce");
+
+		bytes32 neededPurpose;
+		if (_to == address(this))
+		{
+			require(_sigs.length >= m_managementThreshold, "missing-signers");
+			neededPurpose = PURPOSE_MANAGEMENT;
+		}
+		else
+		{
+			require(_sigs.length >= m_actionThreshold, "missing-signers");
+			neededPurpose = PURPOSE_ACTION;
+		}
+
+		bytes32 executionID = keccak256(abi.encodePacked(
+				address(this),
+				_operationType,
+				_to,
+				_value,
+				keccak256(_data),
+				_nonce
+			)).toEthSignedMessageHash();
+
+		address lastSigner = address(0);
+		for (uint256 i = 0; i < _sigs.length; ++i)
+		{
+			address signer  = executionID.recover(_sigs[i]);
+			require(signer > lastSigner, "invalid-signatures-ordering");
+			require(keyHasPurpose(addrToKey(signer), neededPurpose), "invalid-signature");
+			lastSigner = signer;
+		}
+
+		this.execute(_operationType, _to, _value, _data);
 	}
 }

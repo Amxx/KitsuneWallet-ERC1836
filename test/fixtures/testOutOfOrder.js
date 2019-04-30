@@ -6,7 +6,7 @@ const {relayMetaTx,prepareMetaTx} = require('../../utils/utils.js');
 const {expect} = chai;
 chai.use(solidity);
 
-function testOutOfOrder(provider, executeabi)
+function testOutOfOrder(provider, executeabi, addrToKey = ethers.utils.keccak256)
 {
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
 	const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
@@ -111,7 +111,7 @@ function testOutOfOrder(provider, executeabi)
 					{
 						to: proxyAsWallet.address,
 						data: proxyAsWallet.interface.functions.setKey.encode([
-							ethers.utils.keccak256(user2.address),
+							addrToKey(user2.address),
 							'0x0000000000000000000000000000000000000000000000000000000000000007'
 						]),
 						nonce: 1,
@@ -122,7 +122,7 @@ function testOutOfOrder(provider, executeabi)
 				relayer,
 			)).to
 			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
-			.emit(proxyAsWallet, 'SetKey').withArgs(ethers.utils.keccak256(user2.address), "0x0000000000000000000000000000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000007");
+			.emit(proxyAsWallet, 'SetKey').withArgs(addrToKey(user2.address), "0x0000000000000000000000000000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000007");
 			await expect(relayMetaTx(
 				await prepareMetaTx(
 					proxyAsWallet,

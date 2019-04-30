@@ -22,6 +22,7 @@ describe('Wallet', () => {
 
 	const provider = createMockProvider();
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
+	const addrToKey = ethers.utils.keccak256
 
 	before(async () => {
 		walletContract = await deployContract(wallet, Wallet, []);
@@ -34,7 +35,7 @@ describe('Wallet', () => {
 			walletContract.address,
 			walletContract.interface.functions.initialize.encode([
 				[
-					ethers.utils.keccak256(user1.address),
+					addrToKey(user1.address),
 				],
 				[
 					'0x0000000000000000000000000000000000000000000000000000000000000007',
@@ -47,7 +48,7 @@ describe('Wallet', () => {
 			walletContract.address,
 			walletContract.interface.functions.initialize.encode([
 				[
-					ethers.utils.keccak256(relayer.address),
+					addrToKey(relayer.address),
 				],
 				[
 					'0x0000000000000000000000000000000000000000000000000000000000000007',
@@ -63,11 +64,11 @@ describe('Wallet', () => {
 		await tokenContract.connect(wallet).transfer(proxyAsWallet.address, eth(1));
 	});
 
-	testInitialize   (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
-	testExecute      (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
-	testRefund       (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
-	testKeyManagement(provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
-	testMultisig     (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
-	testUpdateMaster (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])');
+	testInitialize   (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])', addrToKey);
+	testExecute      (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])', addrToKey);
+	testRefund       (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])', addrToKey);
+	testKeyManagement(provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])', addrToKey);
+	testMultisig     (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])', addrToKey);
+	testUpdateMaster (provider, 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])', addrToKey);
 
 });

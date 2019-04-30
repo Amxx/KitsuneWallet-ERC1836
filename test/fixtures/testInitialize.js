@@ -6,7 +6,7 @@ const {relayMetaTx,prepareMetaTx} = require('../../utils/utils.js');
 const {expect} = chai;
 chai.use(solidity);
 
-function testInitialize(provider, executeabi, extra = [])
+function testInitialize(provider, executeabi, addrToKey = ethers.utils.keccak256)
 {
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
 
@@ -22,7 +22,7 @@ function testInitialize(provider, executeabi, extra = [])
 		it('reintrance protection', async () => {
 			await expect(proxyAsWallet.connect(user1).initialize(
 				[
-					ethers.utils.keccak256(user1.address),
+					addrToKey(user1.address),
 				],
 				[
 					'0x0000000000000000000000000000000000000000000000000000000000000007',

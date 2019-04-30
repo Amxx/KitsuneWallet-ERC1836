@@ -7,7 +7,7 @@ const {expect} = chai;
 chai.use(solidity);
 
 eth = x => ethers.utils.parseEther(x.toString())
-function testExecute(provider, executeabi)
+function testExecute(provider, executeabi, addrToKey = ethers.utils.keccak256)
 {
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
 	const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));

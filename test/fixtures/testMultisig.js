@@ -6,7 +6,7 @@ const {relayMetaTx,prepareMetaTx} = require('../../utils/utils.js');
 const {expect} = chai;
 chai.use(solidity);
 
-function testMultisig(provider, executeabi)
+function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 {
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
 	const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
@@ -85,7 +85,7 @@ function testMultisig(provider, executeabi)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setKey.encode([
-								ethers.utils.keccak256(user2.address),
+								addrToKey(user2.address),
 								'0x0000000000000000000000000000000000000000000000000000000000000001',
 							]),
 							nonce: 1,
@@ -165,7 +165,7 @@ function testMultisig(provider, executeabi)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setKey.encode([
-								ethers.utils.keccak256(user2.address),
+								addrToKey(user2.address),
 								'0x0000000000000000000000000000000000000000000000000000000000000001',
 							]),
 							nonce: 1,
@@ -220,7 +220,7 @@ function testMultisig(provider, executeabi)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setKey.encode([
-								ethers.utils.keccak256(user2.address),
+								addrToKey(user2.address),
 								'0x0000000000000000000000000000000000000000000000000000000000000001',
 							]),
 							nonce: 1,
@@ -317,7 +317,7 @@ function testMultisig(provider, executeabi)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setKey.encode([
-								ethers.utils.keccak256(user2.address),
+								addrToKey(user2.address),
 								'0x0000000000000000000000000000000000000000000000000000000000000006'
 							]),
 							nonce: 1,

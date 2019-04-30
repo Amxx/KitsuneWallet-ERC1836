@@ -4,7 +4,7 @@ const {createMockProvider, deployContract, getWallets, solidity} = require('ethe
 const {sendMetaTx} = require('../../utils/utils.js');
 
 const Proxy  = require('../../build/Proxy');
-const Wallet = require('../../build/WalletMultisig');
+const Wallet = require('../../build/IexecWhitelist');
 const Target = require('../../build/Target');
 
 const testInitialize    = require("../fixtures/testInitialize.js");
@@ -16,11 +16,11 @@ const testUpdateMaster  = require("../fixtures/testUpdateMaster.js");
 ethers.errors.setLogLevel('error');
 
 eth = x => ethers.utils.parseEther(x.toString())
-describe('Wallet', () => {
+describe('IexecWhitelist', () => {
 
 	const provider = createMockProvider();
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
-	const addrToKey = ethers.utils.keccak256
+	const addrToKey = addr => ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode([ 'address' ],[ addr ]))
 
 	before(async () => {
 		walletContract = await deployContract(wallet, Wallet, []);

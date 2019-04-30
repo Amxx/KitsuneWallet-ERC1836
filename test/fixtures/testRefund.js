@@ -7,7 +7,7 @@ const {expect} = chai;
 chai.use(solidity);
 
 eth = x => ethers.utils.parseEther(x.toString())
-function testExecute(provider, executeabi)
+function testExecute(provider, executeabi, addrToKey = ethers.utils.keccak256)
 {
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
 
@@ -18,8 +18,8 @@ function testExecute(provider, executeabi)
 			const gasPrice = 20 * 10**9; // 20gwai
 			const dest     = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 
-			expect(await relayerProxyAsWallet.getKey(ethers.utils.keccak256(relayer.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
-			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await relayerProxyAsWallet.getKey(addrToKey(relayer.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxyAsWallet.getKey(addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 
 			expect(await provider.getBalance(proxyAsWallet.address       )).to.eq(eth(1.0));
 			expect(await provider.getBalance(relayerProxyAsWallet.address)).to.eq(eth(0.0));
@@ -67,7 +67,7 @@ function testExecute(provider, executeabi)
 			const gasPrice = 2000000000;
 			const dest     = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 
-			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxyAsWallet.getKey(addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 
 			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(1.0));
 			expect(await provider.getBalance(dest                 )).to.eq(eth(0.0));
@@ -108,7 +108,7 @@ function testExecute(provider, executeabi)
 			const gasPrice = 1;
 			const dest     = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 
-			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxyAsWallet.getKey(addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 
 			expect(await provider.getBalance    (proxyAsWallet.address)).to.eq(eth(1.0));
 			expect(await provider.getBalance    (dest                 )).to.eq(eth(0.0));

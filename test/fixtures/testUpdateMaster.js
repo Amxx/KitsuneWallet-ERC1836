@@ -6,7 +6,7 @@ const {relayMetaTx,prepareMetaTx} = require('../../utils/utils.js');
 const {expect} = chai;
 chai.use(solidity);
 
-function testUpdateMaster(provider, executeabi)
+function testUpdateMaster(provider, executeabi, addrToKey = ethers.utils.keccak256)
 {
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
 	const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
@@ -14,8 +14,8 @@ function testUpdateMaster(provider, executeabi)
 	describe('UpdateMaster', async () => {
 
 		it('authorized', async () => {
-			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
-			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+			expect(await proxyAsWallet.getKey(addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxyAsWallet.getKey(addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxyAsWallet.nonce()).to.be.eq(0);
 
 			await expect(relayMetaTx(
@@ -26,7 +26,7 @@ function testUpdateMaster(provider, executeabi)
 						data: proxyAsWallet.interface.functions.updateMaster.encode([
 							walletContract.address,
 							walletContract.interface.functions.initialize.encode([
-								[ ethers.utils.keccak256(user2.address) ],
+								[ addrToKey(user2.address) ],
 								[ "0x0000000000000000000000000000000000000000000000000000000000000007" ],
 								1,
 								1,
@@ -44,8 +44,8 @@ function testUpdateMaster(provider, executeabi)
 			.emit(proxyAsWallet, 'MasterChange').withArgs(walletContract.address, walletContract.address);
 
 
-			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
-			expect(await proxyAsWallet.getKey(ethers.utils.keccak256(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxyAsWallet.getKey(addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+			expect(await proxyAsWallet.getKey(addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxyAsWallet.nonce()).to.be.eq(1);
 		});
 
@@ -57,7 +57,7 @@ function testUpdateMaster(provider, executeabi)
 				proxyAsWallet.interface.functions.updateMaster.encode([
 					walletContract.address,
 					walletContract.interface.functions.initialize.encode([
-						[ ethers.utils.keccak256(user2.address) ],
+						[ addrToKey(user2.address) ],
 						[ "0x000000000000000000000000000000000000000000000000000000000000000f" ],
 						1,
 						1,

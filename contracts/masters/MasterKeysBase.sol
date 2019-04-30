@@ -102,6 +102,12 @@ contract MasterKeysBase is MasterBase, IERC1271
 		return _purpose & ~m_keyPurposes[_key] == bytes32(0);
 	}
 
+	function keyHasPurpose(bytes32 _key, uint256 _purpose)
+	public view returns (bool)
+	{
+		keyHasPurpose(_key, bytes32(_purpose));
+	}
+
 	function setKey(bytes32 _key, bytes32 _purpose)
 	public protected
 	{

@@ -39,7 +39,7 @@ The added value of Kitsune is the way masters are structured, and the way they d
 Methods includes:
 
 | Function name       | arguments                                 | returns        | view | Comment                                                       |
-|---------------------|-------------------------------------------|----------------|------|---------------------------------------------------------------|
+|:--------------------|:------------------------------------------|:---------------|:----:|:--------------------------------------------------------------|
 | `master`            | ()                                        | (address)      | Yes  | KitsuneWallet: get master address                             |
 | `updateMaster`      | (address,bytes calldata,bool)             |                | No   | KitsuneWallet: update master                                  |
 | `transferOwnership` | (address)                                 |                | No   | Wallet specific: change ownership of the contract             |
@@ -63,7 +63,7 @@ Calls to the execute method can be perform by anyone, but the subsequent calls w
 Methods includes:
 
 | Function name            | arguments                                                          | returns            | view | Comment                                                                      |
-|--------------------------|--------------------------------------------------------------------|--------------------|------|------------------------------------------------------------------------------|
+|:-------------------------|:-------------------------------------------------------------------|:-------------------|:----:|:-----------------------------------------------------------------------------|
 | `master`                 | ()                                                                 | (address)          | Yes  | KitsuneWallet: get master address                                            |
 | `updateMaster`           | (address,bytes calldata,bool)                                      |                    | No   | KitsuneWallet: update master                                                 |
 | `addrToKey`              | (address)                                                          | (bytes32)          | Yes  | Wallet specific: convert address to key                                      |
@@ -97,7 +97,7 @@ Methods includes:
 Methods are the same as `WalletMultisig` except for the `execute` method that supports the modification in the meta-transaction.
 
 | Function name            | arguments                                                                            | returns | view | Comment                                                                      |
-|--------------------------|--------------------------------------------------------------------------------------|---------|------|------------------------------------------------------------------------------|
+|:-------------------------|:-------------------------------------------------------------------------------------|:--------|:----:|:-----------------------------------------------------------------------------|
 | `execute`                | (uint256, address, uint256, bytes memory, uint256, address, uint256, bytes[] memory) |         | No   | Wallet specific: Execute a transaction (must be signed with authorized keys) |
 
 #### `WalletMultisigRefundOutOfOrder`
@@ -107,7 +107,7 @@ Methods are the same as `WalletMultisig` except for the `execute` method that su
 Methods are the same as `WalletMultisig` and `WalletMultisigRefund` except for the `execute` method that supports the modification in the meta-transaction.
 
 | Function name            | arguments                                                                                     | returns | view | Comment                                                                      |
-|--------------------------|-----------------------------------------------------------------------------------------------|---------|------|------------------------------------------------------------------------------|
+|:-------------------------|:----------------------------------------------------------------------------------------------|:--------|:----:|:-----------------------------------------------------------------------------|
 | `execute`                | (uint256, address, uint256, bytes memory, uint256, bytes32, address, uint256, bytes[] memory) |         | No   | Wallet specific: Execute a transaction (must be signed with authorized keys) |
 
 #### Meta-transactions signature
@@ -115,7 +115,7 @@ Methods are the same as `WalletMultisig` and `WalletMultisigRefund` except for t
 Meta-transaction used by the `WalletMultisig`, `WalletMultisigRefund` and `WalletMultisigRefundOutOfOrder` follow a common pattern:
 
 | Name          | Type    | Used by `WM` | Used by `WMR` | Used by `WMROOO` | Comment                                                                     |
-|---------------|---------|--------------|---------------|------------------|-----------------------------------------------------------------------------|
+|:--------------|:--------|:------------:|:-------------:|:----------------:|:----------------------------------------------------------------------------|
 | operationType | uint256 | x            | x             | x                | `0` call, `1` create contract                                               |
 | to            | address | x            | x             | x                | Destination of the call                                                     |
 | value         | uint256 | x            | x             | x                | Value of the call (wei transfered)                                          |
@@ -133,14 +133,105 @@ If multiple signatures must be required for an action, the different signatures 
 
 ## Writting a new Master
 
+In order to be a Kitsune compatible master, your contract must follow some rules:
 
+1. Inherit from `contracts/masters/MasterBase.sol` as it's FIRST dependency. This is required to ensure the correct memory space is reserved at the beginning of the contract.
+2. Implement the `function updateMaster(address,bytes calldata,bool) external` function (declared but not defined in `MasterBase`). This function reset the memory specific to your wallet (if the boolean is enabled) and then call `setMaster(_newMaster, _initData)`. Failure to include this function will prevent further upgradability of the proxy using your master.
+3. Implement an initialization function that will be called as part of the update process.
+
+`WalletOwnable` provides a simple example. UniversalLogin also provides an exemple in its [WalletMaster](https://github.com/UniversalLogin/UniversalLoginSDK/blob/master/universal-login-contracts/contracts/WalletMaster.sol) contract.
 
 ## Deploying a proxy
 
+Example of code used to deploy a proxy base on the `WalletMultisig` master controlled by two keys.
 
+```
+const ethers = require('ethers');
+const proxy  = require('./build/Proxy')
+const master = require('./build/WalletMultisig');
+
+initializationTX = new ethers.utils.Interface(master.abi).functions.initialize.encode([
+	[
+		ethers.utils.hexZeroPad(<managment_key_1>, 32).toString().toLowerCase(), // addrToKey(<managment_key_1>)
+		ethers.utils.hexZeroPad(<managment_key_2>, 32).toString().toLowerCase(), // addrToKey(<managment_key_2>)
+	],
+	[
+		"0x0000000000000000000000000000000000000000000000000000000000000003", // purpose: management & action
+		"0x0000000000000000000000000000000000000000000000000000000000000003", // purpose: management & action
+	],
+	1, // Only one signature needed for management
+	1, // Only one signature needed for action
+]);
+new ethers.ContractFactory(proxy.abi, proxy.bytecode).getDeployTransaction(master.networks['42'].address, initializationTX);
+```
 
 ## Using a proxy
 
+To use a proxy, just instanciate a example of the master it uses (can be verified using the `master()` view method) at the address of the proxy. The proxy will transparently redirect all calls and results.
 
+## Upgrading a proxy
 
-## Updating a proxy
+To upgrade a proxy to a new master, call the `updateMaster(address,bytes calldata,bool)` method implemented by the master. If both master use the same memory pattern you could eventually disregard the initialization step.
+
+**Example:** upgrading from `WalletOwnable` to `WalletMultisig` (with the same ownership):
+
+```
+const ethers = require('ethers');
+const utils  = require('./utils/utils');
+
+const newMasterId = "WalletMultisig";
+
+const proxyaddr   = <address of the proxy>;
+const master      = require(`./build/${newMasterId}`);
+const wallet      = new ethers.Wallet(<private key of manager>);
+const proxy       = new ethers.Contract(proxyaddr, master.abi, wallet);
+
+initializationTX = new ethers.utils.Interface(master.abi).functions.initialize.encode([
+	[ ethers.utils.hexZeroPad(wallet.address, 32).toString().toLowerCase() ],
+	[ "0x0000000000000000000000000000000000000000000000000000000000000003" ],
+	1,
+	1,
+]);
+updateMasterTX = new ethers.utils.Interface(master.abi).functions.updateMaster.encode([
+	master.networks["42"].address,
+	initializationTX,
+	true,
+]);
+
+await proxy.functions['execute(uint256,address,uint256,bytes)'](1, proxy.address, 0, updateMasterTX);
+```
+
+**Example:** upgrading from `WalletMultisig` to `WalletMultisigRefundOutOfOrder` (with no memory reset):
+
+```
+const ethers = require('ethers');
+const utils  = require('./utils/utils');
+
+const newMasterId = "WalletMultisigRefundOutOfOrder";
+
+const proxyaddr   = <address of the proxy>;
+const master      = require(`./build/${newMasterId}`);
+const wallet      = new ethers.Wallet(<private key of manager>);
+const proxy       = new ethers.Contract(proxyaddr, master.abi, wallet);
+const executeABI  = Object.keys(proxy.interface.functions)
+	.filter(fn => fn.startsWith("execute("))
+	.filter(fn => fn !== 'execute(uint256,address,uint256,bytes)')[0]
+
+await utils.relayMetaTx(
+	await prepareMetaTx(
+		proxy,
+		{
+			to: proxy.address,
+			data: proxy.interface.functions.updateMaster.encode([
+				master.address,
+				"0x",
+				false,
+			]),
+			nonce: (await proxy.nonce()) + 1,
+		}
+		[ wallet ],
+		executeABI
+	),
+	relayer
+)
+```

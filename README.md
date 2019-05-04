@@ -2,7 +2,7 @@
 
 This documentation is for version 0.0.24, please sumbit an issue if you feel like an update is required.
 
----
+
 
 ## What is Kitsune Wallet
 
@@ -28,7 +28,7 @@ Technical architecture can quickly be very complex, particularly when talking of
 
 The added value of Kitsune is the way masters are structured, and the way they deal with memory. Kitsune wallet prevents the proxy from linking to dangerous masters and requires the masters to include specific methods for memory cleanup and replay protection through upgrades.
 
----
+
 
 ## Existing Masters
 
@@ -39,7 +39,7 @@ The added value of Kitsune is the way masters are structured, and the way they d
 Methods includes:
 
 | Function name       | arguments                                 | returns        | view | Comment                                                       |
-|---------------------|-------------------------------------------|----------------|------|---------------------------------------------------------------|
+||-|-|||
 | `master`            | ()                                        | (address)      | Yes  | KitsuneWallet: get master address                             |
 | `updateMaster`      | (address,bytes calldata,bool)             |                | No   | KitsuneWallet: update master                                  |
 | `transferOwnership` | (address)                                 |                | No   | Wallet specific: change ownership of the contract             |
@@ -63,7 +63,7 @@ Calls to the execute method can be perform by anyone, but the subsequent calls w
 Methods includes:
 
 | Function name            | arguments                                                          | returns            | view | Comment                                                                      |
-|--------------------------|--------------------------------------------------------------------|--------------------|------|------------------------------------------------------------------------------|
+|--|--|--|||
 | `master`                 | ()                                                                 | (address)          | Yes  | KitsuneWallet: get master address                                            |
 | `updateMaster`           | (address,bytes calldata,bool)                                      |                    | No   | KitsuneWallet: update master                                                 |
 | `addrToKey`              | (address)                                                          | (bytes32)          | Yes  | Wallet specific: convert address to key                                      |
@@ -97,7 +97,7 @@ Methods includes:
 Methods are the same as `WalletMultisig` except for the `execute` method that supports the modification in the meta-transaction.
 
 | Function name            | arguments                                                                            | returns | view | Comment                                                                      |
-|--------------------------|--------------------------------------------------------------------------------------|---------|------|------------------------------------------------------------------------------|
+|--|--||||
 | `execute`                | (uint256, address, uint256, bytes memory, uint256, address, uint256, bytes[] memory) |         | No   | Wallet specific: Execute a transaction (must be signed with authorized keys) |
 
 #### `WalletMultisigRefundOutOfOrder`
@@ -107,23 +107,40 @@ Methods are the same as `WalletMultisig` except for the `execute` method that su
 Methods are the same as `WalletMultisig` and `WalletMultisigRefund` except for the `execute` method that supports the modification in the meta-transaction.
 
 | Function name            | arguments                                                                                     | returns | view | Comment                                                                      |
-|--------------------------|-----------------------------------------------------------------------------------------------|---------|------|------------------------------------------------------------------------------|
+|--|--||||
 | `execute`                | (uint256, address, uint256, bytes memory, uint256, bytes32, address, uint256, bytes[] memory) |         | No   | Wallet specific: Execute a transaction (must be signed with authorized keys) |
 
-#### Meta-transaction signature
+#### Meta-transactions signature
 
----
+Meta-transaction used by the `WalletMultisig`, `WalletMultisigRefund` and `WalletMultisigRefundOutOfOrder` follow a common pattern:
+
+| Name          | Type    | Used by `WalletMultisig` | Used by `WalletMultisigRefund` | Used by `WalletMultisigRefundOutOfOrder` | Comment                                                                     |
+|---------------|---------|--------------------------|--------------------------------|------------------------------------------|-----------------------------------------------------------------------------|
+| operationType | uint256 | x                        | x                              | x                                        | `0` call, `1` create contract                                               |
+| to            | address | x                        | x                              | x                                        | Destination of the call                                                     |
+| value         | uint256 | x                        | x                              | x                                        | Value of the call (wei transfered)                                          |
+| data          | bytes   | x                        | x                              | x                                        | Data of the call                                                            |
+| nonce         | uint256 | x                        | x                              | x                                        | Meta-nonce (replay protection)                                              |
+| salt          | bytes32 |                          |                                | x                                        | Salt for replay protection of out-of-order meta-transaction                 |
+| gasToken      | address |                          | x                              | x                                        | Address of the ERC20 token to use for gas refund (or 0 for refund in ether) |
+| gasPrice      | uint256 |                          | x                              | x                                        | Gas price for the refund (in ERC20 token or ether)                          |
+| sigs          | bytes[] | x                        | x                              | x                                        | Signatures of the meta-transaction by authorized keys                       |
+
+* Use `nonce = 0` for out-of-order transactions protected by salt (`WalletMultisigRefundOutOfOrder` only)
+
+If multiple signatures must be required for an action, the different signatures must be ordered following the increassing order of the signing addresses. For more details about meta-transaction hashing and signature, please refer to `utils/utils.js` and to the different tests.
+
 
 ## Writting a new Master
 
----
+
 
 ## Deploying a proxy
 
----
+
 
 ## Using a proxy
 
----
+
 
 ## Updating a proxy

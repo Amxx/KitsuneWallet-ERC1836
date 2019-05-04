@@ -1,0 +1,55 @@
+{
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousMaster",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newMaster",
+          "type": "address"
+        }
+      ],
+      "name": "MasterChange",
+      "type": "event"
+    }
+  ],
+  "evm": {
+    "bytecode": {
+      "linkReferences": {},
+      "object": "6080604052348015600f57600080fd5b50603580601d6000396000f3fe6080604052600080fdfea165627a7a723058207b58a4372f9cd397dce9e19a3d7bb74cf40f3ae2ffa366fc2ef3e3a0315136f50029",
+      "opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH1 0xF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x35 DUP1 PUSH1 0x1D PUSH1 0x0 CODECOPY PUSH1 0x0 RETURN INVALID PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG1 PUSH6 0x627A7A723058 KECCAK256 PUSH28 0x58A4372F9CD397DCE9E19A3D7BB74CF40F3AE2FFA366FC2EF3E3A031 MLOAD CALLDATASIZE CREATE2 STOP 0x29 ",
+      "sourceMap": "82:1133:16:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;82:1133:16;;;;;;;"
+    },
+    "deployedBytecode": {
+      "linkReferences": {},
+      "object": "6080604052600080fdfea165627a7a723058207b58a4372f9cd397dce9e19a3d7bb74cf40f3ae2ffa366fc2ef3e3a0315136f50029",
+      "opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG1 PUSH6 0x627A7A723058 KECCAK256 PUSH28 0x58A4372F9CD397DCE9E19A3D7BB74CF40F3AE2FFA366FC2EF3E3A031 MLOAD CALLDATASIZE CREATE2 STOP 0x29 ",
+      "sourceMap": "82:1133:16:-;;;;;"
+    }
+  },
+  "interface": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousMaster",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newMaster",
+          "type": "address"
+        }
+      ],
+      "name": "MasterChange",
+      "type": "event"
+    }
+  ],
+  "bytecode": "6080604052348015600f57600080fd5b50603580601d6000396000f3fe6080604052600080fdfea165627a7a723058207b58a4372f9cd397dce9e19a3d7bb74cf40f3ae2ffa366fc2ef3e3a0315136f50029"
+}

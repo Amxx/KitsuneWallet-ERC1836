@@ -39,7 +39,7 @@ The added value of Kitsune is the way masters are structured, and the way they d
 Methods includes:
 
 | Function name       | arguments                                 | returns        | view | Comment                                                       |
-||-|-|||
+|---------------------|-------------------------------------------|----------------|------|---------------------------------------------------------------|
 | `master`            | ()                                        | (address)      | Yes  | KitsuneWallet: get master address                             |
 | `updateMaster`      | (address,bytes calldata,bool)             |                | No   | KitsuneWallet: update master                                  |
 | `transferOwnership` | (address)                                 |                | No   | Wallet specific: change ownership of the contract             |
@@ -63,7 +63,7 @@ Calls to the execute method can be perform by anyone, but the subsequent calls w
 Methods includes:
 
 | Function name            | arguments                                                          | returns            | view | Comment                                                                      |
-|--|--|--|||
+|--------------------------|--------------------------------------------------------------------|--------------------|------|------------------------------------------------------------------------------|
 | `master`                 | ()                                                                 | (address)          | Yes  | KitsuneWallet: get master address                                            |
 | `updateMaster`           | (address,bytes calldata,bool)                                      |                    | No   | KitsuneWallet: update master                                                 |
 | `addrToKey`              | (address)                                                          | (bytes32)          | Yes  | Wallet specific: convert address to key                                      |
@@ -97,7 +97,7 @@ Methods includes:
 Methods are the same as `WalletMultisig` except for the `execute` method that supports the modification in the meta-transaction.
 
 | Function name            | arguments                                                                            | returns | view | Comment                                                                      |
-|--|--||||
+|--------------------------|--------------------------------------------------------------------------------------|---------|------|------------------------------------------------------------------------------|
 | `execute`                | (uint256, address, uint256, bytes memory, uint256, address, uint256, bytes[] memory) |         | No   | Wallet specific: Execute a transaction (must be signed with authorized keys) |
 
 #### `WalletMultisigRefundOutOfOrder`
@@ -107,7 +107,7 @@ Methods are the same as `WalletMultisig` except for the `execute` method that su
 Methods are the same as `WalletMultisig` and `WalletMultisigRefund` except for the `execute` method that supports the modification in the meta-transaction.
 
 | Function name            | arguments                                                                                     | returns | view | Comment                                                                      |
-|--|--||||
+|--------------------------|-----------------------------------------------------------------------------------------------|---------|------|------------------------------------------------------------------------------|
 | `execute`                | (uint256, address, uint256, bytes memory, uint256, bytes32, address, uint256, bytes[] memory) |         | No   | Wallet specific: Execute a transaction (must be signed with authorized keys) |
 
 #### Meta-transactions signature

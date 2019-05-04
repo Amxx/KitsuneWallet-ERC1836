@@ -114,17 +114,17 @@ Methods are the same as `WalletMultisig` and `WalletMultisigRefund` except for t
 
 Meta-transaction used by the `WalletMultisig`, `WalletMultisigRefund` and `WalletMultisigRefundOutOfOrder` follow a common pattern:
 
-| Name          | Type    | Used by `WalletMultisig` | Used by `WalletMultisigRefund` | Used by `WalletMultisigRefundOutOfOrder` | Comment                                                                     |
-|---------------|---------|--------------------------|--------------------------------|------------------------------------------|-----------------------------------------------------------------------------|
-| operationType | uint256 | x                        | x                              | x                                        | `0` call, `1` create contract                                               |
-| to            | address | x                        | x                              | x                                        | Destination of the call                                                     |
-| value         | uint256 | x                        | x                              | x                                        | Value of the call (wei transfered)                                          |
-| data          | bytes   | x                        | x                              | x                                        | Data of the call                                                            |
-| nonce         | uint256 | x                        | x                              | x                                        | Meta-nonce (replay protection)                                              |
-| salt          | bytes32 |                          |                                | x                                        | Salt for replay protection of out-of-order meta-transaction                 |
-| gasToken      | address |                          | x                              | x                                        | Address of the ERC20 token to use for gas refund (or 0 for refund in ether) |
-| gasPrice      | uint256 |                          | x                              | x                                        | Gas price for the refund (in ERC20 token or ether)                          |
-| sigs          | bytes[] | x                        | x                              | x                                        | Signatures of the meta-transaction by authorized keys                       |
+| Name          | Type    | Used by `WM` | Used by `WMR` | Used by `WMROOO` | Comment                                                                     |
+|---------------|---------|--------------|---------------|------------------|-----------------------------------------------------------------------------|
+| operationType | uint256 | x            | x             | x                | `0` call, `1` create contract                                               |
+| to            | address | x            | x             | x                | Destination of the call                                                     |
+| value         | uint256 | x            | x             | x                | Value of the call (wei transfered)                                          |
+| data          | bytes   | x            | x             | x                | Data of the call                                                            |
+| nonce         | uint256 | x            | x             | x                | Meta-nonce (replay protection)                                              |
+| salt          | bytes32 |              |               | x                | Salt for replay protection of out-of-order meta-transaction                 |
+| gasToken      | address |              | x             | x                | Address of the ERC20 token to use for gas refund (or 0 for refund in ether) |
+| gasPrice      | uint256 |              | x             | x                | Gas price for the refund (in ERC20 token or ether)                          |
+| sigs          | bytes[] | x            | x             | x                | Signatures of the meta-transaction by authorized keys                       |
 
 * Use `nonce = 0` for out-of-order transactions protected by salt (`WalletMultisigRefundOutOfOrder` only)
 

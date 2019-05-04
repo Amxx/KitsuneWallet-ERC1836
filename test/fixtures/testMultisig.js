@@ -88,7 +88,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 								addrToKey(user2.address),
 								'0x0000000000000000000000000000000000000000000000000000000000000001',
 							]),
-							nonce: 1,
 						},
 						[ user1 ],
 						executeabi,
@@ -101,7 +100,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setManagementThreshold.encode([2]),
-							nonce: 2,
 						},
 						[ user1 ],
 						executeabi,
@@ -123,7 +121,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setManagementThreshold.encode([0]),
-							nonce: 1,
 						},
 						[ user1 ],
 						executeabi,
@@ -143,7 +140,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setManagementThreshold.encode([2]),
-							nonce: 1,
 						},
 						[ user1 ],
 						executeabi,
@@ -168,7 +164,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 								addrToKey(user2.address),
 								'0x0000000000000000000000000000000000000000000000000000000000000001',
 							]),
-							nonce: 1,
 						},
 						[ user1 ],
 						executeabi,
@@ -182,7 +177,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setManagementThreshold.encode([2]),
-							nonce: 2,
 						},
 						[ user1 ],
 						executeabi,
@@ -198,7 +192,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setManagementThreshold.encode([1]),
-							nonce: 3,
 						},
 						[ user1, user2 ],
 						executeabi,
@@ -223,7 +216,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 								addrToKey(user2.address),
 								'0x0000000000000000000000000000000000000000000000000000000000000001',
 							]),
-							nonce: 1,
 						},
 						[ user1 ],
 						executeabi,
@@ -237,7 +229,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setManagementThreshold.encode([2]),
-							nonce: 2,
 						},
 						[ user1 ],
 						executeabi,
@@ -253,7 +244,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setManagementThreshold.encode([1]),
-							nonce: 3,
 						},
 						[ user2 ],
 						executeabi,
@@ -275,7 +265,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setActionThreshold.encode([2]),
-							nonce: 1,
 						},
 						[ user1 ],
 						executeabi,
@@ -297,7 +286,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setActionThreshold.encode([0]),
-							nonce: 1,
 						},
 						[ user1 ],
 						executeabi,
@@ -320,7 +308,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 								addrToKey(user2.address),
 								'0x0000000000000000000000000000000000000000000000000000000000000006'
 							]),
-							nonce: 1,
 						},
 						[ user1 ],
 						executeabi,
@@ -333,7 +320,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setActionThreshold.encode([2]),
-							nonce: 2,
 						},
 						[ user1 ],
 						executeabi,
@@ -345,7 +331,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						proxyAsWallet,
 						{
 							to: dest,
-							nonce: 3,
 						},
 						[ user1, user2 ],
 						executeabi,
@@ -357,7 +342,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						proxyAsWallet,
 						{
 							to: dest,
-							nonce: 4,
 						},
 						[ user2, user1 ],
 						executeabi,
@@ -373,7 +357,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setActionThreshold.encode([2]),
-							nonce: 1,
 						},
 						[ user1 ],
 						executeabi,
@@ -385,7 +368,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						proxyAsWallet,
 						{
 							to: dest,
-							nonce: 2,
 						},
 						[ user1, user2 ],
 						executeabi,
@@ -401,7 +383,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						{
 							to: proxyAsWallet.address,
 							data: proxyAsWallet.interface.functions.setActionThreshold.encode([2]),
-							nonce: 1,
 						},
 						[ user1 ],
 						executeabi,
@@ -413,7 +394,6 @@ function testMultisig(provider, executeabi, addrToKey = ethers.utils.keccak256)
 						proxyAsWallet,
 						{
 							to: dest,
-							nonce: 2,
 						},
 						[ user1, user1 ],
 						executeabi,

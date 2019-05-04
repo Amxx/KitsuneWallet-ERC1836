@@ -34,14 +34,12 @@ function testExecute(provider, executeabi, addrToKey = ethers.utils.keccak256)
 							{
 								to:       dest,
 								value:    eth(0.1),
-								nonce:    1,
 								gasToken,
 								gasPrice,
 							},
 							[user1],
 							executeabi
 						),
-						nonce: 1,
 					},
 					[ relayer ],
 					executeabi
@@ -79,7 +77,6 @@ function testExecute(provider, executeabi, addrToKey = ethers.utils.keccak256)
 					{
 						to:       dest,
 						value:    eth(0.1),
-						nonce:    1,
 						gasToken,
 						gasPrice,
 					},
@@ -121,7 +118,6 @@ function testExecute(provider, executeabi, addrToKey = ethers.utils.keccak256)
 					{
 						to:       dest,
 						value:    eth(0.1),
-						nonce:    1,
 						gasToken,
 						gasPrice,
 					},

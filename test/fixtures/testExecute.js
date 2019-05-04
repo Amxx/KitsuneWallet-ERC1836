@@ -23,7 +23,6 @@ function testExecute(provider, executeabi, addrToKey = ethers.utils.keccak256)
 					{
 						to:    dest,
 						value: eth(0.1),
-						nonce: 1,
 					},
 					[ user1 ],
 					executeabi
@@ -44,7 +43,6 @@ function testExecute(provider, executeabi, addrToKey = ethers.utils.keccak256)
 					{
 						to: targetContract.address,
 						data: targetContract.interface.functions.call.encode([ randomdata ]),
-						nonce: 1,
 					},
 					[ user1 ],
 					executeabi

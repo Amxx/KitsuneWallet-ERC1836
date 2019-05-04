@@ -114,7 +114,6 @@ function testOutOfOrder(provider, executeabi, addrToKey = ethers.utils.keccak256
 							addrToKey(user2.address),
 							'0x0000000000000000000000000000000000000000000000000000000000000007'
 						]),
-						nonce: 1,
 					},
 					[ user1 ],
 					executeabi,

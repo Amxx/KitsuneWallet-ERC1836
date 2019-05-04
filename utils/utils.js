@@ -106,7 +106,7 @@ module.exports = {
 
 	prepareMetaTx: async function (proxy, tx, signers, executeABI)
 	{
-		tx = PREPARE_TX[executeABI](tx);
+		tx = PREPARE_TX[executeABI]({ nonce: (await proxy.nonce()).toNumber() + 1, ...tx });
 		const txHash = utils.arrayify(HASHING_METATX[executeABI](proxy.address, tx));
 		const signatures = await Promise.all(signers.sort((a,b) => a.address-b.address).map(signer => signer.signMessage(txHash)));
 		return { to: proxy.address, data: proxy.interface.functions[executeABI].encode([...INLINE_TX[executeABI](tx), signatures]) };

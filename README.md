@@ -227,7 +227,6 @@ await utils.relayMetaTx(
 				"0x",
 				false,
 			]),
-			nonce: (await proxy.nonce()) + 1,
 		}
 		[ wallet ],
 		executeABI

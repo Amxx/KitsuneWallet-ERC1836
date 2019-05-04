@@ -33,7 +33,6 @@ function testUpdateMaster(provider, executeabi, addrToKey = ethers.utils.keccak2
 							]),
 							true,
 						]),
-						nonce: 1,
 					},
 					[ user1 ],
 					executeabi,

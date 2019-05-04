@@ -79,10 +79,10 @@ contract MasterKeysBase is MasterBase, IERC1271
 		return m_managementKeyCount;
 	}
 
-	function addrToKey(address addr)
+	function addrToKey(address _addr)
 	public pure returns (bytes32)
 	{
-		return bytes32(uint256(addr));
+		return bytes32(uint256(_addr));
 	}
 
 	// KEYS

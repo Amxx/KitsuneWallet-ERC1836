@@ -1,8 +1,8 @@
 # MINIFICATION
-# JQN       = ./node_modules/.bin/jqn
-# PATH_MAIN = ./build/contracts/
-# PATH_MIN  = ./build/contracts-min/
-# OBJECTS   = $(patsubst $(PATH_MAIN)%.json, %, $(wildcard $(PATH_MAIN)*.json))
+JQN       = ./node_modules/.bin/jqn
+PATH_MAIN = ./build/
+PATH_MIN  = ./build-minified/
+OBJECTS   = $(patsubst $(PATH_MAIN)%.json, %, $(wildcard $(PATH_MAIN)*.json))
 
 # FLATTEN
 PATH_FLAT = ./build/
@@ -24,19 +24,19 @@ SRCS   =                                                                      \
 	contracts/masters/wallets/WalletMultisig.sol                                \
 	contracts/masters/wallets/WalletMultisigRefund.sol                          \
 	contracts/masters/wallets/WalletMultisigRefundOutOfOrder.sol                \
-	
+
 .PHONY: minify flatten
 
 all:
 	@echo "Usage: make [minify|flatten]"
 
-# minify: $(OBJECTS)
-#
-# $(OBJECTS): % : $(PATH_MAIN)%.json makefile
-# 	@mkdir -p $(PATH_MIN)
-# 	@echo -n "Minification of $@.json ..."
-# 	@cat $< | $(JQN) 'pick(["abi","networks"])' --color=false -j > $(PATH_MIN)/$@.json
-# 	@echo " done"
+minify: $(OBJECTS)
+
+$(OBJECTS): % : $(PATH_MAIN)%.json makefile
+	@mkdir -p $(PATH_MIN)
+	@echo -n "Minification of $@.json ..."
+	@cat $< | $(JQN) 'pick(["abi","networks"])' --color=false -j > $(PATH_MIN)/$@.json
+	@echo " done"
 
 flatten: $(PATH_FLAT)$(FILE_FLAT)
 

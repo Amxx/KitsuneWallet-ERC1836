@@ -1,0 +1,21 @@
+{
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousMaster",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newMaster",
+          "type": "address"
+        }
+      ],
+      "name": "MasterChange",
+      "type": "event"
+    }
+  ]
+}

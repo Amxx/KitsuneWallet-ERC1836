@@ -31,6 +31,7 @@ const deployContract = (
 const getMasterInstance = (
 	sdk     = throwIfMissing(),
 	name    = throwIfMissing(),
+	deploy  = true,
 	relayer = null,
 ) => {
 	return new Promise((resolve, reject) => {
@@ -39,17 +40,24 @@ const getMasterInstance = (
 		.then(network => {
 			if (contract.networks[network.chainId] === undefined)
 			{
-				deployContract(sdk, name, [], relayer)
-				.then(instance => {
-					contract.networks[network.chainId] = {
-						"events": {}
-					, "links": {}
-					, "address": instance['address']
-					, "transactionHash": instance['deployTransaction'].hash
-					};
-					resolve(instance);
-				})
-				.catch(reject);
+				if (deploy)
+				{
+					deployContract(sdk, name, [], relayer)
+					.then(instance => {
+						contract.networks[network.chainId] = {
+							"events": {}
+						, "links": {}
+						, "address": instance['address']
+						, "transactionHash": instance['deployTransaction'].hash
+						};
+						resolve(instance);
+					})
+					.catch(reject);
+				}
+				else
+				{
+					resolve(null);
+				}
 			}
 			else
 			{

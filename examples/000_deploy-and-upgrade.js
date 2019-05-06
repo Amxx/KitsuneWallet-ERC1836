@@ -32,22 +32,14 @@ provider.ready.then(async ({ chainId, name }) => {
 
 	const sdk = new Sdk(provider, relayer);
 
-	// // ------------------------ Check master deployments ------------------------
-	// for (let master of sdk.masterList)
+	// ------------------------ Check master deployments ------------------------
+	// for (let master of Object.keys(sdk.contracts.ABIS).filter(name => name !== "Proxy"))
 	// {
-	// 	let instance = await sdk.deployMasterIfNotExist(master);
-	// 	if (instance !== null)
-	// 	{
-	// 		console.log(`${master} not found on chain '${name}' (${chainId}).`)
-	// 		console.log(`→ new instance deployed at address ${instance['address']}`);
-	// 		console.log(`---`);
-	// 	}
+	// 	let instance = await sdk.contracts.getMasterInstance(master);
+	// 	console.log(`${master} is available on chain '${name}' (${chainId}).`)
+	// 	console.log(`→ ${instance['address']}`);
+	// 	console.log(`---`);
 	// }
-
-
-
-
-
 
 	// ------------------------------ create proxy ------------------------------
 	let proxy = null;
@@ -109,8 +101,8 @@ provider.ready.then(async ({ chainId, name }) => {
 			]
 		);
 
-		await sdk.transactions.meta.relay(
-			await sdk.transactions.meta.sign(
+		await sdk.transactions.relay(
+			await sdk.transactions.sign(
 				proxy,                                                    // proxy
 				{ to: proxy.address, data: updateMasterTx },              // tx
 				[ user1 ],                                                // signer

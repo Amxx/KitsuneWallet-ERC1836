@@ -1,11 +1,14 @@
 const   chai     = require('chai');
 const { expect } = chai;
 const { ethers } = require('ethers');
-const   utils    = require('../utils/utils');
 const { createMockProvider, getWallets, solidity} = require('ethereum-waffle');
+
+const { Sdk }    = require('../utils/sdk');
 
 chai.use(solidity);
 ethers.errors.setLogLevel('error');
+
+
 
 // const provider = new ethers.providers.JsonRpcProvider();
 // const accounts = [
@@ -25,133 +28,128 @@ ethers.errors.setLogLevel('error');
 const provider = createMockProvider();
 const [ relayer, user1, user2, user3 ] = getWallets(provider);
 
-async function deployContract(contract, args = [])
-{
-	return new Promise(function(resolve, reject) {
-		(new ethers.ContractFactory(contract.abi, contract.bytecode, relayer))
-		.deploy(...args)
-		.then(
-			contract => contract.deployed()
-			.then(resolve)
-			.catch(reject)
-		)
-		.catch(reject)
-	});
-}
+const sdk = new Sdk(provider, relayer);
 
 provider.ready.then(async ({ chainId, name }) => {
 
-	const contracts = new Map([
-	  "Proxy"
-	, "WalletOwnable"
-	, "WalletMultisig"
-	, "WalletMultisigRefund"
-	, "WalletMultisigRefundOutOfOrder"
-	].map(key => [ key, require(`../build/${key}`) ]));
-
-	const masters = [
-	  "WalletOwnable"
-	, "WalletMultisig"
-	, "WalletMultisigRefund"
-	, "WalletMultisigRefundOutOfOrder"
-	];
-
-	for (let master of masters)
+	// ------------------------ Check master deployments ------------------------
+	for (let master of sdk.masterList)
 	{
-		let contract = await deployContract(contracts.get(master));
-		contracts.get(master).networks[chainId] = {
-		  "events": {}
-		, "links": {}
-		, "address": contract['address']
-		, "transactionHash": contract['deployTransaction'].hash
-		};
-		console.log(`${master} : ${contract['address']}`);
+		if (sdk.contracts[master].networks[chainId] === undefined)
+		{
+			let instance = await sdk.deployContract(master, []);
+
+			sdk.contracts[master].networks[chainId] = {
+			  "events": {}
+			, "links": {}
+			, "address": instance['address']
+			, "transactionHash": instance['deployTransaction'].hash
+			};
+
+			console.log(`${master} not found on chain '${name}' (${chainId}).`)
+			console.log(`→ new instance deployed at address ${instance['address']}`);
+			console.log(`---`);
+		}
 	}
 
-	let proxyAddr = null;
-	let proxy     = null;
 
 	// ------------------------------ create proxy ------------------------------
+	let proxyAddr = null;
+	let proxy     = null;
 	{
-		console.log("\nDeploying proxy: WalletOwnable\n");
+		console.log("Deploying proxy: WalletOwnable\n");
 
-		let initializationTx = new ethers.utils.Interface(contracts.get("WalletOwnable").abi).functions.initialize.encode([
-			user1.address
-		]);
+		let initializationTx = sdk.makeInitializationTx(
+			"WalletOwnable",
+			[
+				user1.address
+			]
+		);
 
-		proxyAddr = (await deployContract(contracts.get("Proxy"), [
-			contracts.get("WalletOwnable").networks[chainId].address,
-			initializationTx,
-			{ gasLimit: 1000000 }
-		]))['address'];
+		proxyAddr = (await sdk.deployContract(
+			"Proxy",
+			[
+				sdk.contracts["WalletOwnable"].networks[chainId].address,
+				initializationTx,
+				{ gasLimit: 1000000 }
+			]
+		)).address;
 
-		proxy = new ethers.Contract(proxyAddr, contracts.get("WalletOwnable").abi, provider);
+		proxy = sdk.viewContract("WalletOwnable", proxyAddr);
 
-		console.log("proxy    :", proxy.address);
-		console.log("master   :", await proxy.master());
-		console.log("masterId :", await proxy.masterId());
-		console.log("owner    :", await proxy.owner());
+		console.log(`proxy    : ${proxy.address}`         );
+		console.log(`master   : ${await proxy.master()}`  );
+		console.log(`masterId : ${await proxy.masterId()}`);
+		console.log(`owner    : ${await proxy.owner()}`   );
+		console.log("");
 	}
 
 	// ----------------- master: WalletOwnable → WalletMultisig -----------------
 	{
 		console.log("\nUpdating proxy: WalletOwnable → WalletMultisig\n");
 
-		let initializationTx = new ethers.utils.Interface(contracts.get("WalletMultisig").abi).functions.initialize.encode([
-			[ ethers.utils.hexZeroPad(user1.address, 32).toString().toLowerCase() ],
-			[ "0x0000000000000000000000000000000000000000000000000000000000000001" ],
-			1,
-			1,
-		]);
+		let initializationTx = sdk.makeInitializationTx(
+			"WalletMultisig",
+			[
+				[ ethers.utils.hexZeroPad(user1.address, 32).toString().toLowerCase() ],
+				[ "0x0000000000000000000000000000000000000000000000000000000000000001" ],
+				1,
+				1,
+			]
+		);
 
-		let updateMasterTx = new ethers.utils.Interface(contracts.get("WalletOwnable").abi).functions.updateMaster.encode([
-			contracts.get("WalletMultisig").networks[chainId].address,
-			initializationTx,
-			true,
-		]);
+		let updateMasterTx = sdk.makeUpdateTx(
+			"WalletOwnable",
+			[
+				sdk.contracts["WalletMultisig"].networks[chainId].address,
+				initializationTx,
+				true,
+			]
+		);
 
 		await (await proxy.connect(user1).execute(0, proxyAddr, 0, updateMasterTx, { gasLimit: 800000 })).wait();
 
-		proxy = new ethers.Contract(proxyAddr, contracts.get("WalletMultisig").abi, provider);
+		proxy = sdk.viewContract("WalletMultisig", proxyAddr);
 
-		console.log("proxy      :", proxy.address);
-		console.log("master     :", await proxy.master());
-		console.log("masterId   :", await proxy.masterId());
-		console.log("owner      :", await proxy.owner());
-		console.log("getKey(U1) :", await proxy.functions['getKey(address)'](user1.address));
-		console.log("getKey(U2) :", await proxy.functions['getKey(address)'](user2.address));
-		console.log("getKey(U3) :", await proxy.functions['getKey(address)'](user3.address));
+		console.log(`proxy      : ${proxy.address}`         );
+		console.log(`master     : ${await proxy.master()}`  );
+		console.log(`masterId   : ${await proxy.masterId()}`);
+		console.log(`owner      : ${await proxy.owner()}`   );
+		console.log(`getKey(U1) : ${await proxy.functions['getKey(address)'](user1.address)}`);
+		console.log(`getKey(U2) : ${await proxy.functions['getKey(address)'](user2.address)}`);
+		console.log(`getKey(U3) : ${await proxy.functions['getKey(address)'](user3.address)}`);
 	}
 
 	// -------- master: WalletMultisig → WalletMultisigRefundOutOfOrder ---------
 	{
 		console.log("\nUpdating proxy: WalletMultisig → WalletMultisigRefundOutOfOrder\n");
 
-		let updateMasterTx = new ethers.utils.Interface(contracts.get("WalletMultisig").abi).functions.updateMaster.encode([
-			contracts.get("WalletMultisigRefundOutOfOrder").networks[chainId].address,
-			"0x",  // no initialization
-			false, // no reset (memory pattern are compatible)
-		]);
+		let updateMasterTx = sdk.makeUpdateTx(
+			"WalletMultisig",
+			[
+				sdk.contracts["WalletMultisigRefundOutOfOrder"].networks[chainId].address,
+				"0x",  // no initialization
+				false, // no reset (memory pattern are compatible)
+			]
+		);
 
-		await utils.relayMetaTx(
-			await utils.prepareMetaTx(
+		await sdk.relayMetaTx(
+			await sdk.prepareMetaTx(
 				proxy,                                                    // proxy
 				{ to: proxyAddr, data: updateMasterTx },                  // tx
 				[ user1 ],                                                // signer
-				Object.keys(proxy.interface.functions).filter(fn => fn.startsWith("execute(") && fn !== 'execute(uint256,address,uint256,bytes)')[0] // 'execute(uint256,address,uint256,bytes,uint256,bytes[])', // executeABI
-			),
-			relayer
+			)
 		);
 
-		proxy = new ethers.Contract(proxyAddr, contracts.get("WalletMultisigRefundOutOfOrder").abi, provider);
+		proxy = sdk.viewContract("WalletMultisigRefundOutOfOrder", proxyAddr);
 
-		console.log("proxy      :", proxy.address);
-		console.log("master     :", await proxy.master());
-		console.log("masterId   :", await proxy.masterId());
-		console.log("owner      :", await proxy.owner());
-		console.log("getKey(U1) :", await proxy.functions['getKey(address)'](user1.address));
-		console.log("getKey(U2) :", await proxy.functions['getKey(address)'](user2.address));
-		console.log("getKey(U3) :", await proxy.functions['getKey(address)'](user3.address));
+		console.log(`proxy      : ${proxy.address}`         );
+		console.log(`master     : ${await proxy.master()}`  );
+		console.log(`masterId   : ${await proxy.masterId()}`);
+		console.log(`owner      : ${await proxy.owner()}`   );
+		console.log(`getKey(U1) : ${await proxy.functions['getKey(address)'](user1.address)}`);
+		console.log(`getKey(U2) : ${await proxy.functions['getKey(address)'](user2.address)}`);
+		console.log(`getKey(U3) : ${await proxy.functions['getKey(address)'](user3.address)}`);
 	}
 
 });

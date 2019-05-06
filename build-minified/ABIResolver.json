@@ -85,5 +85,6 @@
       "name": "ABIChanged",
       "type": "event"
     }
-  ]
+  ],
+  "bytecode": ""
 }

@@ -206,5 +206,6 @@
       "name": "NewTTL",
       "type": "event"
     }
-  ]
+  ],
+  "bytecode": ""
 }

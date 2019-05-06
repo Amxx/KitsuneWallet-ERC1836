@@ -1,5 +1,12 @@
 const { ethers } = require('ethers');
 
+const IMaster                        = require(`../build-minified/IMaster`);
+const Proxy                          = require(`../build-minified/Proxy`);
+const WalletOwnable                  = require(`../build-minified/WalletOwnable`);
+const WalletMultisig                 = require(`../build-minified/WalletMultisig`);
+const WalletMultisigRefund           = require(`../build-minified/WalletMultisigRefund`);
+const WalletMultisigRefundOutOfOrder = require(`../build-minified/WalletMultisigRefundOutOfOrder`);
+
 const HASHING_METATX = {
 	'execute(uint256,address,uint256,bytes,uint256,bytes[])': function (proxyAddress, tx)
 	{
@@ -97,15 +104,7 @@ const INLINE_TX = {
 	},
 };
 
-const IMaster                        = require(`../build/IMaster`);
-
-const Proxy                          = require(`../build/Proxy`);
-const WalletOwnable                  = require(`../build/WalletOwnable`);
-const WalletMultisig                 = require(`../build/WalletMultisig`);
-const WalletMultisigRefund           = require(`../build/WalletMultisigRefund`);
-const WalletMultisigRefundOutOfOrder = require(`../build/WalletMultisigRefundOutOfOrder`);
-
-const contracts = {
+const CONTRACTS = {
 	"Proxy":                          Proxy
 , "WalletOwnable":                  WalletOwnable
 , "WalletMultisig":                 WalletMultisig
@@ -118,8 +117,7 @@ class Sdk
 	constructor(provider = null, defaultRelayer = null)
 	{
 		this.provider       = provider || new ethers.providers.JsonRpcProvider();
-		this.contracts      = contracts;
-		this.masterList     = Object.keys(contracts).filter(name => name !== "Proxy");
+		this.contracts      = CONTRACTS;
 		this.defaultRelayer = defaultRelayer;
 	}
 
@@ -213,6 +211,7 @@ class Sdk
 	prepareMetaTx(proxy, tx, signers = [])
 	{
 		let executeABI = Object.keys(proxy.interface.functions).filter(fn => fn.startsWith("execute(") && fn !== 'execute(uint256,address,uint256,bytes)')[0]
+
 		return new Promise(function(resolve, reject) {
 			proxy.nonce()
 			.then(previousNonce => {
@@ -231,6 +230,30 @@ class Sdk
 	addrToKey(address)
 	{
 		return ethers.utils.hexZeroPad(address, 32).toString().toLowerCase();
+	}
+
+
+	setKey(proxy, key, purpose, signers, relayer = null, params = {})
+	{
+		let sdk  = this;
+		let args = { proxy, key, purpose, signers, relayer, params };
+
+		return new Promise(function(resolve, reject) {
+			sdk.prepareMetaTx(
+				args.proxy,
+				{
+					to: args.proxy.address,
+					data: args.proxy.interface.functions['setKey(bytes32,bytes32)'].encode([ args.key, args.purpose ])
+				},
+				args.signers
+			)
+			.then(txData => {
+				sdk.relayMetaTx(txData, args.relayer, args.params)
+				.then(resolve)
+				.catch(reject);
+			})
+			.catch(reject);
+		});
 	}
 }
 

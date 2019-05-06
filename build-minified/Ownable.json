@@ -74,5 +74,6 @@
       "name": "OwnershipTransferred",
       "type": "event"
     }
-  ]
+  ],
+  "bytecode": ""
 }

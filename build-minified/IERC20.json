@@ -173,5 +173,6 @@
       "name": "Approval",
       "type": "event"
     }
-  ]
+  ],
+  "bytecode": ""
 }

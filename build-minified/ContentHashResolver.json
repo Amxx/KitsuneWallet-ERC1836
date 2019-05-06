@@ -73,5 +73,6 @@
       "name": "ContenthashChanged",
       "type": "event"
     }
-  ]
+  ],
+  "bytecode": ""
 }

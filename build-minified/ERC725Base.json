@@ -157,5 +157,6 @@
       "name": "CallFailure",
       "type": "event"
     }
-  ]
+  ],
+  "bytecode": ""
 }

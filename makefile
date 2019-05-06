@@ -35,7 +35,7 @@ minify: $(OBJECTS)
 $(OBJECTS): % : $(PATH_MAIN)%.json makefile
 	@mkdir -p $(PATH_MIN)
 	@echo -n "Minification of $@.json ..."
-	@cat $< | $(JQN) 'pick(["abi","networks"])' --color=false -j > $(PATH_MIN)/$@.json
+	@cat $< | $(JQN) 'pick(["abi","bytecode","networks"])' --color=false -j > $(PATH_MIN)/$@.json
 	@echo " done"
 
 flatten: $(PATH_FLAT)$(FILE_FLAT)

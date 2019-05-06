@@ -140,5 +140,6 @@
       "name": "AddrChanged",
       "type": "event"
     }
-  ]
+  ],
+  "bytecode": ""
 }

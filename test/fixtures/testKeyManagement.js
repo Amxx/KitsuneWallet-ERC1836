@@ -40,18 +40,11 @@ function testKeyManagement(sdk)
 			expect(await proxy.getActiveKeys()).to.deep.eq([sdk.addrToKey(user1.address)]);
 			expect(await proxy.managementKeyCount()).to.be.eq(1);
 
-			await expect(sdk.relayMetaTx(
-				await sdk.prepareMetaTx(
-					proxy,
-					{
-						to: proxy.address,
-						data: proxy.interface.functions.setKey.encode([
-							sdk.addrToKey(user2.address),
-							'0x0000000000000000000000000000000000000000000000000000000000000004'
-						]),
-					},
-					[ user1 ],
-				),
+			await expect(sdk.setKey(
+				proxy,
+				sdk.addrToKey(user2.address),
+				'0x0000000000000000000000000000000000000000000000000000000000000004',
+				[ user1 ],
 				relayer,
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
@@ -69,18 +62,11 @@ function testKeyManagement(sdk)
 			expect(await proxy.getActiveKeys()).to.deep.eq([sdk.addrToKey(user1.address)]);
 			expect(await proxy.managementKeyCount()).to.be.eq(1);
 
-			await expect(sdk.relayMetaTx(
-				await sdk.prepareMetaTx(
-					proxy,
-					{
-						to: proxy.address,
-						data: proxy.interface.functions.setKey.encode([
-							sdk.addrToKey(user1.address),
-							'0x000000000000000000000000000000000000000000000000000000000000000f',
-						]),
-					},
-					[ user1 ],
-				),
+			await expect(sdk.setKey(
+				proxy,
+				sdk.addrToKey(user1.address),
+				'0x000000000000000000000000000000000000000000000000000000000000000f',
+				[ user1 ],
 				relayer,
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
@@ -98,18 +84,11 @@ function testKeyManagement(sdk)
 			expect(await proxy.getActiveKeys()).to.deep.eq([sdk.addrToKey(user1.address)]);
 			expect(await proxy.managementKeyCount()).to.be.eq(1);
 
-			await expect(sdk.relayMetaTx(
-				await sdk.prepareMetaTx(
-					proxy,
-					{
-						to: proxy.address,
-						data: proxy.interface.functions.setKey.encode([
-							sdk.addrToKey(user1.address),
-							'0x0000000000000000000000000000000000000000000000000000000000000006',
-						]),
-					},
-					[ user1 ],
-				),
+			await expect(sdk.setKey(
+				proxy,
+				sdk.addrToKey(user1.address),
+				'0x0000000000000000000000000000000000000000000000000000000000000006',
+				[ user1 ],
 				relayer,
 			)).to.emit(proxy, 'CallFailure'); //.withArgs(proxy.address, 'cannot-remove-critical-management-key');
 
@@ -126,18 +105,11 @@ function testKeyManagement(sdk)
 			expect(await proxy.getActiveKeys()).to.deep.eq([sdk.addrToKey(user1.address)]);
 			expect(await proxy.managementKeyCount()).to.be.eq(1);
 
-			await expect(sdk.relayMetaTx(
-				await sdk.prepareMetaTx(
-					proxy,
-					{
-						to: proxy.address,
-						data: proxy.interface.functions.setKey.encode([
-							sdk.addrToKey(user2.address),
-							'0x0000000000000000000000000000000000000000000000000000000000000007',
-						]),
-					},
-					[ user1 ],
-				),
+			await expect(sdk.setKey(
+				proxy,
+				sdk.addrToKey(user2.address),
+				'0x0000000000000000000000000000000000000000000000000000000000000007',
+				[ user1 ],
 				relayer,
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
@@ -148,18 +120,11 @@ function testKeyManagement(sdk)
 			expect(await proxy.getActiveKeys()).to.deep.eq([sdk.addrToKey(user1.address),sdk.addrToKey(user2.address)]);
 			expect(await proxy.managementKeyCount()).to.be.eq(2);
 
-			await expect(sdk.relayMetaTx(
-				await sdk.prepareMetaTx(
-					proxy,
-					{
-						to: proxy.address,
-						data: proxy.interface.functions.setKey.encode([
-							sdk.addrToKey(user1.address),
-							'0x0000000000000000000000000000000000000000000000000000000000000000',
-						]),
-					},
-					[ user1 ],
-				),
+			await expect(sdk.setKey(
+				proxy,
+				sdk.addrToKey(user1.address),
+				'0x0000000000000000000000000000000000000000000000000000000000000000',
+				[ user1 ],
 				relayer,
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)

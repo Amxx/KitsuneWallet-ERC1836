@@ -74,18 +74,11 @@ function testMultisig(sdk)
 			it('valid', async () => {
 				expect(await proxy.getManagementThreshold()).to.eq(1);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
-						proxy,
-						{
-							to: proxy.address,
-							data: proxy.interface.functions.setKey.encode([
-								sdk.addrToKey(user2.address),
-								'0x0000000000000000000000000000000000000000000000000000000000000001',
-							]),
-						},
-						[ user1 ],
-					),
+				await expect(sdk.setKey(
+					proxy,
+					sdk.addrToKey(user2.address),
+					'0x0000000000000000000000000000000000000000000000000000000000000001',
+					[ user1 ],
 					relayer,
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 				await expect(sdk.relayMetaTx(
@@ -146,18 +139,11 @@ function testMultisig(sdk)
 			it('valid', async () => {
 				expect(await proxy.getManagementThreshold()).to.eq(1);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
-						proxy,
-						{
-							to: proxy.address,
-							data: proxy.interface.functions.setKey.encode([
-								sdk.addrToKey(user2.address),
-								'0x0000000000000000000000000000000000000000000000000000000000000001',
-							]),
-						},
-						[ user1 ],
-					),
+				await expect(sdk.setKey(
+					proxy,
+					sdk.addrToKey(user2.address),
+					'0x0000000000000000000000000000000000000000000000000000000000000001',
+					[ user1 ],
 					relayer,
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 
@@ -195,18 +181,11 @@ function testMultisig(sdk)
 			it('invalid', async () => {
 				expect(await proxy.getManagementThreshold()).to.eq(1);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
-						proxy,
-						{
-							to: proxy.address,
-							data: proxy.interface.functions.setKey.encode([
-								sdk.addrToKey(user2.address),
-								'0x0000000000000000000000000000000000000000000000000000000000000001',
-							]),
-						},
-						[ user1 ],
-					),
+				await expect(sdk.setKey(
+					proxy,
+					sdk.addrToKey(user2.address),
+					'0x0000000000000000000000000000000000000000000000000000000000000001',
+					[ user1 ],
 					relayer,
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 
@@ -282,18 +261,11 @@ function testMultisig(sdk)
 
 		describe('Execute with multiple signatures', async () => {
 			it('valid', async () => {
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
-						proxy,
-						{
-							to: proxy.address,
-							data: proxy.interface.functions.setKey.encode([
-								sdk.addrToKey(user2.address),
-								'0x0000000000000000000000000000000000000000000000000000000000000006'
-							]),
-						},
-						[ user1 ],
-					),
+				await expect(sdk.setKey(
+					proxy,
+					sdk.addrToKey(user2.address),
+					'0x0000000000000000000000000000000000000000000000000000000000000006',
+					[ user1 ],
 					relayer,
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 				await expect(sdk.relayMetaTx(

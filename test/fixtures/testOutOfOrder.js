@@ -97,18 +97,11 @@ function testOutOfOrder(sdk)
 		it('out-of-order replay protection (different signers)', async () => {
 			samesalt = ethers.utils.randomBytes(32);
 			expect(await proxy.nonce()).to.be.eq(0);
-			await expect(sdk.relayMetaTx(
-				await sdk.prepareMetaTx(
-					proxy,
-					{
-						to: proxy.address,
-						data: proxy.interface.functions.setKey.encode([
-							sdk.addrToKey(user2.address),
-							'0x0000000000000000000000000000000000000000000000000000000000000007'
-						]),
-					},
-					[ user1 ],
-				),
+			await expect(sdk.setKey(
+				proxy,
+				sdk.addrToKey(user2.address),
+				'0x0000000000000000000000000000000000000000000000000000000000000007',
+				[ user1 ],
 				relayer,
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)

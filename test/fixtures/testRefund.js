@@ -17,18 +17,18 @@ function testExecute(sdk)
 			const gasPrice = 20 * 10**9; // 20gwai
 			const dest     = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 
-			expect(await relayerProxy.getKey(sdk.addrToKey(relayer.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
-			expect(await proxy.getKey(sdk.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await relayerProxy.getKey(sdk.utils.addrToKey(relayer.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 
 			expect(await sdk.provider.getBalance(proxy.address       )).to.eq(eth(1.0));
 			expect(await sdk.provider.getBalance(relayerProxy.address)).to.eq(eth(0.0));
 			expect(await sdk.provider.getBalance(dest                )).to.eq(eth(0.0));
 
-			await expect( sdk.relayMetaTx(
-				await  sdk.prepareMetaTx(
+			await expect( sdk.transactions.relay(
+				await  sdk.transactions.sign(
 					relayerProxy,
 					{
-						...await  sdk.prepareMetaTx(
+						...await  sdk.transactions.sign(
 							proxy,
 							{
 								to:       dest,
@@ -62,14 +62,14 @@ function testExecute(sdk)
 			const gasPrice = 2000000000;
 			const dest     = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 
-			expect(await proxy.getKey(sdk.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 
 			expect(await sdk.provider.getBalance(proxy.address)).to.eq(eth(1.0));
 			expect(await sdk.provider.getBalance(dest                 )).to.eq(eth(0.0));
 
 			const balanceBefore = await sdk.provider.getBalance(relayer.address);
-			const tx = await  sdk.relayMetaTx(
-				await  sdk.prepareMetaTx(
+			const tx = await  sdk.transactions.relay(
+				await  sdk.transactions.sign(
 					proxy,
 					{
 						to:       dest,
@@ -101,15 +101,15 @@ function testExecute(sdk)
 			const gasPrice = 1;
 			const dest     = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 
-			expect(await proxy.getKey(sdk.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 
 			expect(await sdk.provider.getBalance    (proxy.address)).to.eq(eth(1.0));
 			expect(await sdk.provider.getBalance    (dest                 )).to.eq(eth(0.0));
 			expect(await tokenContract.balanceOf(proxy.address)).to.eq(eth(1.0));
 			expect(await tokenContract.balanceOf(relayer.address      )).to.eq(eth(0.0));
 
-			await expect( sdk.relayMetaTx(
-				await  sdk.prepareMetaTx(
+			await expect( sdk.transactions.relay(
+				await  sdk.transactions.sign(
 					proxy,
 					{
 						to:       dest,

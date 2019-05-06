@@ -1,6 +1,6 @@
 {
 	"name": "kitsune-wallet",
-	"version": "0.0.25",
+	"version": "0.0.26",
 	"description": "Kitsune-wallet, an upgradable proxy pattern for wallet contracts (erc1836)",
 	"repository": {
 		"type": "git",
@@ -13,7 +13,7 @@
 		"/contracts",
 		"/build",
 		"/build-minified/",
-		"/utils"
+		"/sdk"
 	],
 	"author": "Hadrien Croubois (hc@iex.ec)",
 	"license": "ISC",

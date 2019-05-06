@@ -11,15 +11,15 @@ function testUpdateMaster(sdk, name)
 
 		const [ wallet, relayer, user1, user2, user3 ] = getWallets(sdk.provider);
 		const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
-		const masterAddress = (await sdk.getMasterInstance(name)).address;
+		const masterAddress = (await sdk.contracts.getMasterInstance(name)).address;
 
 		it('authorized', async () => {
-			expect(await proxy.getKey(sdk.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
-			expect(await proxy.getKey(sdk.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxy.nonce()).to.be.eq(0);
 
-			await expect(sdk.relayMetaTx(
-				await sdk.prepareMetaTx(
+			await expect(sdk.transactions.relay(
+				await sdk.transactions.sign(
 					proxy,
 					{
 						to: proxy.address,
@@ -29,7 +29,7 @@ function testUpdateMaster(sdk, name)
 								sdk.makeInitializationTx(
 									name,
 									[
-										[ sdk.addrToKey(user2.address) ],
+										[ sdk.utils.addrToKey(user2.address) ],
 										[ "0x0000000000000000000000000000000000000000000000000000000000000007" ],
 										1,
 										1,
@@ -47,8 +47,8 @@ function testUpdateMaster(sdk, name)
 			.emit(proxy, 'MasterChange').withArgs(masterAddress, masterAddress);
 
 
-			expect(await proxy.getKey(sdk.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
-			expect(await proxy.getKey(sdk.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.nonce()).to.be.eq(1);
 		});
 
@@ -64,7 +64,7 @@ function testUpdateMaster(sdk, name)
 						sdk.makeInitializationTx(
 							"WalletMultisig",
 							[
-								[ sdk.addrToKey(user2.address) ],
+								[ sdk.utils.addrToKey(user2.address) ],
 								[ "0x000000000000000000000000000000000000000000000000000000000000000f" ],
 								1,
 								1,

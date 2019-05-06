@@ -16,8 +16,8 @@ function testMultisig(sdk)
 			it('valid', async () => {
 				expect(await proxy.nonce()).to.be.eq(0);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{ to: dest, nonce: 1 },
 						[ user1 ],
@@ -31,8 +31,8 @@ function testMultisig(sdk)
 			it('invalid', async () => {
 				expect(await proxy.nonce()).to.be.eq(0);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{ to: dest, nonce: 2 },
 						[ user1 ],
@@ -46,8 +46,8 @@ function testMultisig(sdk)
 			it('replay protection', async () => {
 				expect(await proxy.nonce()).to.be.eq(0);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{ to: dest, nonce: 1 },
 						[ user1 ],
@@ -57,8 +57,8 @@ function testMultisig(sdk)
 
 				expect(await proxy.nonce()).to.be.eq(1);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{ to: dest, nonce: 1 },
 						[ user1 ],
@@ -74,15 +74,15 @@ function testMultisig(sdk)
 			it('valid', async () => {
 				expect(await proxy.getManagementThreshold()).to.eq(1);
 
-				await expect(sdk.setKey(
+				await expect(sdk.multisig.setKey(
 					proxy,
-					sdk.addrToKey(user2.address),
+					sdk.utils.addrToKey(user2.address),
 					'0x0000000000000000000000000000000000000000000000000000000000000001',
 					[ user1 ],
 					relayer,
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: proxy.address,
@@ -101,8 +101,8 @@ function testMultisig(sdk)
 			it('invalid (too low)', async () => {
 				expect(await proxy.getManagementThreshold()).to.eq(1);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: proxy.address,
@@ -119,8 +119,8 @@ function testMultisig(sdk)
 			it('invalid (too high)', async () => {
 				expect(await proxy.getManagementThreshold()).to.eq(1);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: proxy.address,
@@ -139,16 +139,16 @@ function testMultisig(sdk)
 			it('valid', async () => {
 				expect(await proxy.getManagementThreshold()).to.eq(1);
 
-				await expect(sdk.setKey(
+				await expect(sdk.multisig.setKey(
 					proxy,
-					sdk.addrToKey(user2.address),
+					sdk.utils.addrToKey(user2.address),
 					'0x0000000000000000000000000000000000000000000000000000000000000001',
 					[ user1 ],
 					relayer,
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: proxy.address,
@@ -161,8 +161,8 @@ function testMultisig(sdk)
 				.emit(proxy, 'CallSuccess').withArgs(proxy.address)
 				.emit(proxy, 'ManagementThresholdChange').withArgs(1, 2);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: proxy.address,
@@ -181,16 +181,16 @@ function testMultisig(sdk)
 			it('invalid', async () => {
 				expect(await proxy.getManagementThreshold()).to.eq(1);
 
-				await expect(sdk.setKey(
+				await expect(sdk.multisig.setKey(
 					proxy,
-					sdk.addrToKey(user2.address),
+					sdk.utils.addrToKey(user2.address),
 					'0x0000000000000000000000000000000000000000000000000000000000000001',
 					[ user1 ],
 					relayer,
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: proxy.address,
@@ -203,8 +203,8 @@ function testMultisig(sdk)
 				.emit(proxy, 'CallSuccess').withArgs(proxy.address)
 				.emit(proxy, 'ManagementThresholdChange').withArgs(1, 2);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: proxy.address,
@@ -223,8 +223,8 @@ function testMultisig(sdk)
 			it('valid', async () => {
 				expect(await proxy.getActionThreshold()).to.eq(1);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: proxy.address,
@@ -243,8 +243,8 @@ function testMultisig(sdk)
 			it('invalid', async () => {
 				expect(await proxy.getActionThreshold()).to.eq(1);
 
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: proxy.address,
@@ -261,15 +261,15 @@ function testMultisig(sdk)
 
 		describe('Execute with multiple signatures', async () => {
 			it('valid', async () => {
-				await expect(sdk.setKey(
+				await expect(sdk.multisig.setKey(
 					proxy,
-					sdk.addrToKey(user2.address),
+					sdk.utils.addrToKey(user2.address),
 					'0x0000000000000000000000000000000000000000000000000000000000000006',
 					[ user1 ],
 					relayer,
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: proxy.address,
@@ -279,8 +279,8 @@ function testMultisig(sdk)
 					),
 					relayer,
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: dest,
@@ -289,8 +289,8 @@ function testMultisig(sdk)
 					),
 					relayer,
 				)).to.emit(proxy, 'CallSuccess').withArgs(dest);
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: dest,
@@ -302,8 +302,8 @@ function testMultisig(sdk)
 			});
 
 			it('invalid - unauthorized signer', async () => {
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: proxy.address,
@@ -313,8 +313,8 @@ function testMultisig(sdk)
 					),
 					relayer,
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: dest,
@@ -326,8 +326,8 @@ function testMultisig(sdk)
 			});
 
 			it('invalid - multiple signer', async () => {
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: proxy.address,
@@ -337,8 +337,8 @@ function testMultisig(sdk)
 					),
 					relayer,
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
-				await expect(sdk.relayMetaTx(
-					await sdk.prepareMetaTx(
+				await expect(sdk.transactions.relay(
+					await sdk.transactions.sign(
 						proxy,
 						{
 							to: dest,

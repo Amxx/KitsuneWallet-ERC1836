@@ -13,7 +13,7 @@ function testInitialize(sdk, name)
 
 		it('Verify proxy initialization', async () => {
 			expect(await proxy.owner()).to.eq(proxy.address);
-			expect(await proxy.master()).to.eq((await sdk.getMasterInstance(name)).address);
+			expect(await proxy.master()).to.eq((await sdk.contracts.getMasterInstance(name)).address);
 			expect(await proxy.getManagementThreshold()).to.eq(1);
 			expect(await proxy.getActionThreshold()).to.eq(1);
 		});
@@ -21,7 +21,7 @@ function testInitialize(sdk, name)
 		it('reintrance protection', async () => {
 			await expect(proxy.connect(user1).initialize(
 				[
-					sdk.addrToKey(user1.address),
+					sdk.utils.addrToKey(user1.address),
 				],
 				[
 					'0x0000000000000000000000000000000000000000000000000000000000000007',

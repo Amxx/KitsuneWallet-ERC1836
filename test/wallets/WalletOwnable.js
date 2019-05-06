@@ -2,7 +2,7 @@ const chai   = require('chai');
 const ethers = require('ethers');
 const {createMockProvider, deployContract, getWallets, solidity} = require('ethereum-waffle');
 
-const { Sdk } = require('../../utils/sdk.js');
+const { Sdk } = require('../../sdk/sdk.js');
 const Target   = require('../../build/Target');
 
 const {expect} = chai;
@@ -17,13 +17,13 @@ describe('WalletOwnable', () => {
 	const sdk = new Sdk(provider, relayer);
 
 	before(async () => {
-		walletContract = await sdk.getMasterInstance("WalletOwnable");
+		walletContract = await sdk.contracts.getMasterInstance("WalletOwnable");
 		targetContract = await deployContract(wallet, Target, []);
 		dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 	});
 
 	beforeEach(async () => {
-		proxy = await sdk.deployProxy("WalletOwnable", [ user1.address ]);
+		proxy = await sdk.contracts.deployProxy("WalletOwnable", [ user1.address ]);
 
 		await wallet.sendTransaction({to: proxy.address, value: eth(1.0)});
 	});
@@ -108,10 +108,10 @@ describe('WalletOwnable', () => {
 				0,
 				proxy.address,
 				0,
-				sdk.makeUpdateTx(
+				sdk.transactions.prepare.updateMaster(
 					[
 						walletContract.address,
-						sdk.makeInitializationTx("WalletOwnable", [ user2.address ]),
+						sdk.transactions.prepare.initialization("WalletOwnable", [ user2.address ]),
 						true,
 					]
 				),
@@ -128,10 +128,10 @@ describe('WalletOwnable', () => {
 				0,
 				proxy.address,
 				0,
-				sdk.makeUpdateTx(
+				sdk.transactions.prepare.updateMaster(
 					[
 						walletContract.address,
-						sdk.makeInitializationTx("WalletOwnable", [ user2.address ]),
+						sdk.transactions.prepare.initialization("WalletOwnable", [ user2.address ]),
 						true,
 					]
 				),

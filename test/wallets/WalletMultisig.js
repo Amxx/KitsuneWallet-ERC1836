@@ -2,7 +2,7 @@ const chai = require('chai');
 const ethers = require('ethers');
 const { createMockProvider, deployContract, getWallets, solidity } = require('ethereum-waffle');
 
-const { Sdk } = require('../../utils/sdk.js');
+const { Sdk } = require('../../sdk/sdk.js');
 const Target = require('../../build/Target');
 
 const testInitialize    = require("../fixtures/testInitialize.js");
@@ -25,11 +25,11 @@ describe('Wallet', () => {
 	});
 
 	beforeEach(async () => {
-		proxy = await sdk.deployProxy(
+		proxy = await sdk.contracts.deployProxy(
 			"WalletMultisig",
 			[
 				[
-					sdk.addrToKey(user1.address),
+					sdk.utils.addrToKey(user1.address),
 				],
 				[
 					'0x0000000000000000000000000000000000000000000000000000000000000007',

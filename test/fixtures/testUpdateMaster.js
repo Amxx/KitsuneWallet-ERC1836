@@ -1,68 +1,78 @@
 const chai   = require('chai');
 const ethers = require('ethers');
 const {getWallets, solidity} = require('ethereum-waffle');
-const {relayMetaTx,prepareMetaTx} = require('../../utils/utils.js');
 
 const {expect} = chai;
 chai.use(solidity);
 
-function testUpdateMaster(provider, executeabi, addrToKey = ethers.utils.keccak256)
+function testUpdateMaster(sdk, name)
 {
-	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
-	const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
-
 	describe('UpdateMaster', async () => {
 
-		it('authorized', async () => {
-			expect(await proxyAsWallet.getKey(addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
-			expect(await proxyAsWallet.getKey(addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
-			expect(await proxyAsWallet.nonce()).to.be.eq(0);
+		const [ wallet, relayer, user1, user2, user3 ] = getWallets(sdk.provider);
+		const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
+		const masterAddress = (await sdk.getMasterInstance(name)).address;
 
-			await expect(relayMetaTx(
-				await prepareMetaTx(
-					proxyAsWallet,
+		it('authorized', async () => {
+			expect(await proxy.getKey(sdk.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxy.getKey(sdk.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+			expect(await proxy.nonce()).to.be.eq(0);
+
+			await expect(sdk.relayMetaTx(
+				await sdk.prepareMetaTx(
+					proxy,
 					{
-						to: proxyAsWallet.address,
-						data: proxyAsWallet.interface.functions.updateMaster.encode([
-							walletContract.address,
-							walletContract.interface.functions.initialize.encode([
-								[ addrToKey(user2.address) ],
-								[ "0x0000000000000000000000000000000000000000000000000000000000000007" ],
-								1,
-								1,
-							]),
-							true,
-						]),
+						to: proxy.address,
+						data: sdk.makeUpdateTx(
+							[
+								masterAddress,
+								sdk.makeInitializationTx(
+									name,
+									[
+										[ sdk.addrToKey(user2.address) ],
+										[ "0x0000000000000000000000000000000000000000000000000000000000000007" ],
+										1,
+										1,
+									]
+								),
+								true,
+							]
+						),
 					},
 					[ user1 ],
-					executeabi,
 				),
 				relayer,
 			)).to
-			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
-			.emit(proxyAsWallet, 'MasterChange').withArgs(walletContract.address, walletContract.address);
+			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
+			.emit(proxy, 'MasterChange').withArgs(masterAddress, masterAddress);
 
 
-			expect(await proxyAsWallet.getKey(addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
-			expect(await proxyAsWallet.getKey(addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
-			expect(await proxyAsWallet.nonce()).to.be.eq(1);
+			expect(await proxy.getKey(sdk.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+			expect(await proxy.getKey(sdk.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxy.nonce()).to.be.eq(1);
 		});
 
 		it('protected', async () => {
-			await expect(proxyAsWallet.connect(user2).execute(
+			await expect(proxy.connect(user2).execute(
 				0,
-				proxyAsWallet.address,
+				proxy.address,
 				0,
-				proxyAsWallet.interface.functions.updateMaster.encode([
-					walletContract.address,
-					walletContract.interface.functions.initialize.encode([
-						[ addrToKey(user2.address) ],
-						[ "0x000000000000000000000000000000000000000000000000000000000000000f" ],
-						1,
-						1,
-					]),
-					true,
-				]),
+				sdk.makeUpdateTx(
+					"WalletMultisig",
+					[
+						walletContract.address,
+						sdk.makeInitializationTx(
+							"WalletMultisig",
+							[
+								[ sdk.addrToKey(user2.address) ],
+								[ "0x000000000000000000000000000000000000000000000000000000000000000f" ],
+								1,
+								1,
+							]
+						),
+						true,
+					]
+				),
 				{ gasLimit: 800000 }
 			)).to.be.revertedWith('access-forbidden');
 		});

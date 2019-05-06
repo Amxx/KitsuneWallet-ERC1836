@@ -1,28 +1,27 @@
 const chai   = require('chai');
 const ethers = require('ethers');
 const {getWallets, solidity} = require('ethereum-waffle');
-const {relayMetaTx,prepareMetaTx} = require('../../utils/utils.js');
 
 const {expect} = chai;
 chai.use(solidity);
 
-function testInitialize(provider, executeabi, addrToKey = ethers.utils.keccak256)
+function testInitialize(sdk, name)
 {
-	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
-
 	describe('Initialize', async () => {
 
+		const [ wallet, relayer, user1, user2, user3 ] = getWallets(sdk.provider);
+
 		it('Verify proxy initialization', async () => {
-			expect(await proxyAsWallet.owner()).to.eq(proxyAsWallet.address);
-			expect(await proxyAsWallet.master()).to.eq(walletContract.address);
-			expect(await proxyAsWallet.getManagementThreshold()).to.eq(1);
-			expect(await proxyAsWallet.getActionThreshold()).to.eq(1);
+			expect(await proxy.owner()).to.eq(proxy.address);
+			expect(await proxy.master()).to.eq((await sdk.getMasterInstance(name)).address);
+			expect(await proxy.getManagementThreshold()).to.eq(1);
+			expect(await proxy.getActionThreshold()).to.eq(1);
 		});
 
 		it('reintrance protection', async () => {
-			await expect(proxyAsWallet.connect(user1).initialize(
+			await expect(proxy.connect(user1).initialize(
 				[
-					addrToKey(user1.address),
+					sdk.addrToKey(user1.address),
 				],
 				[
 					'0x0000000000000000000000000000000000000000000000000000000000000007',

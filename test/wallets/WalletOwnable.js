@@ -2,9 +2,8 @@ const chai   = require('chai');
 const ethers = require('ethers');
 const {createMockProvider, deployContract, getWallets, solidity} = require('ethereum-waffle');
 
-const Proxy         = require('../../build/Proxy');
-const WalletOwnable = require('../../build/WalletOwnable');
-const Target        = require('../../build/Target');
+const { Sdk } = require('../../utils/sdk.js');
+const Target   = require('../../build/Target');
 
 const {expect} = chai;
 chai.use(solidity);
@@ -15,65 +14,62 @@ describe('WalletOwnable', () => {
 
 	const provider = createMockProvider();
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
+	const sdk = new Sdk(provider, relayer);
 
 	before(async () => {
-		walletContract = await deployContract(wallet, WalletOwnable, []);
+		walletContract = await sdk.getMasterInstance("WalletOwnable");
 		targetContract = await deployContract(wallet, Target, []);
 		dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 	});
 
 	beforeEach(async () => {
-		proxyContract = await deployContract(wallet, Proxy, [
-			walletContract.address,
-			walletContract.interface.functions.initialize.encode([ user1.address ])
-		]);
-		proxyAsWallet = new ethers.Contract(proxyContract.address, WalletOwnable.abi, provider);
+		proxy = await sdk.deployProxy("WalletOwnable", [ user1.address ]);
 
-		await wallet.sendTransaction({to: proxyAsWallet.address, value: eth(1.0)});
+		await wallet.sendTransaction({to: proxy.address, value: eth(1.0)});
 	});
 
 	it ("Verify proxy initialization", async () => {
-		expect(await proxyAsWallet.owner()).to.eq(user1.address);
-		expect(await proxyAsWallet.master()).to.eq(walletContract.address);
+		expect(await proxy.owner()).to.eq(user1.address);
+		expect(await proxy.master()).to.eq(walletContract.address);
 	});
 
 	describe('Execute', async () => {
 
 		it ("authorized - pay with proxy", async () => {
-			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(1.0));
-			expect(await provider.getBalance(dest                 )).to.eq(eth(0.0));
+			expect(await provider.getBalance(proxy.address)).to.eq(eth(1.0));
+			expect(await provider.getBalance(dest         )).to.eq(eth(0.0));
 
-			await expect(proxyAsWallet.connect(user1).execute(
+			await expect(proxy.connect(user1).execute(
 				0,
 				dest,
 				eth(0.1),
 				[],
 				{ gasLimit: 80000 }
-			)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(dest);
+			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
 
-			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(0.9));
-			expect(await provider.getBalance(dest                 )).to.eq(eth(0.1));
+			expect(await provider.getBalance(proxy.address)).to.eq(eth(0.9));
+			expect(await provider.getBalance(dest         )).to.eq(eth(0.1));
 		});
 
 		it ("authorized - call with proxy", async () => {
 			randomdata = ethers.utils.hexlify(ethers.utils.randomBytes(32));
 
-			await expect(proxyAsWallet.connect(user1).execute(
+			await expect(proxy.connect(user1).execute(
 				0,
 				targetContract.address,
 				0,
 				targetContract.interface.functions.call.encode([ randomdata ]),
 				{ gasLimit: 80000 }
-			)).to.emit(proxyAsWallet, 'CallSuccess').withArgs(targetContract.address);
+			)).to.emit(proxy, 'CallSuccess').withArgs(targetContract.address);
 
-			expect(await targetContract.lastSender()).to.eq(proxyAsWallet.address);
+			expect(await targetContract.lastSender()).to.eq(proxy.address);
 			expect(await targetContract.lastData()).to.eq(randomdata);
 		});
 
 		it("protected", async () => {
-			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(1.0));
+			expect(await provider.getBalance(proxy.address)).to.eq(eth(1.0));
 
-			await expect(proxyAsWallet.connect(user2).execute(
+			await expect(proxy.connect(user2).execute(
 				0,
 				user2.address,
 				eth(0.1),
@@ -81,23 +77,23 @@ describe('WalletOwnable', () => {
 				{ gasLimit: 80000 }
 			)).to.be.revertedWith('access-forbidden');
 
-			expect(await provider.getBalance(proxyAsWallet.address)).to.eq(eth(1.0));
+			expect(await provider.getBalance(proxy.address)).to.eq(eth(1.0));
 		});
 	});
 
 	describe('TransferOwnership', async () => {
 
 		it("authorized", async () => {
-			await expect(proxyAsWallet.connect(user1).transferOwnership(
+			await expect(proxy.connect(user1).transferOwnership(
 				user2.address,
 				{ gasLimit: 80000 }
-			)).to.emit(proxyAsWallet, 'OwnershipTransferred').withArgs(user1.address, user2.address);
+			)).to.emit(proxy, 'OwnershipTransferred').withArgs(user1.address, user2.address);
 
-			expect(await proxyAsWallet.owner()).to.eq(user2.address);
+			expect(await proxy.owner()).to.eq(user2.address);
 		});
 
 		it("protected", async () => {
-			await expect(proxyAsWallet.connect(user2).transferOwnership(
+			await expect(proxy.connect(user2).transferOwnership(
 				user2.address,
 				{ gasLimit: 80000 }
 			)).to.be.reverted;
@@ -108,33 +104,37 @@ describe('WalletOwnable', () => {
 	describe('UpdateMaster', async () => {
 
 		it("authorized", async () => {
-			await expect(proxyAsWallet.connect(user1).execute(
+			await expect(proxy.connect(user1).execute(
 				0,
-				proxyAsWallet.address,
+				proxy.address,
 				0,
-				proxyAsWallet.interface.functions.updateMaster.encode([
-					walletContract.address,
-					walletContract.interface.functions.initialize.encode([ user2.address ]),
-					true,
-				]),
+				sdk.makeUpdateTx(
+					[
+						walletContract.address,
+						sdk.makeInitializationTx("WalletOwnable", [ user2.address ]),
+						true,
+					]
+				),
 				{ gasLimit: 800000 }
 			)).to
-			.emit(proxyAsWallet, 'CallSuccess').withArgs(proxyAsWallet.address)
-			.emit(proxyAsWallet, 'MasterChange').withArgs(walletContract.address, walletContract.address);
+			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
+			.emit(proxy, 'MasterChange').withArgs(walletContract.address, walletContract.address);
 
-			expect(await proxyAsWallet.owner()).to.eq(user2.address);
+			expect(await proxy.owner()).to.eq(user2.address);
 		});
 
 		it ("protected", async () => {
-			await expect(proxyAsWallet.connect(user2).execute(
+			await expect(proxy.connect(user2).execute(
 				0,
-				proxyAsWallet.address,
+				proxy.address,
 				0,
-				proxyAsWallet.interface.functions.updateMaster.encode([
-					walletContract.address,
-					walletContract.interface.functions.initialize.encode([ user2.address ]),
-					true,
-				]),
+				sdk.makeUpdateTx(
+					[
+						walletContract.address,
+						sdk.makeInitializationTx("WalletOwnable", [ user2.address ]),
+						true,
+					]
+				),
 				{ gasLimit: 800000 }
 			)).to.be.revertedWith('access-forbidden');
 		});
@@ -144,7 +144,7 @@ describe('WalletOwnable', () => {
 	describe('Initialize', async () => {
 
 		it ("reintrance protection", async () => {
-			await expect(proxyAsWallet.connect(user1).initialize(user2.address)).to.be.revertedWith('already-initialized');
+			await expect(proxy.connect(user1).initialize(user2.address)).to.be.revertedWith('already-initialized');
 		});
 
 	});

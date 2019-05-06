@@ -28,54 +28,30 @@ ethers.errors.setLogLevel('error');
 const provider = createMockProvider();
 const [ relayer, user1, user2, user3 ] = getWallets(provider);
 
-const sdk = new Sdk(provider, relayer);
-
 provider.ready.then(async ({ chainId, name }) => {
 
-	// ------------------------ Check master deployments ------------------------
-	for (let master of sdk.masterList)
-	{
-		if (sdk.contracts[master].networks[chainId] === undefined)
-		{
-			let instance = await sdk.deployContract(master, []);
+	const sdk = new Sdk(provider, relayer);
 
-			sdk.contracts[master].networks[chainId] = {
-			  "events": {}
-			, "links": {}
-			, "address": instance['address']
-			, "transactionHash": instance['deployTransaction'].hash
-			};
-
-			console.log(`${master} not found on chain '${name}' (${chainId}).`)
-			console.log(`→ new instance deployed at address ${instance['address']}`);
-			console.log(`---`);
-		}
-	}
+	// // ------------------------ Check master deployments ------------------------
+	// for (let master of sdk.masterList)
+	// {
+	// 	let instance = await sdk.deployMasterIfNotExist(master);
+	// 	if (instance !== null)
+	// 	{
+	// 		console.log(`${master} not found on chain '${name}' (${chainId}).`)
+	// 		console.log(`→ new instance deployed at address ${instance['address']}`);
+	// 		console.log(`---`);
+	// 	}
+	// }
 
 
 	// ------------------------------ create proxy ------------------------------
-	let proxyAddr = null;
-	let proxy     = null;
+	let proxy = null;
+
 	{
 		console.log("Deploying proxy: WalletOwnable\n");
 
-		let initializationTx = sdk.makeInitializationTx(
-			"WalletOwnable",
-			[
-				user1.address
-			]
-		);
-
-		proxyAddr = (await sdk.deployContract(
-			"Proxy",
-			[
-				sdk.contracts["WalletOwnable"].networks[chainId].address,
-				initializationTx,
-				{ gasLimit: 1000000 }
-			]
-		)).address;
-
-		proxy = sdk.viewContract("WalletOwnable", proxyAddr);
+		proxy = await sdk.deployProxy("WalletOwnable", [ user1.address ]);
 
 		console.log(`proxy    : ${proxy.address}`         );
 		console.log(`master   : ${await proxy.master()}`  );
@@ -88,28 +64,25 @@ provider.ready.then(async ({ chainId, name }) => {
 	{
 		console.log("\nUpdating proxy: WalletOwnable → WalletMultisig\n");
 
-		let initializationTx = sdk.makeInitializationTx(
-			"WalletMultisig",
-			[
-				[ ethers.utils.hexZeroPad(user1.address, 32).toString().toLowerCase() ],
-				[ "0x0000000000000000000000000000000000000000000000000000000000000001" ],
-				1,
-				1,
-			]
-		);
-
 		let updateMasterTx = sdk.makeUpdateTx(
-			"WalletOwnable",
 			[
-				sdk.contracts["WalletMultisig"].networks[chainId].address,
-				initializationTx,
+				(await sdk.getMasterInstance("WalletMultisig")).address,
+				sdk.makeInitializationTx(
+					"WalletMultisig",
+					[
+						[ ethers.utils.hexZeroPad(user1.address, 32).toString().toLowerCase() ],
+						[ "0x0000000000000000000000000000000000000000000000000000000000000001" ],
+						1,
+						1,
+					]
+				),
 				true,
 			]
 		);
 
-		await (await proxy.connect(user1).execute(0, proxyAddr, 0, updateMasterTx, { gasLimit: 800000 })).wait();
+		await (await proxy.connect(user1).execute(0, proxy.address, 0, updateMasterTx, { gasLimit: 800000 })).wait();
 
-		proxy = sdk.viewContract("WalletMultisig", proxyAddr);
+		proxy = sdk.viewContract("WalletMultisig", proxy.address);
 
 		console.log(`proxy      : ${proxy.address}`         );
 		console.log(`master     : ${await proxy.master()}`  );
@@ -125,9 +98,8 @@ provider.ready.then(async ({ chainId, name }) => {
 		console.log("\nUpdating proxy: WalletMultisig → WalletMultisigRefundOutOfOrder\n");
 
 		let updateMasterTx = sdk.makeUpdateTx(
-			"WalletMultisig",
 			[
-				sdk.contracts["WalletMultisigRefundOutOfOrder"].networks[chainId].address,
+				(await sdk.getMasterInstance("WalletMultisigRefundOutOfOrder")).address,
 				"0x",  // no initialization
 				false, // no reset (memory pattern are compatible)
 			]
@@ -136,12 +108,12 @@ provider.ready.then(async ({ chainId, name }) => {
 		await sdk.relayMetaTx(
 			await sdk.prepareMetaTx(
 				proxy,                                                    // proxy
-				{ to: proxyAddr, data: updateMasterTx },                  // tx
+				{ to: proxy.address, data: updateMasterTx },              // tx
 				[ user1 ],                                                // signer
 			)
 		);
 
-		proxy = sdk.viewContract("WalletMultisigRefundOutOfOrder", proxyAddr);
+		proxy = sdk.viewContract("WalletMultisigRefundOutOfOrder", proxy.address);
 
 		console.log(`proxy      : ${proxy.address}`         );
 		console.log(`master     : ${await proxy.master()}`  );

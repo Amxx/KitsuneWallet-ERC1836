@@ -97,6 +97,8 @@ const INLINE_TX = {
 	},
 };
 
+const IMaster                        = require(`../build/IMaster`);
+
 const Proxy                          = require(`../build/Proxy`);
 const WalletOwnable                  = require(`../build/WalletOwnable`);
 const WalletMultisig                 = require(`../build/WalletMultisig`);
@@ -111,11 +113,6 @@ const contracts = {
 , "WalletMultisigRefundOutOfOrder": WalletMultisigRefundOutOfOrder
 }
 
-
-
-
-
-
 class Sdk
 {
 	constructor(provider = null, defaultRelayer = null)
@@ -126,7 +123,7 @@ class Sdk
 		this.defaultRelayer = defaultRelayer;
 	}
 
-	async deployContract(name, args, relayer = null)
+	deployContract(name, args, relayer = null)
 	{
 		let contract = this.contracts[name];
 		let sender   = relayer || this.defaultRelayer;
@@ -143,14 +140,64 @@ class Sdk
 		});
 	}
 
+	getMasterInstance(name, relayer = null)
+	{
+		let sdk      = this;
+		let contract = this.contracts[name];
+		let sender   = relayer || this.defaultRelayer;
+
+		return new Promise(function(resolve, reject) {
+			sdk.provider.getNetwork()
+			.then(network => {
+				if (contract.networks[network.chainId] === undefined)
+				{
+					sdk.deployContract(name, [], sender)
+					.then(instance => {
+						contract.networks[network.chainId] = {
+						  "events": {}
+						, "links": {}
+						, "address": instance['address']
+						, "transactionHash": instance['deployTransaction'].hash
+						};
+						resolve(instance);
+					})
+					.catch(reject);
+				}
+				else
+				{
+					resolve(sdk.viewContract(name, contract.networks[network.chainId].address));
+				}
+			})
+			.catch(reject);
+		})
+	}
+
+	deployProxy(name, args, relayer = null, params = {})
+	{
+		let sdk    = this;
+		let master = name;
+
+		return new Promise(function(resolve, reject) {
+			sdk.getMasterInstance(master, relayer)
+			.then(instance => {
+				sdk.deployContract("Proxy", [ instance.address, sdk.makeInitializationTx(master, args) ])
+				.then(proxy => {
+					resolve(sdk.viewContract(master, proxy.address));
+				})
+				.catch(reject);
+			})
+			.catch(reject);
+		});
+	}
+
 	makeInitializationTx(name, args)
 	{
 		return new ethers.utils.Interface(this.contracts[name].abi).functions.initialize.encode(args);
 	}
 
-	makeUpdateTx(name, args)
+	makeUpdateTx(args)
 	{
-		return new ethers.utils.Interface(this.contracts[name].abi).functions.updateMaster.encode(args);
+		return new ethers.utils.Interface(IMaster.abi).functions.updateMaster.encode(args);
 	}
 
 	viewContract(name, address)
@@ -169,7 +216,7 @@ class Sdk
 		return new Promise(function(resolve, reject) {
 			proxy.nonce()
 			.then(previousNonce => {
-				let txFull = PREPARE_TX[executeABI]({ nonce: previousNonce + 1, ...tx });
+				let txFull = PREPARE_TX[executeABI]({ nonce: previousNonce.toNumber() + 1, ...tx });
 				let txHash = ethers.utils.arrayify(HASHING_METATX[executeABI](proxy.address, txFull));
 				Promise.all(signers.sort((a,b) => a.address-b.address).map(signer => signer.signMessage(txHash)))
 				.then(signatures => {
@@ -179,6 +226,11 @@ class Sdk
 			})
 			.catch(reject);
 		});
+	}
+
+	addrToKey(address)
+	{
+		return ethers.utils.hexZeroPad(address, 32).toString().toLowerCase();
 	}
 }
 

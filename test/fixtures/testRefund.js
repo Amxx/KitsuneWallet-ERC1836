@@ -5,7 +5,7 @@ const {getWallets, solidity} = require('ethereum-waffle');
 const {expect} = chai;
 chai.use(solidity);
 
-function testExecute(sdk)
+function testRefund(sdk)
 {
 	describe('Refund', async () => {
 
@@ -139,4 +139,4 @@ function testExecute(sdk)
 	});
 }
 
-module.exports = testExecute;
+module.exports = testRefund;

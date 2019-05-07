@@ -34,7 +34,7 @@ class Sdk
 			prepare:
 			{
 				initialization: transactions_prepare.initialization.bind(this, this),
-				updateMaster:   transactions_prepare.updateMaster,
+				updateMaster:   transactions_prepare.updateMaster.bind(this, this),
 			},
 			relay:            transactions_meta.relay.bind(this, this),
 			sign:             transactions_meta.sign,

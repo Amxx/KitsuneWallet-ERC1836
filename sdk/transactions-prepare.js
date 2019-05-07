@@ -12,9 +12,28 @@ const initialization = (
 }
 
 const updateMaster = (
-	args = throwIfMissing(),
+	sdk          = throwIfMissing(),
+	name         = throwIfMissing(),
+	initTx       = throwIfMissing(),
+	reset        = null,
+	deployMaster = true,
+	relayer      = null,
 ) => {
-	return new ethers.utils.Interface(IMaster.abi).functions.updateMaster.encode(args);
+	return new Promise((resolve, reject) => {
+		sdk.contracts.getMasterInstance(name, deployMaster, relayer)
+		.then(instance => {
+			if (instance === null)
+			{
+				reject(null);
+			}
+			resolve(new ethers.utils.Interface(IMaster.abi).functions.updateMaster.encode([
+				instance.address,
+				initTx,
+				(reset !== null) ? reset : initTx !== "0x",
+			]));
+		})
+		.catch(reject);
+	});
 }
 
 module.exports = {

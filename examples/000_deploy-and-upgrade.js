@@ -40,19 +40,16 @@ provider.ready.then(async () => {
 		console.log("\nUpdating proxy: WalletOwnable → WalletMultisig\n");
 
 		let updateMasterTx = sdk.transactions.prepare.updateMaster(
-			[
-				(await sdk.contracts.getMasterInstance("WalletMultisig")).address,
-				sdk.transactions.prepare.initialization(
-					"WalletMultisig",
-					[
-						[ sdk.utils.addrToKey(user1.address) ],
-						[ "0x0000000000000000000000000000000000000000000000000000000000000001" ],
-						1,
-						1,
-					]
-				),
-				true,
-			]
+			"WalletMultisig",
+			sdk.transactions.prepare.initialization(
+				"WalletMultisig",
+				[
+					[ sdk.utils.addrToKey(user1.address) ],
+					[ "0x0000000000000000000000000000000000000000000000000000000000000001" ],
+					1,
+					1,
+				]
+			),
 		);
 
 		await (await proxy.connect(user1).execute(0, proxy.address, 0, updateMasterTx, { gasLimit: 800000 })).wait();
@@ -72,12 +69,9 @@ provider.ready.then(async () => {
 	{
 		console.log("\nUpdating proxy: WalletMultisig → WalletMultisigRefundOutOfOrder\n");
 
-		let updateMasterTx = sdk.transactions.prepare.updateMaster(
-			[
-				(await sdk.contracts.getMasterInstance("WalletMultisigRefundOutOfOrder")).address,
-				"0x",  // no initialization
-				false, // no reset (memory pattern are compatible)
-			]
+		let updateMasterTx = await sdk.transactions.prepare.updateMaster(
+			"WalletMultisigRefundOutOfOrder",
+			"0x",
 		);
 
 		await sdk.transactions.relay(

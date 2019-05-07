@@ -108,12 +108,9 @@ describe('WalletOwnable', () => {
 				0,
 				proxy.address,
 				0,
-				sdk.transactions.prepare.updateMaster(
-					[
-						walletContract.address,
-						sdk.transactions.prepare.initialization("WalletOwnable", [ user2.address ]),
-						true,
-					]
+				await sdk.transactions.prepare.updateMaster(
+					"WalletOwnable",
+					sdk.transactions.prepare.initialization("WalletOwnable", [ user2.address ]),
 				),
 				{ gasLimit: 800000 }
 			)).to
@@ -128,12 +125,9 @@ describe('WalletOwnable', () => {
 				0,
 				proxy.address,
 				0,
-				sdk.transactions.prepare.updateMaster(
-					[
-						walletContract.address,
-						sdk.transactions.prepare.initialization("WalletOwnable", [ user2.address ]),
-						true,
-					]
+				await sdk.transactions.prepare.updateMaster(
+					"WalletOwnable",
+					sdk.transactions.prepare.initialization("WalletOwnable", [ user2.address ]),
 				),
 				{ gasLimit: 800000 }
 			)).to.be.revertedWith('access-forbidden');

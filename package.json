@@ -13,7 +13,8 @@
 		"/contracts",
 		"/build",
 		"/build-minified/",
-		"/sdk"
+		"/src",
+		"/dist"
 	],
 	"author": "Hadrien Croubois (hc@iex.ec)",
 	"license": "ISC",

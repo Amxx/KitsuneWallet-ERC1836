@@ -15,8 +15,8 @@ function testKeyManagement(sdk)
 		it('getKey', async () => {
 			expect(await proxy.functions['getKey(bytes32)'](sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.functions['getKey(bytes32)'](sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
-			expect(await proxy.functions['getKey(address)'](              user1.address )).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
-			expect(await proxy.functions['getKey(address)'](              user2.address )).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+			expect(await proxy.functions['getKey(address)'](                    user1.address )).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxy.functions['getKey(address)'](                    user2.address )).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 		});
 
 		it('keyHasPurpose', async () => {
@@ -26,12 +26,12 @@ function testKeyManagement(sdk)
 			expect(await proxy.functions['keyHasPurpose(bytes32,bytes32)'](sdk.utils.addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000008')).to.be.eq(false);
 			expect(await proxy.functions['keyHasPurpose(bytes32,bytes32)'](sdk.utils.addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000007')).to.be.eq(true);
 			expect(await proxy.functions['keyHasPurpose(bytes32,bytes32)'](sdk.utils.addrToKey(user1.address), '0x0000000000000000000000000000000000000000000000000000000000000009')).to.be.eq(false);
-			expect(await proxy.functions['keyHasPurpose(address,bytes32)'](              user1.address , '0x0000000000000000000000000000000000000000000000000000000000000001')).to.be.eq(true);
-			expect(await proxy.functions['keyHasPurpose(address,bytes32)'](              user1.address , '0x0000000000000000000000000000000000000000000000000000000000000002')).to.be.eq(true);
-			expect(await proxy.functions['keyHasPurpose(address,bytes32)'](              user1.address , '0x0000000000000000000000000000000000000000000000000000000000000004')).to.be.eq(true);
-			expect(await proxy.functions['keyHasPurpose(address,bytes32)'](              user1.address , '0x0000000000000000000000000000000000000000000000000000000000000008')).to.be.eq(false);
-			expect(await proxy.functions['keyHasPurpose(address,bytes32)'](              user1.address , '0x0000000000000000000000000000000000000000000000000000000000000007')).to.be.eq(true);
-			expect(await proxy.functions['keyHasPurpose(address,bytes32)'](              user1.address , '0x0000000000000000000000000000000000000000000000000000000000000009')).to.be.eq(false);
+			expect(await proxy.functions['keyHasPurpose(address,bytes32)'](                    user1.address , '0x0000000000000000000000000000000000000000000000000000000000000001')).to.be.eq(true);
+			expect(await proxy.functions['keyHasPurpose(address,bytes32)'](                    user1.address , '0x0000000000000000000000000000000000000000000000000000000000000002')).to.be.eq(true);
+			expect(await proxy.functions['keyHasPurpose(address,bytes32)'](                    user1.address , '0x0000000000000000000000000000000000000000000000000000000000000004')).to.be.eq(true);
+			expect(await proxy.functions['keyHasPurpose(address,bytes32)'](                    user1.address , '0x0000000000000000000000000000000000000000000000000000000000000008')).to.be.eq(false);
+			expect(await proxy.functions['keyHasPurpose(address,bytes32)'](                    user1.address , '0x0000000000000000000000000000000000000000000000000000000000000007')).to.be.eq(true);
+			expect(await proxy.functions['keyHasPurpose(address,bytes32)'](                    user1.address , '0x0000000000000000000000000000000000000000000000000000000000000009')).to.be.eq(false);
 		});
 
 		it('AddKey', async () => {
@@ -45,7 +45,7 @@ function testKeyManagement(sdk)
 				sdk.utils.addrToKey(user2.address),
 				'0x0000000000000000000000000000000000000000000000000000000000000004',
 				[ user1 ],
-				relayer,
+				{ options: { gasLimit: 1000000 } }
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
 			.emit(proxy, 'SetKey').withArgs(sdk.utils.addrToKey(user2.address), "0x0000000000000000000000000000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000004");
@@ -67,7 +67,7 @@ function testKeyManagement(sdk)
 				sdk.utils.addrToKey(user1.address),
 				'0x000000000000000000000000000000000000000000000000000000000000000f',
 				[ user1 ],
-				relayer,
+				{ options: { gasLimit: 1000000 } }
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
 			.emit(proxy, 'SetKey').withArgs(sdk.utils.addrToKey(user1.address), "0x0000000000000000000000000000000000000000000000000000000000000007", "0x000000000000000000000000000000000000000000000000000000000000000f");
@@ -89,7 +89,7 @@ function testKeyManagement(sdk)
 				sdk.utils.addrToKey(user1.address),
 				'0x0000000000000000000000000000000000000000000000000000000000000006',
 				[ user1 ],
-				relayer,
+				{ options: { gasLimit: 1000000 } }
 			)).to.emit(proxy, 'CallFailure'); //.withArgs(proxy.address, 'cannot-remove-critical-management-key');
 
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
@@ -110,7 +110,7 @@ function testKeyManagement(sdk)
 				sdk.utils.addrToKey(user2.address),
 				'0x0000000000000000000000000000000000000000000000000000000000000007',
 				[ user1 ],
-				relayer,
+				{ options: { gasLimit: 1000000 } }
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
 			.emit(proxy, 'SetKey').withArgs(sdk.utils.addrToKey(user2.address), "0x0000000000000000000000000000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000007");
@@ -125,7 +125,7 @@ function testKeyManagement(sdk)
 				sdk.utils.addrToKey(user1.address),
 				'0x0000000000000000000000000000000000000000000000000000000000000000',
 				[ user1 ],
-				relayer,
+				{ options: { gasLimit: 1000000 } }
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
 			.emit(proxy, 'SetKey').withArgs(sdk.utils.addrToKey(user1.address), "0x0000000000000000000000000000000000000000000000000000000000000007", "0x0000000000000000000000000000000000000000000000000000000000000000");

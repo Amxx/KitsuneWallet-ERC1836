@@ -17,35 +17,31 @@ function testExecute(sdk)
 			expect(await sdk.provider.getBalance(proxy.address)).to.eq(eth(1.0));
 			expect(await sdk.provider.getBalance(dest         )).to.eq(eth(0.0));
 
-			await expect(sdk.meta.relay(
-				await sdk.meta.sign(
-					proxy,
-					{
-						to:    dest,
-						value: eth(0.1),
-					},
-					[ user1 ],
-				),
-				relayer,
+			await expect(sdk.multisig.execute(
+				[ user1 ],
+				proxy,
+				{
+					to:    dest,
+					value: eth(0.1),
+				},
+				{ options: { gasLimit: 1000000 } }
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
 
 			expect(await sdk.provider.getBalance(proxy.address)).to.eq(eth(0.9));
-			expect(await sdk.provider.getBalance(dest                 )).to.eq(eth(0.1));
+			expect(await sdk.provider.getBalance(dest         )).to.eq(eth(0.1));
 		});
 
 		it('authorized - call with proxy', async () => {
 			randomdata = ethers.utils.hexlify(ethers.utils.randomBytes(32));
 
-			await expect(sdk.meta.relay(
-				await sdk.meta.sign(
-					proxy,
-					{
-						to: targetContract.address,
-						data: targetContract.interface.functions.call.encode([ randomdata ]),
-					},
-					[ user1 ],
-				),
-				relayer,
+			await expect(sdk.multisig.execute(
+				[ user1 ],
+				proxy,
+				{
+					to: targetContract.address,
+					data: targetContract.interface.functions.call.encode([ randomdata ]),
+				},
+				{ options: { gasLimit: 1000000 } }
 			)).to.emit(proxy, 'CallSuccess').withArgs(targetContract.address);
 
 			expect(await targetContract.lastSender()).to.eq(proxy.address);

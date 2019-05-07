@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import * as types from "../types";
+import * as types from "../types/all";
 
 import ModuleBase from "./__ModuleBase";
 
@@ -7,29 +7,24 @@ export class Contracts extends ModuleBase
 {
 	viewContract(
 		name:    string,
-		address: string,
-	) : types.contract
-	{
-		return new ethers.Contract(address, this.sdk.ABIS[name].abi, this.sdk.provider);
+		address: types.ethereum.address,
+	) : types.contract {
+		return new ethers.Contract(ethers.utils.hexlify(address), this.sdk.ABIS[name].abi, this.sdk.provider);
 	}
 
 	deployContract(
 		name:   string,
-		args:   types.args,
+		args:   types.ethereum.args,
 		config: types.config = {},
-	) : Promise<types.contract>
-	{
+	) : Promise<types.contract> {
 		return new Promise((resolve, reject) => {
 			(new ethers.ContractFactory(
 				this.sdk.ABIS[name].abi,
 				this.sdk.ABIS[name].bytecode,
-				config['wallet'] || this.sdk.wallet || reject(Error("Missing wallet")),
+				config.wallet || this.sdk.wallet || reject(Error("Missing wallet")),
 			))
-			.deploy(...args)
-			.then(
-				instance => instance.deployed()
-				.then(resolve)
-				.catch(reject)
+			.deploy(...args) // TRANSACTION
+			.then(instance => instance.deployed().then(resolve).catch(reject)
 			)
 			.catch(reject);
 		});
@@ -42,22 +37,22 @@ export class Contracts extends ModuleBase
 	{
 		return new Promise((resolve, reject) => {
 			this.sdk.provider.getNetwork()
-			.then(network => {
+			.then((network: types.network) => {
 				try
 				{
 					resolve(this.viewContract(name, this.sdk.ABIS[name].networks[network.chainId].address));
 				}
 				catch
 				{
-					if (config['allowDeploy'])
+					if (config.allowDeploy)
 					{
 						this.deployContract(name, [], config)
 						.then(instance => {
 							this.sdk.ABIS[name].networks[network.chainId] = {
 								"events": {}
 							, "links": {}
-							, "address": instance['address']
-							, "transactionHash": instance['deployTransaction'].hash
+							, "address": instance.address
+							, "transactionHash": instance.deployTransaction.hash
 							};
 							resolve(instance);
 						})
@@ -65,7 +60,7 @@ export class Contracts extends ModuleBase
 					}
 					else
 					{
-						reject(Error("Master is not available on this network, try setting config['allowDeploy'] to true"));
+						reject(Error("Master is not available on this network, try setting config.allowDeploy to true"));
 					}
 				}
 			})
@@ -75,13 +70,13 @@ export class Contracts extends ModuleBase
 
 	deployProxy(
 		name:   string,
-		args:   types.args,
+		args:   types.ethereum.args,
 		config: types.config = {},
 	): Promise<types.contract>
 	{
 		return new Promise((resolve, reject) => {
 			this.getMasterInstance(name, config)
-			.then(instance => {
+			.then((instance: types.contract) => {
 				this.deployContract("Proxy", [ instance.address, this.sdk.transactions.initialization(name, args) ])
 				.then(proxy => resolve(this.viewContract(name, proxy.address)))
 				.catch(reject);
@@ -93,7 +88,7 @@ export class Contracts extends ModuleBase
 	upgradeProxy(
 		proxy:   types.contract,
 		name:    string,
-		args:    types.args,
+		args:    types.ethereum.args,
 		execute: types.txExecutor,
 		config:  types.config = {},
 	) : Promise<types.contract>
@@ -104,9 +99,9 @@ export class Contracts extends ModuleBase
 				args ? this.sdk.transactions.initialization(name, args) : "0x",
 				config
 			)
-			.then(initData => {
+			.then((initData: types.ethereum.bytes) => {
 				execute(proxy, { to: proxy.address, data: initData }, config)
-				.then(_ => {
+				.then(() => {
 					proxy = this.viewContract(name, proxy.address);
 					resolve(proxy);
 				})

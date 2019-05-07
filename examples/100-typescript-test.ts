@@ -36,7 +36,7 @@ ethers.errors.setLogLevel('error');
 			1,
 		],
 		sdk.ownable.execute.bind(sdk.ownable, wallet),
-		{ allowDeploy: true }
+		{ allowDeploy: true, options: { gasLimit: 1000000 } }
 	);
 
 	console.log(`proxy      : ${proxy.address}`         );
@@ -52,7 +52,7 @@ ethers.errors.setLogLevel('error');
 		"WalletMultisigRefund",
 		null,
 		sdk.multisig.execute.bind(sdk.multisig, [ wallet ]),
-		{ allowDeploy: true }
+		{ allowDeploy: true, options: { gasLimit: 1000000 } }
 	);
 
 	console.log(`proxy      : ${proxy.address}`         );

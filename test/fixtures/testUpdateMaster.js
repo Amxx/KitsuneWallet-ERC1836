@@ -18,27 +18,25 @@ function testUpdateMaster(sdk, name)
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxy.nonce()).to.be.eq(0);
 
-			await expect(sdk.meta.relay(
-				await sdk.meta.sign(
-					proxy,
-					{
-						to: proxy.address,
-						data: await sdk.transactions.updateMaster(
+			await expect(sdk.multisig.execute(
+				[ user1 ],
+				proxy,
+				{
+					to: proxy.address,
+					data: await sdk.transactions.updateMaster(
+						name,
+						sdk.transactions.initialization(
 							name,
-							sdk.transactions.initialization(
-								name,
-								[
-									[ sdk.utils.addrToKey(user2.address) ],
-									[ "0x0000000000000000000000000000000000000000000000000000000000000007" ],
-									1,
-									1,
-								]
-							),
+							[
+								[ sdk.utils.addrToKey(user2.address) ],
+								[ "0x0000000000000000000000000000000000000000000000000000000000000007" ],
+								1,
+								1,
+							]
 						),
-					},
-					[ user1 ],
-				),
-				relayer,
+					),
+				},
+				{ options: { gasLimit: 1000000 } },
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
 			.emit(proxy, 'MasterChange').withArgs(masterAddress, masterAddress);
@@ -65,7 +63,7 @@ function testUpdateMaster(sdk, name)
 						]
 					),
 				),
-				{ gasLimit: 800000 }
+				{ gasLimit: 1000000 }
 			)).to.be.revertedWith('access-forbidden');
 		});
 	});

@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import * as types from "./types";
+import * as types from "./types/all";
 
 // import Proxy                          from "../build-minified/Proxy";
 // import WalletOwnable                  from "../build-minified/WalletOwnable";
@@ -16,7 +16,6 @@ var ABIS = {
 }
 
 import { Contracts    } from "./modules/Contracts";
-import { Meta         } from "./modules/Meta";
 import { Multisig     } from "./modules/Multisig";
 import { Ownable      } from "./modules/Ownable";
 import { Transactions } from "./modules/Transactions";
@@ -30,7 +29,6 @@ export class SDK
 
 	// modules
 	contracts:    Contracts;
-	meta:         Meta;
 	multisig:     Multisig;
 	ownable:      Ownable;
 	transactions: Transactions;
@@ -45,7 +43,6 @@ export class SDK
 		this.ABIS     = ABIS;
 
 		this.contracts    = new Contracts(this);
-		this.meta         = new Meta(this);
 		this.multisig     = new Multisig(this);
 		this.ownable      = new Ownable(this);
 		this.transactions = new Transactions(this);

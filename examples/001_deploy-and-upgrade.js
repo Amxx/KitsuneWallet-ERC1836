@@ -57,6 +57,7 @@ provider.ready.then(async () => {
 			user1,
 			proxy,
 			{ to: proxy.address, data: updateMasterTx },
+			{ options: { gasLimit: 1000000 } }
 		);
 
 		proxy = sdk.contracts.viewContract("WalletMultisig", proxy.address);
@@ -84,6 +85,7 @@ provider.ready.then(async () => {
 			[ user1 ],
 			proxy,
 			{ to: proxy.address, data: updateMasterTx },
+			{ options: { gasLimit: 1000000 } }
 		);
 
 		proxy = sdk.contracts.viewContract("WalletMultisigRefundOutOfOrder", proxy.address);

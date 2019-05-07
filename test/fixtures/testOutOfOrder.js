@@ -14,60 +14,50 @@ function testOutOfOrder(sdk)
 
 		it('valid nonce', async () => {
 			expect(await proxy.nonce()).to.be.eq(0);
-			await expect(sdk.meta.relay(
-				await sdk.meta.sign(
-					proxy,
-					{ to: dest, nonce: 1 },
-					[ user1 ],
-				),
-				relayer,
+			await expect(sdk.multisig.execute(
+				[ user1 ],
+				proxy,
+				{ to: dest, nonce: 1 },
+				{ options: { gasLimit: 1000000 } },
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
 			expect(await proxy.nonce()).to.be.eq(1);
 		});
 
 		it('invalid nonce', async () => {
 			expect(await proxy.nonce()).to.be.eq(0);
-			await expect(sdk.meta.relay(
-				await sdk.meta.sign(
-					proxy,
-					{ to: dest, nonce: 2 },
-					[ user1 ],
-				),
-				relayer,
+			await expect(sdk.multisig.execute(
+				[ user1 ],
+				proxy,
+				{ to: dest, nonce: 2 },
+				{ options: { gasLimit: 1000000 } },
 			)).to.be.revertedWith('invalid-nonce');
 			expect(await proxy.nonce()).to.be.eq(0);
 		});
 
 		it('out-of-order with salt', async () => {
 			expect(await proxy.nonce()).to.be.eq(0);
-			await expect(sdk.meta.relay(
-				await sdk.meta.sign(
-					proxy,
-					{ to: dest, nonce: 0 },
-					[ user1 ],
-				),
-				relayer,
+			await expect(sdk.multisig.execute(
+				[ user1 ],
+				proxy,
+				{ to: dest, nonce: 0 },
+				{ options: { gasLimit: 1000000 } },
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
 			expect(await proxy.nonce()).to.be.eq(1);
 		});
 
 		it('out-of-order with salt (multiple)', async () => {
 			expect(await proxy.nonce()).to.be.eq(0);
-			await expect(sdk.meta.relay(
-				await sdk.meta.sign(
-					proxy,
-					{ to: dest, nonce: 0 },
-					[ user1 ],
-				),
-				relayer,
+			await expect(sdk.multisig.execute(
+				[ user1 ],
+				proxy,
+				{ to: dest, nonce: 0 },
+				{ options: { gasLimit: 1000000 } },
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
-			await expect(sdk.meta.relay(
-				await sdk.meta.sign(
-					proxy,
-					{ to: dest, nonce: 0 },
-					[ user1 ],
-				),
-				relayer,
+			await expect(sdk.multisig.execute(
+				[ user1 ],
+				proxy,
+				{ to: dest, nonce: 0 },
+				{ options: { gasLimit: 1000000 } },
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
 			expect(await proxy.nonce()).to.be.eq(2);
 		});
@@ -75,21 +65,17 @@ function testOutOfOrder(sdk)
 		it('out-of-order replay protection', async () => {
 			samesalt = ethers.utils.randomBytes(32);
 			expect(await proxy.nonce()).to.be.eq(0);
-			await expect(sdk.meta.relay(
-				await sdk.meta.sign(
-					proxy,
-					{ to: dest, nonce: 0, salt: samesalt },
-					[ user1 ],
-				),
-				relayer,
+			await expect(sdk.multisig.execute(
+				[ user1 ],
+				proxy,
+				{ to: dest, nonce: 0, salt: samesalt },
+				{ options: { gasLimit: 1000000 } },
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
-			await expect(sdk.meta.relay(
-				await sdk.meta.sign(
-					proxy,
-					{ to: dest, nonce: 0, salt: samesalt },
-					[ user1 ],
-				),
-				relayer,
+			await expect(sdk.multisig.execute(
+				[ user1 ],
+				proxy,
+				{ to: dest, nonce: 0, salt: samesalt },
+				{ options: { gasLimit: 1000000 } },
 			)).to.revertedWith('transaction-replay');
 			expect(await proxy.nonce()).to.be.eq(1);
 		});
@@ -102,25 +88,21 @@ function testOutOfOrder(sdk)
 				sdk.utils.addrToKey(user2.address),
 				'0x0000000000000000000000000000000000000000000000000000000000000007',
 				[ user1 ],
-				relayer,
+				{ options: { gasLimit: 1000000 } },
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
 			.emit(proxy, 'SetKey').withArgs(sdk.utils.addrToKey(user2.address), "0x0000000000000000000000000000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000007");
-			await expect(sdk.meta.relay(
-				await sdk.meta.sign(
-					proxy,
-					{ to: dest, nonce: 0, salt: samesalt },
-					[ user1 ],
-				),
-				relayer,
+			await expect(sdk.multisig.execute(
+				[ user1 ],
+				proxy,
+				{ to: dest, nonce: 0, salt: samesalt },
+				{ options: { gasLimit: 1000000 } },
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
-			await expect(sdk.meta.relay(
-				await sdk.meta.sign(
-					proxy,
-					{ to: dest, nonce: 0, salt: samesalt },
-					[ user2 ],
-				),
-				relayer,
+			await expect(sdk.multisig.execute(
+				[ user2 ],
+				proxy,
+				{ to: dest, nonce: 0, salt: samesalt },
+				{ options: { gasLimit: 1000000 } },
 			)).to.revertedWith('transaction-replay');
 			expect(await proxy.nonce()).to.be.eq(2);
 		});

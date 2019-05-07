@@ -24,24 +24,22 @@ function testRefund(sdk)
 			expect(await sdk.provider.getBalance(relayerProxy.address)).to.eq(eth(0.0));
 			expect(await sdk.provider.getBalance(dest                )).to.eq(eth(0.0));
 
-			await expect( sdk.meta.relay(
-				await  sdk.meta.sign(
-					relayerProxy,
-					{
-						...await  sdk.meta.sign(
-							proxy,
-							{
-								to:       dest,
-								value:    eth(0.1),
-								gasToken,
-								gasPrice,
-							},
-							[user1],
-						),
-					},
-					[ relayer ],
-				),
-				relayer,
+			await expect(sdk.multisig.execute(
+				[ relayer ],
+				relayerProxy,
+				{
+					...await  sdk.multisig.sign(
+						[user1],
+						proxy,
+						{
+							to:       dest,
+							value:    eth(0.1),
+							gasToken,
+							gasPrice,
+						},
+					),
+				},
+				{ options: { gasLimit: 1000000 } }
 			)).to
 			// .emit(relayerProxy, 'CallSuccess').withArgs(proxy.address);
 			.emit(proxy, 'CallSuccess').withArgs(dest);
@@ -54,7 +52,7 @@ function testRefund(sdk)
 
 			expect(await sdk.provider.getBalance(proxy.address       )).to.eq(eth(0.9).sub(relayerProxyBalanceDelta));
 			expect(await sdk.provider.getBalance(relayerProxy.address)).to.eq(eth(0.0).add(relayerProxyBalanceDelta));
-			expect(await sdk.provider.getBalance(dest                        )).to.eq(eth(0.1));
+			expect(await sdk.provider.getBalance(dest                )).to.eq(eth(0.1));
 		});
 
 		it('Refund in ether - Fine Tunning', async () => {
@@ -65,21 +63,19 @@ function testRefund(sdk)
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 
 			expect(await sdk.provider.getBalance(proxy.address)).to.eq(eth(1.0));
-			expect(await sdk.provider.getBalance(dest                 )).to.eq(eth(0.0));
+			expect(await sdk.provider.getBalance(dest         )).to.eq(eth(0.0));
 
 			const balanceBefore = await sdk.provider.getBalance(relayer.address);
-			const tx = await  sdk.meta.relay(
-				await  sdk.meta.sign(
-					proxy,
-					{
-						to:       dest,
-						value:    eth(0.1),
-						gasToken,
-						gasPrice,
-					},
-					[user1],
-				),
-				relayer,
+			const tx = await sdk.multisig.execute(
+				[user1],
+				proxy,
+				{
+					to:       dest,
+					value:    eth(0.1),
+					gasToken,
+					gasPrice,
+				},
+				{ options: { gasLimit: 1000000 } }
 			);
 			const receipt = await tx.wait();
 			const balanceAfter = await sdk.provider.getBalance(relayer.address);
@@ -103,23 +99,21 @@ function testRefund(sdk)
 
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 
-			expect(await sdk.provider.getBalance    (proxy.address)).to.eq(eth(1.0));
-			expect(await sdk.provider.getBalance    (dest                 )).to.eq(eth(0.0));
-			expect(await tokenContract.balanceOf(proxy.address)).to.eq(eth(1.0));
-			expect(await tokenContract.balanceOf(relayer.address      )).to.eq(eth(0.0));
+			expect(await sdk.provider.getBalance(proxy.address  )).to.eq(eth(1.0));
+			expect(await sdk.provider.getBalance(dest           )).to.eq(eth(0.0));
+			expect(await tokenContract.balanceOf(proxy.address  )).to.eq(eth(1.0));
+			expect(await tokenContract.balanceOf(relayer.address)).to.eq(eth(0.0));
 
-			await expect( sdk.meta.relay(
-				await  sdk.meta.sign(
-					proxy,
-					{
-						to:       dest,
-						value:    eth(0.1),
-						gasToken,
-						gasPrice,
-					},
-					[user1],
-				),
-				relayer,
+			await expect( sdk.multisig.execute(
+				[user1],
+				proxy,
+				{
+					to:       dest,
+					value:    eth(0.1),
+					gasToken,
+					gasPrice,
+				},
+				{ options: { gasLimit: 1000000 } }
 			)).to
 			// .emit(relayerProxy, 'CallSuccess').withArgs(proxy.address);
 			.emit(proxy, 'CallSuccess').withArgs(dest);

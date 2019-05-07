@@ -1,34 +1,13 @@
-const   chai     = require('chai');
-const { expect } = chai;
 const { ethers } = require('ethers');
 const { createMockProvider, getWallets, solidity} = require('ethereum-waffle');
-
 const { Sdk }    = require('../sdk/sdk.js');
 
-chai.use(solidity);
 ethers.errors.setLogLevel('error');
-
-
-
-// const provider = new ethers.providers.JsonRpcProvider();
-// const accounts = [
-//   "<privatekey_0>"
-// , "<privatekey_1>"
-// , "<privatekey_2>"
-// , "<privatekey_3>"
-// , "<privatekey_4>"
-// , "<privatekey_5>"
-// , "<privatekey_6>"
-// , "<privatekey_7>"
-// , "<privatekey_8>"
-// , "<privatekey_9>"
-// ].map(pk => new ethers.Wallet(pk, provider));
-// const [ relayer, user1, user2, user3 ] = accounts;
 
 const provider = createMockProvider();
 const [ relayer, user1, user2, user3 ] = getWallets(provider);
 
-provider.ready.then(async ({ chainId, name }) => {
+provider.ready.then(async () => {
 
 	const sdk = new Sdk(provider, relayer);
 
@@ -66,7 +45,7 @@ provider.ready.then(async ({ chainId, name }) => {
 				sdk.transactions.prepare.initialization(
 					"WalletMultisig",
 					[
-						[ ethers.utils.hexZeroPad(user1.address, 32).toString().toLowerCase() ],
+						[ sdk.utils.addrToKey(user1.address) ],
 						[ "0x0000000000000000000000000000000000000000000000000000000000000001" ],
 						1,
 						1,

@@ -69,15 +69,17 @@ const getMasterInstance = (
 }
 
 const deployProxy = (
-	sdk     = throwIfMissing(),
-	name    = throwIfMissing(),
-	args    = [],
-	relayer = null,
-	params  = {},
+	sdk          = throwIfMissing(),
+	name         = throwIfMissing(),
+	args         = [],
+	deployMaster = true,
+	relayer      = null,
+	params       = {},
 ) => {
 	return new Promise(function(resolve, reject) {
-		getMasterInstance(sdk, name, relayer)
+		getMasterInstance(sdk, name, deployMaster, relayer)
 		.then(instance => {
+			if (instance === null) { reject(null); }
 			deployContract(sdk, "Proxy", [ instance.address, sdk.transactions.prepare.initialization(name, args) ])
 			.then(proxy => {
 				resolve(viewContract(sdk, name, proxy.address));

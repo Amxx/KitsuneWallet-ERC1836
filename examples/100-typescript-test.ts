@@ -35,7 +35,7 @@ ethers.errors.setLogLevel('error');
 			1,
 			1,
 		],
-		sdk.execute.ownable.bind(sdk.execute, wallet),
+		sdk.ownable.execute.bind(sdk.ownable, wallet),
 		{ allowDeploy: true }
 	);
 
@@ -51,7 +51,7 @@ ethers.errors.setLogLevel('error');
 		proxy,
 		"WalletMultisigRefund",
 		null,
-		sdk.execute.multisig.bind(sdk.execute, [ wallet ]),
+		sdk.multisig.execute.bind(sdk.multisig, [ wallet ]),
 		{ allowDeploy: true }
 	);
 

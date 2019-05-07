@@ -5,6 +5,24 @@ import ModuleBase from "./__ModuleBase";
 
 export class Multisig extends ModuleBase
 {
+	execute(
+		signers: types.wallet[],
+		proxy:   types.contract,
+		tx:      {},
+		config:  types.config = {},
+	) : Promise<{}>
+	{
+		return new Promise((resolve, reject) => {
+			this.sdk.meta.sign(proxy, tx, signers)
+			.then(metatx => {
+				this.sdk.meta.relay(metatx, config)
+				.then(resolve)
+				.catch(reject);
+			})
+			.catch(reject);
+		});
+	}
+
 	setKey(
 		proxy:   types.contract,
 		key:     string,
@@ -13,7 +31,7 @@ export class Multisig extends ModuleBase
 		config:  types.config = {},
 	) : Promise<{}>
 	{
-		return this.sdk.execute.multisig(
+		return this.execute(
 			signers,
 			proxy,
 			{

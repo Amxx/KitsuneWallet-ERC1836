@@ -53,7 +53,7 @@ provider.ready.then(async () => {
 			{ allowDeploy: true }
 		);
 
-		await sdk.execute.ownable(
+		await sdk.ownable.execute(
 			user1,
 			proxy,
 			{ to: proxy.address, data: updateMasterTx },
@@ -80,7 +80,7 @@ provider.ready.then(async () => {
 			{ allowDeploy: true }
 		);
 
-		await sdk.execute.multisig(
+		await sdk.multisig.execute(
 			[ user1 ],
 			proxy,
 			{ to: proxy.address, data: updateMasterTx },

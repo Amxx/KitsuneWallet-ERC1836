@@ -14,29 +14,20 @@ var __extends = (this && this.__extends) || (function () {
 })();
 exports.__esModule = true;
 var __ModuleBase_1 = require("./__ModuleBase");
-var Multisig = /** @class */ (function (_super) {
-    __extends(Multisig, _super);
-    function Multisig() {
+var Ownable = /** @class */ (function (_super) {
+    __extends(Ownable, _super);
+    function Ownable() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Multisig.prototype.execute = function (signers, proxy, tx, config) {
-        var _this = this;
+    Ownable.prototype.execute = function (owner, proxy, tx, config) {
         if (config === void 0) { config = {}; }
         return new Promise(function (resolve, reject) {
-            _this.sdk.meta.sign(proxy, tx, signers)
-                .then(function (metatx) {
-                _this.sdk.meta.relay(metatx, config)
-                    .then(resolve)["catch"](reject);
-            })["catch"](reject);
+            proxy
+                .connect(owner)
+                .execute(tx['type'] || 0, tx['to'], tx['value'] || 0, tx['data'] || "0x", { gasLimit: 800000 })
+                .then(function (tx) { return tx.wait().then(resolve)["catch"](reject); })["catch"](reject);
         });
     };
-    Multisig.prototype.setKey = function (proxy, key, purpose, signers, config) {
-        if (config === void 0) { config = {}; }
-        return this.execute(signers, proxy, {
-            to: proxy.address,
-            data: proxy.interface.functions['setKey(bytes32,bytes32)'].encode([key, purpose])
-        }, config = {});
-    };
-    return Multisig;
+    return Ownable;
 }(__ModuleBase_1["default"]));
-exports.Multisig = Multisig;
+exports.Ownable = Ownable;

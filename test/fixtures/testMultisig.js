@@ -17,8 +17,8 @@ function testMultisig(sdk)
 				expect(await proxy.nonce()).to.be.eq(0);
 
 				await expect(sdk.multisig.execute(
-					[ user1 ],
 					proxy,
+					[ user1 ],
 					{ to: dest, nonce: 1 },
 					{ options: { gasLimit: 1000000 } },
 				)).to.emit(proxy, 'CallSuccess').withArgs(dest);
@@ -30,8 +30,8 @@ function testMultisig(sdk)
 				expect(await proxy.nonce()).to.be.eq(0);
 
 				await expect(sdk.multisig.execute(
-					[ user1 ],
 					proxy,
+					[ user1 ],
 					{ to: dest, nonce: 2 },
 					{ options: { gasLimit: 1000000 } },
 				)).to.be.revertedWith('invalid-nonce');
@@ -43,8 +43,8 @@ function testMultisig(sdk)
 				expect(await proxy.nonce()).to.be.eq(0);
 
 				await expect(sdk.multisig.execute(
-					[ user1 ],
 					proxy,
+					[ user1 ],
 					{ to: dest, nonce: 1 },
 					{ options: { gasLimit: 1000000 } },
 				)).to.emit(proxy, 'CallSuccess').withArgs(dest);
@@ -52,8 +52,8 @@ function testMultisig(sdk)
 				expect(await proxy.nonce()).to.be.eq(1);
 
 				await expect(sdk.multisig.execute(
-					[ user1 ],
 					proxy,
+					[ user1 ],
 					{ to: dest, nonce: 1 },
 					{ options: { gasLimit: 1000000 } },
 				)).to.be.revertedWith('invalid-nonce');
@@ -68,14 +68,14 @@ function testMultisig(sdk)
 
 				await expect(sdk.multisig.setKey(
 					proxy,
+					[ user1 ],
 					sdk.utils.addrToKey(user2.address),
 					'0x0000000000000000000000000000000000000000000000000000000000000001',
-					[ user1 ],
 					{ options: { gasLimit: 1000000 } },
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 				await expect(sdk.multisig.execute(
-					[ user1 ],
 					proxy,
+					[ user1 ],
 					{
 						to: proxy.address,
 						data: proxy.interface.functions.setManagementThreshold.encode([2]),
@@ -92,8 +92,8 @@ function testMultisig(sdk)
 				expect(await proxy.getManagementThreshold()).to.eq(1);
 
 				await expect(sdk.multisig.execute(
-					[ user1 ],
 					proxy,
+					[ user1 ],
 					{
 						to: proxy.address,
 						data: proxy.interface.functions.setManagementThreshold.encode([0]),
@@ -108,8 +108,8 @@ function testMultisig(sdk)
 				expect(await proxy.getManagementThreshold()).to.eq(1);
 
 				await expect(sdk.multisig.execute(
-					[ user1 ],
 					proxy,
+					[ user1 ],
 					{
 						to: proxy.address,
 						data: proxy.interface.functions.setManagementThreshold.encode([2]),
@@ -127,15 +127,15 @@ function testMultisig(sdk)
 
 				await expect(sdk.multisig.setKey(
 					proxy,
+					[ user1 ],
 					sdk.utils.addrToKey(user2.address),
 					'0x0000000000000000000000000000000000000000000000000000000000000001',
-					[ user1 ],
 					{ options: { gasLimit: 1000000 } },
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 
 				await expect(sdk.multisig.execute(
-					[ user1 ],
 					proxy,
+					[ user1 ],
 					{
 						to: proxy.address,
 						data: proxy.interface.functions.setManagementThreshold.encode([2]),
@@ -146,8 +146,8 @@ function testMultisig(sdk)
 				.emit(proxy, 'ManagementThresholdChange').withArgs(1, 2);
 
 				await expect(sdk.multisig.execute(
-					[ user1, user2 ],
 					proxy,
+					[ user1, user2 ],
 					{
 						to: proxy.address,
 						data: proxy.interface.functions.setManagementThreshold.encode([1]),
@@ -165,15 +165,15 @@ function testMultisig(sdk)
 
 				await expect(sdk.multisig.setKey(
 					proxy,
+					[ user1 ],
 					sdk.utils.addrToKey(user2.address),
 					'0x0000000000000000000000000000000000000000000000000000000000000001',
-					[ user1 ],
 					{ options: { gasLimit: 1000000 } },
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 
 				await expect(sdk.multisig.execute(
-					[ user1 ],
 					proxy,
+					[ user1 ],
 					{
 						to: proxy.address,
 						data: proxy.interface.functions.setManagementThreshold.encode([2]),
@@ -184,8 +184,8 @@ function testMultisig(sdk)
 				.emit(proxy, 'ManagementThresholdChange').withArgs(1, 2);
 
 				await expect(sdk.multisig.execute(
-					[ user2 ],
 					proxy,
+					[ user2 ],
 					{
 						to: proxy.address,
 						data: proxy.interface.functions.setManagementThreshold.encode([1]),
@@ -202,8 +202,8 @@ function testMultisig(sdk)
 				expect(await proxy.getActionThreshold()).to.eq(1);
 
 				await expect(sdk.multisig.execute(
-					[ user1 ],
 					proxy,
+					[ user1 ],
 					{
 						to: proxy.address,
 						data: proxy.interface.functions.setActionThreshold.encode([2]),
@@ -220,8 +220,8 @@ function testMultisig(sdk)
 				expect(await proxy.getActionThreshold()).to.eq(1);
 
 				await expect(sdk.multisig.execute(
-					[ user1 ],
 					proxy,
+					[ user1 ],
 					{
 						to: proxy.address,
 						data: proxy.interface.functions.setActionThreshold.encode([0]),
@@ -237,14 +237,14 @@ function testMultisig(sdk)
 			it('valid', async () => {
 				await expect(sdk.multisig.setKey(
 					proxy,
+					[ user1 ],
 					sdk.utils.addrToKey(user2.address),
 					'0x0000000000000000000000000000000000000000000000000000000000000006',
-					[ user1 ],
 					{ options: { gasLimit: 1000000 } },
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 				await expect(sdk.multisig.execute(
-					[ user1 ],
 					proxy,
+					[ user1 ],
 					{
 						to: proxy.address,
 						data: proxy.interface.functions.setActionThreshold.encode([2]),
@@ -252,16 +252,16 @@ function testMultisig(sdk)
 					{ options: { gasLimit: 1000000 } },
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 				await expect(sdk.multisig.execute(
-					[ user1, user2 ],
 					proxy,
+					[ user1, user2 ],
 					{
 						to: dest,
 					},
 					{ options: { gasLimit: 1000000 } },
 				)).to.emit(proxy, 'CallSuccess').withArgs(dest);
 				await expect(sdk.multisig.execute(
-					[ user2, user1 ],
 					proxy,
+					[ user2, user1 ],
 					{
 						to: dest,
 					},
@@ -271,8 +271,8 @@ function testMultisig(sdk)
 
 			it('invalid - unauthorized signer', async () => {
 				await expect(sdk.multisig.execute(
-					[ user1 ],
 					proxy,
+					[ user1 ],
 					{
 						to: proxy.address,
 						data: proxy.interface.functions.setActionThreshold.encode([2]),
@@ -280,8 +280,8 @@ function testMultisig(sdk)
 					{ options: { gasLimit: 1000000 } },
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 				await expect(sdk.multisig.execute(
-					[ user1, user2 ],
 					proxy,
+					[ user1, user2 ],
 					{
 						to: dest,
 					},
@@ -291,8 +291,8 @@ function testMultisig(sdk)
 
 			it('invalid - multiple signer', async () => {
 				await expect(sdk.multisig.execute(
-					[ user1 ],
 					proxy,
+					[ user1 ],
 					{
 						to: proxy.address,
 						data: proxy.interface.functions.setActionThreshold.encode([2]),
@@ -300,8 +300,8 @@ function testMultisig(sdk)
 					{ options: { gasLimit: 1000000 } },
 				)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 				await expect(sdk.multisig.execute(
-					[ user1, user1 ],
 					proxy,
+					[ user1, user1 ],
 					{
 						to: dest,
 					},

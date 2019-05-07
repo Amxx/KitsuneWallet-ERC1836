@@ -15,8 +15,8 @@ function testOutOfOrder(sdk)
 		it('valid nonce', async () => {
 			expect(await proxy.nonce()).to.be.eq(0);
 			await expect(sdk.multisig.execute(
-				[ user1 ],
 				proxy,
+				[ user1 ],
 				{ to: dest, nonce: 1 },
 				{ options: { gasLimit: 1000000 } },
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
@@ -26,8 +26,8 @@ function testOutOfOrder(sdk)
 		it('invalid nonce', async () => {
 			expect(await proxy.nonce()).to.be.eq(0);
 			await expect(sdk.multisig.execute(
-				[ user1 ],
 				proxy,
+				[ user1 ],
 				{ to: dest, nonce: 2 },
 				{ options: { gasLimit: 1000000 } },
 			)).to.be.revertedWith('invalid-nonce');
@@ -37,8 +37,8 @@ function testOutOfOrder(sdk)
 		it('out-of-order with salt', async () => {
 			expect(await proxy.nonce()).to.be.eq(0);
 			await expect(sdk.multisig.execute(
-				[ user1 ],
 				proxy,
+				[ user1 ],
 				{ to: dest, nonce: 0 },
 				{ options: { gasLimit: 1000000 } },
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
@@ -48,14 +48,14 @@ function testOutOfOrder(sdk)
 		it('out-of-order with salt (multiple)', async () => {
 			expect(await proxy.nonce()).to.be.eq(0);
 			await expect(sdk.multisig.execute(
-				[ user1 ],
 				proxy,
+				[ user1 ],
 				{ to: dest, nonce: 0 },
 				{ options: { gasLimit: 1000000 } },
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
 			await expect(sdk.multisig.execute(
-				[ user1 ],
 				proxy,
+				[ user1 ],
 				{ to: dest, nonce: 0 },
 				{ options: { gasLimit: 1000000 } },
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
@@ -66,14 +66,14 @@ function testOutOfOrder(sdk)
 			samesalt = ethers.utils.randomBytes(32);
 			expect(await proxy.nonce()).to.be.eq(0);
 			await expect(sdk.multisig.execute(
-				[ user1 ],
 				proxy,
+				[ user1 ],
 				{ to: dest, nonce: 0, salt: samesalt },
 				{ options: { gasLimit: 1000000 } },
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
 			await expect(sdk.multisig.execute(
-				[ user1 ],
 				proxy,
+				[ user1 ],
 				{ to: dest, nonce: 0, salt: samesalt },
 				{ options: { gasLimit: 1000000 } },
 			)).to.revertedWith('transaction-replay');
@@ -85,22 +85,22 @@ function testOutOfOrder(sdk)
 			expect(await proxy.nonce()).to.be.eq(0);
 			await expect(sdk.multisig.setKey(
 				proxy,
+				[ user1 ],
 				sdk.utils.addrToKey(user2.address),
 				'0x0000000000000000000000000000000000000000000000000000000000000007',
-				[ user1 ],
 				{ options: { gasLimit: 1000000 } },
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
 			.emit(proxy, 'SetKey').withArgs(sdk.utils.addrToKey(user2.address), "0x0000000000000000000000000000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000007");
 			await expect(sdk.multisig.execute(
-				[ user1 ],
 				proxy,
+				[ user1 ],
 				{ to: dest, nonce: 0, salt: samesalt },
 				{ options: { gasLimit: 1000000 } },
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
 			await expect(sdk.multisig.execute(
-				[ user2 ],
 				proxy,
+				[ user2 ],
 				{ to: dest, nonce: 0, salt: samesalt },
 				{ options: { gasLimit: 1000000 } },
 			)).to.revertedWith('transaction-replay');

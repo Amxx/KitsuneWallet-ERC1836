@@ -42,9 +42,9 @@ function testKeyManagement(sdk)
 
 			await expect(sdk.multisig.setKey(
 				proxy,
+				[ user1 ],
 				sdk.utils.addrToKey(user2.address),
 				'0x0000000000000000000000000000000000000000000000000000000000000004',
-				[ user1 ],
 				{ options: { gasLimit: 1000000 } }
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
@@ -64,9 +64,9 @@ function testKeyManagement(sdk)
 
 			await expect(sdk.multisig.setKey(
 				proxy,
+				[ user1 ],
 				sdk.utils.addrToKey(user1.address),
 				'0x000000000000000000000000000000000000000000000000000000000000000f',
-				[ user1 ],
 				{ options: { gasLimit: 1000000 } }
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
@@ -86,9 +86,9 @@ function testKeyManagement(sdk)
 
 			await expect(sdk.multisig.setKey(
 				proxy,
+				[ user1 ],
 				sdk.utils.addrToKey(user1.address),
 				'0x0000000000000000000000000000000000000000000000000000000000000006',
-				[ user1 ],
 				{ options: { gasLimit: 1000000 } }
 			)).to.emit(proxy, 'CallFailure'); //.withArgs(proxy.address, 'cannot-remove-critical-management-key');
 
@@ -107,9 +107,9 @@ function testKeyManagement(sdk)
 
 			await expect(sdk.multisig.setKey(
 				proxy,
+				[ user1 ],
 				sdk.utils.addrToKey(user2.address),
 				'0x0000000000000000000000000000000000000000000000000000000000000007',
-				[ user1 ],
 				{ options: { gasLimit: 1000000 } }
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
@@ -122,9 +122,9 @@ function testKeyManagement(sdk)
 
 			await expect(sdk.multisig.setKey(
 				proxy,
+				[ user1 ],
 				sdk.utils.addrToKey(user1.address),
 				'0x0000000000000000000000000000000000000000000000000000000000000000',
-				[ user1 ],
 				{ options: { gasLimit: 1000000 } }
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)

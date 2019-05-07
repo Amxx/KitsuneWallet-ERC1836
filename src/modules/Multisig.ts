@@ -20,8 +20,8 @@ export class Multisig extends ModuleBase
 {
 
 	sign(
-		signers: types.wallet[],
 		proxy:   types.contract,
+		signers: types.wallet[],
 		metatx:  types.ethereum.metatx,
 	) : Promise<types.ethereum.tx>
 	{
@@ -55,14 +55,14 @@ export class Multisig extends ModuleBase
 	}
 
 	execute(
-		signers: types.wallet[],
 		proxy:   types.contract,
+		signers: types.wallet[],
 		metatx:  types.ethereum.metatx,
 		config:  types.config = {},
 	) : Promise<{}>
 	{
 		return new Promise((resolve, reject) => {
-			this.sign(signers, proxy, metatx)
+			this.sign(proxy, signers, metatx)
 			.then((signed_metatx: types.ethereum.metatx) => {
 				this.relay(signed_metatx, config)
 				.then(resolve)
@@ -74,15 +74,15 @@ export class Multisig extends ModuleBase
 
 	setKey(
 		proxy:   types.contract,
+		signers: types.wallet[],
 		key:     types.ethereum.bytes32,
 		purpose: types.ethereum.bytes32,
-		signers: types.wallet[],
 		config:  types.config = {},
 	) : Promise<{}>
 	{
 		return this.execute(
-			signers,
 			proxy,
+			signers,
 			{
 				to: proxy.address,
 				data: proxy.interface.functions['setKey(bytes32,bytes32)'].encode([ key, purpose ]),

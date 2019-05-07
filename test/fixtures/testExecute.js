@@ -18,8 +18,8 @@ function testExecute(sdk)
 			expect(await sdk.provider.getBalance(dest         )).to.eq(eth(0.0));
 
 			await expect(sdk.multisig.execute(
-				[ user1 ],
 				proxy,
+				[ user1 ],
 				{
 					to:    dest,
 					value: eth(0.1),
@@ -35,8 +35,8 @@ function testExecute(sdk)
 			randomdata = ethers.utils.hexlify(ethers.utils.randomBytes(32));
 
 			await expect(sdk.multisig.execute(
-				[ user1 ],
 				proxy,
+				[ user1 ],
 				{
 					to: targetContract.address,
 					data: targetContract.interface.functions.call.encode([ randomdata ]),

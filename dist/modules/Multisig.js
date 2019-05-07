@@ -18,7 +18,7 @@ function toNumber(n) {
 }
 ;
 class Multisig extends __ModuleBase_1.default {
-    sign(signers, proxy, metatx) {
+    sign(proxy, signers, metatx) {
         var executeABI = Object.keys(proxy.interface.functions).filter(fn => fn.startsWith("execute(") && fn !== 'execute(uint256,address,uint256,bytes)')[0];
         return new Promise(function (resolve, reject) {
             proxy.nonce()
@@ -42,9 +42,9 @@ class Multisig extends __ModuleBase_1.default {
                 .catch(reject);
         });
     }
-    execute(signers, proxy, metatx, config = {}) {
+    execute(proxy, signers, metatx, config = {}) {
         return new Promise((resolve, reject) => {
-            this.sign(signers, proxy, metatx)
+            this.sign(proxy, signers, metatx)
                 .then((signed_metatx) => {
                 this.relay(signed_metatx, config)
                     .then(resolve)
@@ -53,8 +53,8 @@ class Multisig extends __ModuleBase_1.default {
                 .catch(reject);
         });
     }
-    setKey(proxy, key, purpose, signers, config = {}) {
-        return this.execute(signers, proxy, {
+    setKey(proxy, signers, key, purpose, config = {}) {
+        return this.execute(proxy, signers, {
             to: proxy.address,
             data: proxy.interface.functions['setKey(bytes32,bytes32)'].encode([key, purpose]),
         }, config);

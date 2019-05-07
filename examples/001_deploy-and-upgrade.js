@@ -54,8 +54,8 @@ provider.ready.then(async () => {
 		);
 
 		await sdk.ownable.execute(
-			user1,
 			proxy,
+			user1,
 			{ to: proxy.address, data: updateMasterTx },
 			{ options: { gasLimit: 1000000 } }
 		);
@@ -82,8 +82,8 @@ provider.ready.then(async () => {
 		);
 
 		await sdk.multisig.execute(
-			[ user1 ],
 			proxy,
+			[ user1 ],
 			{ to: proxy.address, data: updateMasterTx },
 			{ options: { gasLimit: 1000000 } }
 		);

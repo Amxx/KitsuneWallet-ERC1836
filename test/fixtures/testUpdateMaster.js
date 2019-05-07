@@ -19,8 +19,8 @@ function testUpdateMaster(sdk, name)
 			expect(await proxy.nonce()).to.be.eq(0);
 
 			await expect(sdk.multisig.execute(
-				[ user1 ],
 				proxy,
+				[ user1 ],
 				{
 					to: proxy.address,
 					data: await sdk.transactions.updateMaster(
@@ -40,6 +40,31 @@ function testUpdateMaster(sdk, name)
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
 			.emit(proxy, 'MasterChange').withArgs(masterAddress, masterAddress);
+
+			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxy.nonce()).to.be.eq(1);
+		});
+
+		it('authorized - dedicated function', async () => {
+			const masterAddress = (await sdk.contracts.getMasterInstance(name)).address;
+
+			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+			expect(await proxy.nonce()).to.be.eq(0);
+
+			await sdk.contracts.upgradeProxy(
+				proxy,
+				name,
+				[
+					[ sdk.utils.addrToKey(user2.address) ],
+					[ "0x0000000000000000000000000000000000000000000000000000000000000007" ],
+					1,
+					1,
+				],
+				(proxy, tx, config) => sdk.multisig.execute(proxy, [ user1 ], tx, config),
+				{ options: { gasLimit: 1000000 } },
+			);
 
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');

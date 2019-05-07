@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { SDK }    from '../src/SDK';
+import { SDK }    from '../dist/SDK';
 
 import { createMockProvider, getWallets, solidity} from 'ethereum-waffle';
 
@@ -35,7 +35,7 @@ ethers.errors.setLogLevel('error');
 			1,
 			1,
 		],
-		sdk.ownable.execute.bind(sdk.ownable, wallet),
+		(proxy, tx, config) => sdk.ownable.execute(proxy, wallet, tx, config),
 		{ allowDeploy: true, options: { gasLimit: 1000000 } }
 	);
 
@@ -51,7 +51,7 @@ ethers.errors.setLogLevel('error');
 		proxy,
 		"WalletMultisigRefund",
 		null,
-		sdk.multisig.execute.bind(sdk.multisig, [ wallet ]),
+		(proxy, tx, config) => sdk.multisig.execute(proxy, [ wallet ], tx, config),
 		{ allowDeploy: true, options: { gasLimit: 1000000 } }
 	);
 

@@ -25,12 +25,12 @@ function testRefund(sdk)
 			expect(await sdk.provider.getBalance(dest                )).to.eq(eth(0.0));
 
 			await expect(sdk.multisig.execute(
-				[ relayer ],
 				relayerProxy,
+				[ relayer ],
 				{
 					...await  sdk.multisig.sign(
-						[user1],
 						proxy,
+						[user1],
 						{
 							to:       dest,
 							value:    eth(0.1),
@@ -67,8 +67,8 @@ function testRefund(sdk)
 
 			const balanceBefore = await sdk.provider.getBalance(relayer.address);
 			const tx = await sdk.multisig.execute(
-				[user1],
 				proxy,
+				[user1],
 				{
 					to:       dest,
 					value:    eth(0.1),
@@ -105,8 +105,8 @@ function testRefund(sdk)
 			expect(await tokenContract.balanceOf(relayer.address)).to.eq(eth(0.0));
 
 			await expect( sdk.multisig.execute(
-				[user1],
 				proxy,
+				[user1],
 				{
 					to:       dest,
 					value:    eth(0.1),
@@ -124,10 +124,10 @@ function testRefund(sdk)
 
 			console.log("gas refunded:", relayerBalanceDelta.div(gasPrice).toNumber());
 
-			expect(await sdk.provider.getBalance    (proxy.address)).to.eq(eth(0.9));
-			expect(await sdk.provider.getBalance    (dest                 )).to.eq(eth(0.1));
-			expect(await tokenContract.balanceOf(proxy.address)).to.eq(eth(1.0).sub(relayerBalanceDelta));
-			expect(await tokenContract.balanceOf(relayer.address      )).to.eq(eth(0.0).add(relayerBalanceDelta));
+			expect(await sdk.provider.getBalance(proxy.address  )).to.eq(eth(0.9));
+			expect(await sdk.provider.getBalance(dest           )).to.eq(eth(0.1));
+			expect(await tokenContract.balanceOf(proxy.address  )).to.eq(eth(1.0).sub(relayerBalanceDelta));
+			expect(await tokenContract.balanceOf(relayer.address)).to.eq(eth(0.0).add(relayerBalanceDelta));
 		});
 
 	});

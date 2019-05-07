@@ -18,6 +18,7 @@ var ABIS = {
 import { Contracts    } from "./modules/Contracts";
 import { Execute      } from "./modules/Execute";
 import { Meta         } from "./modules/Meta";
+import { Multisig     } from "./modules/Multisig";
 import { Transactions } from "./modules/Transactions";
 import { Utils        } from "./modules/Utils";
 
@@ -31,6 +32,7 @@ export class SDK
 	contracts:    Contracts;
 	execute:      Execute;
 	meta:         Meta;
+	multisig:     Multisig;
 	transactions: Transactions;
 	utils:        Utils;
 
@@ -45,6 +47,7 @@ export class SDK
 		this.contracts    = new Contracts(this);
 		this.execute      = new Execute(this);
 		this.meta         = new Meta(this);
+		this.multisig     = new Multisig(this);
 		this.transactions = new Transactions(this);
 		this.utils        = new Utils(this);
 	}

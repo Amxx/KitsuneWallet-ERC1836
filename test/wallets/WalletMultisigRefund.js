@@ -2,7 +2,7 @@ const chai = require('chai');
 const ethers = require('ethers');
 const { createMockProvider, deployContract, getWallets, solidity } = require('ethereum-waffle');
 
-const { Sdk } = require('../../sdk/sdk.js');
+const { SDK } = require('../../dist/SDK.js');
 const Target = require('../../build/Target');
 const Token  = require('../../contracts/Token');
 
@@ -20,9 +20,10 @@ describe('Wallet', () => {
 
 	const provider = createMockProvider();
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
-	const sdk = new Sdk(provider, relayer);
+	const sdk = new SDK(provider, relayer);
 
 	before(async () => {
+		await sdk.contracts.getMasterInstance("WalletMultisigRefund", { allowDeploy: true });
 		targetContract = await deployContract(wallet, Target, []);
 		tokenContract  = await deployContract(wallet, Token,  []);
 	});

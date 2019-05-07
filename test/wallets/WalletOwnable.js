@@ -2,7 +2,7 @@ const chai   = require('chai');
 const ethers = require('ethers');
 const {createMockProvider, deployContract, getWallets, solidity} = require('ethereum-waffle');
 
-const { Sdk } = require('../../sdk/sdk.js');
+const { SDK } = require('../../dist/SDK.js');
 const Target   = require('../../build/Target');
 
 const {expect} = chai;
@@ -14,10 +14,10 @@ describe('WalletOwnable', () => {
 
 	const provider = createMockProvider();
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
-	const sdk = new Sdk(provider, relayer);
+	const sdk = new SDK(provider, relayer);
 
 	before(async () => {
-		walletContract = await sdk.contracts.getMasterInstance("WalletOwnable");
+		walletContract = await sdk.contracts.getMasterInstance("WalletOwnable", { allowDeploy: true });
 		targetContract = await deployContract(wallet, Target, []);
 		dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 	});
@@ -108,9 +108,9 @@ describe('WalletOwnable', () => {
 				0,
 				proxy.address,
 				0,
-				await sdk.transactions.prepare.updateMaster(
+				await sdk.transactions.updateMaster(
 					"WalletOwnable",
-					sdk.transactions.prepare.initialization("WalletOwnable", [ user2.address ]),
+					sdk.transactions.initialization("WalletOwnable", [ user2.address ]),
 				),
 				{ gasLimit: 800000 }
 			)).to
@@ -125,9 +125,9 @@ describe('WalletOwnable', () => {
 				0,
 				proxy.address,
 				0,
-				await sdk.transactions.prepare.updateMaster(
+				await sdk.transactions.updateMaster(
 					"WalletOwnable",
-					sdk.transactions.prepare.initialization("WalletOwnable", [ user2.address ]),
+					sdk.transactions.initialization("WalletOwnable", [ user2.address ]),
 				),
 				{ gasLimit: 800000 }
 			)).to.be.revertedWith('access-forbidden');

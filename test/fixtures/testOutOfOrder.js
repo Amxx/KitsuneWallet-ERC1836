@@ -14,8 +14,8 @@ function testOutOfOrder(sdk)
 
 		it('valid nonce', async () => {
 			expect(await proxy.nonce()).to.be.eq(0);
-			await expect(sdk.transactions.relay(
-				await sdk.transactions.sign(
+			await expect(sdk.meta.relay(
+				await sdk.meta.sign(
 					proxy,
 					{ to: dest, nonce: 1 },
 					[ user1 ],
@@ -27,8 +27,8 @@ function testOutOfOrder(sdk)
 
 		it('invalid nonce', async () => {
 			expect(await proxy.nonce()).to.be.eq(0);
-			await expect(sdk.transactions.relay(
-				await sdk.transactions.sign(
+			await expect(sdk.meta.relay(
+				await sdk.meta.sign(
 					proxy,
 					{ to: dest, nonce: 2 },
 					[ user1 ],
@@ -40,8 +40,8 @@ function testOutOfOrder(sdk)
 
 		it('out-of-order with salt', async () => {
 			expect(await proxy.nonce()).to.be.eq(0);
-			await expect(sdk.transactions.relay(
-				await sdk.transactions.sign(
+			await expect(sdk.meta.relay(
+				await sdk.meta.sign(
 					proxy,
 					{ to: dest, nonce: 0 },
 					[ user1 ],
@@ -53,16 +53,16 @@ function testOutOfOrder(sdk)
 
 		it('out-of-order with salt (multiple)', async () => {
 			expect(await proxy.nonce()).to.be.eq(0);
-			await expect(sdk.transactions.relay(
-				await sdk.transactions.sign(
+			await expect(sdk.meta.relay(
+				await sdk.meta.sign(
 					proxy,
 					{ to: dest, nonce: 0 },
 					[ user1 ],
 				),
 				relayer,
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
-			await expect(sdk.transactions.relay(
-				await sdk.transactions.sign(
+			await expect(sdk.meta.relay(
+				await sdk.meta.sign(
 					proxy,
 					{ to: dest, nonce: 0 },
 					[ user1 ],
@@ -75,16 +75,16 @@ function testOutOfOrder(sdk)
 		it('out-of-order replay protection', async () => {
 			samesalt = ethers.utils.randomBytes(32);
 			expect(await proxy.nonce()).to.be.eq(0);
-			await expect(sdk.transactions.relay(
-				await sdk.transactions.sign(
+			await expect(sdk.meta.relay(
+				await sdk.meta.sign(
 					proxy,
 					{ to: dest, nonce: 0, salt: samesalt },
 					[ user1 ],
 				),
 				relayer,
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
-			await expect(sdk.transactions.relay(
-				await sdk.transactions.sign(
+			await expect(sdk.meta.relay(
+				await sdk.meta.sign(
 					proxy,
 					{ to: dest, nonce: 0, salt: samesalt },
 					[ user1 ],
@@ -106,16 +106,16 @@ function testOutOfOrder(sdk)
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
 			.emit(proxy, 'SetKey').withArgs(sdk.utils.addrToKey(user2.address), "0x0000000000000000000000000000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000007");
-			await expect(sdk.transactions.relay(
-				await sdk.transactions.sign(
+			await expect(sdk.meta.relay(
+				await sdk.meta.sign(
 					proxy,
 					{ to: dest, nonce: 0, salt: samesalt },
 					[ user1 ],
 				),
 				relayer,
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
-			await expect(sdk.transactions.relay(
-				await sdk.transactions.sign(
+			await expect(sdk.meta.relay(
+				await sdk.meta.sign(
 					proxy,
 					{ to: dest, nonce: 0, salt: samesalt },
 					[ user2 ],

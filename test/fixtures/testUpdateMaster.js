@@ -18,14 +18,14 @@ function testUpdateMaster(sdk, name)
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxy.nonce()).to.be.eq(0);
 
-			await expect(sdk.transactions.relay(
-				await sdk.transactions.sign(
+			await expect(sdk.meta.relay(
+				await sdk.meta.sign(
 					proxy,
 					{
 						to: proxy.address,
-						data: await sdk.transactions.prepare.updateMaster(
+						data: await sdk.transactions.updateMaster(
 							name,
-							sdk.transactions.prepare.initialization(
+							sdk.transactions.initialization(
 								name,
 								[
 									[ sdk.utils.addrToKey(user2.address) ],
@@ -53,10 +53,10 @@ function testUpdateMaster(sdk, name)
 				0,
 				proxy.address,
 				0,
-				await sdk.transactions.prepare.updateMaster(
-					"WalletMultisig",
-					sdk.transactions.prepare.initialization(
-						"WalletMultisig",
+				await sdk.transactions.updateMaster(
+					name,
+					sdk.transactions.initialization(
+						name,
 						[
 							[ sdk.utils.addrToKey(user2.address) ],
 							[ "0x000000000000000000000000000000000000000000000000000000000000000f" ],

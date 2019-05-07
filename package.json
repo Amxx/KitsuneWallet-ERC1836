@@ -19,9 +19,10 @@
 	"author": "Hadrien Croubois (hc@iex.ec)",
 	"license": "ISC",
 	"scripts": {
-		"build": "waffle .waffle.js",
-		"test": "mocha \"test/**/*.{js,ts}\"",
-		"clean": "rm -rf node_modules build"
+		"compile": "waffle",
+		"build":   "tsc",
+		"test":    "mocha \"test/**/*.{js,ts}\"",
+		"clean":   "rm -rf node_modules build dist"
 	},
 	"dependencies": {
 		"@ensdomains/ens": "^0.3.5",

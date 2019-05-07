@@ -17,8 +17,8 @@ function testExecute(sdk)
 			expect(await sdk.provider.getBalance(proxy.address)).to.eq(eth(1.0));
 			expect(await sdk.provider.getBalance(dest         )).to.eq(eth(0.0));
 
-			await expect(sdk.transactions.relay(
-				await sdk.transactions.sign(
+			await expect(sdk.meta.relay(
+				await sdk.meta.sign(
 					proxy,
 					{
 						to:    dest,
@@ -36,8 +36,8 @@ function testExecute(sdk)
 		it('authorized - call with proxy', async () => {
 			randomdata = ethers.utils.hexlify(ethers.utils.randomBytes(32));
 
-			await expect(sdk.transactions.relay(
-				await sdk.transactions.sign(
+			await expect(sdk.meta.relay(
+				await sdk.meta.sign(
 					proxy,
 					{
 						to: targetContract.address,

@@ -24,11 +24,11 @@ function testRefund(sdk)
 			expect(await sdk.provider.getBalance(relayerProxy.address)).to.eq(eth(0.0));
 			expect(await sdk.provider.getBalance(dest                )).to.eq(eth(0.0));
 
-			await expect( sdk.transactions.relay(
-				await  sdk.transactions.sign(
+			await expect( sdk.meta.relay(
+				await  sdk.meta.sign(
 					relayerProxy,
 					{
-						...await  sdk.transactions.sign(
+						...await  sdk.meta.sign(
 							proxy,
 							{
 								to:       dest,
@@ -68,8 +68,8 @@ function testRefund(sdk)
 			expect(await sdk.provider.getBalance(dest                 )).to.eq(eth(0.0));
 
 			const balanceBefore = await sdk.provider.getBalance(relayer.address);
-			const tx = await  sdk.transactions.relay(
-				await  sdk.transactions.sign(
+			const tx = await  sdk.meta.relay(
+				await  sdk.meta.sign(
 					proxy,
 					{
 						to:       dest,
@@ -108,8 +108,8 @@ function testRefund(sdk)
 			expect(await tokenContract.balanceOf(proxy.address)).to.eq(eth(1.0));
 			expect(await tokenContract.balanceOf(relayer.address      )).to.eq(eth(0.0));
 
-			await expect( sdk.transactions.relay(
-				await  sdk.transactions.sign(
+			await expect( sdk.meta.relay(
+				await  sdk.meta.sign(
 					proxy,
 					{
 						to:       dest,

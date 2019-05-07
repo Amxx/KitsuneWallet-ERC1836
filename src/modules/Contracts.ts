@@ -43,7 +43,6 @@ export class Contracts extends ModuleBase
 		return new Promise((resolve, reject) => {
 			this.sdk.provider.getNetwork()
 			.then(network => {
-				network.chainId = 17;
 				try
 				{
 					resolve(this.viewContract(name, this.sdk.ABIS[name].networks[network.chainId].address));

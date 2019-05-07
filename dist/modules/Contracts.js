@@ -38,7 +38,6 @@ var Contracts = /** @class */ (function (_super) {
         return new Promise(function (resolve, reject) {
             _this.sdk.provider.getNetwork()
                 .then(function (network) {
-                network.chainId = 17;
                 try {
                     resolve(_this.viewContract(name, _this.sdk.ABIS[name].networks[network.chainId].address));
                 }

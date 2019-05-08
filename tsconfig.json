@@ -2,13 +2,14 @@
 	"compilerOptions":
 	{
 		"module": "commonjs",
-		"noImplicitAny": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		/* "strict": true, */
+		/* "noImplicitAny": true, */
 		"removeComments": true,
-		"preserveConstEnums": true,
-		"sourceMap": true,
-		"outDir": "dist",
+		"outDir": "dist"
 	},
 	"include": [
 		"src/**/*"
-	],
+	]
 }

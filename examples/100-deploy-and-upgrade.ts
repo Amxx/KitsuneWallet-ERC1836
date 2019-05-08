@@ -1,6 +1,5 @@
 import { ethers } from 'ethers';
-import { SDK }    from '../dist/SDK';
-
+import { SDK }    from '../dist/src/SDK.js';
 import { createMockProvider, getWallets, solidity} from 'ethereum-waffle';
 
 ethers.errors.setLogLevel('error');

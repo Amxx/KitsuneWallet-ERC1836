@@ -2,7 +2,7 @@ const chai   = require('chai');
 const ethers = require('ethers');
 const {createMockProvider, deployContract, getWallets, solidity} = require('ethereum-waffle');
 
-const { SDK } = require('../../dist/SDK.js');
+const { SDK } = require('../../dist/src/SDK.js');
 const Target   = require('../../build/Target');
 
 const {expect} = chai;

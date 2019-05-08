@@ -3,7 +3,7 @@ import * as types from "../typings/all";
 
 import ModuleBase from "./__ModuleBase";
 
-var IMaster = require(`../../build-minified/IMaster`);
+import * as IMaster from "../../build-minified/IMaster.json";
 
 export class Transactions extends ModuleBase
 {

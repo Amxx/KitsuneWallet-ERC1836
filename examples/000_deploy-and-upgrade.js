@@ -1,6 +1,6 @@
 const { ethers } = require('ethers');
+const { SDK }    = require('../dist/src/SDK');
 const { createMockProvider, getWallets, solidity} = require('ethereum-waffle');
-const { SDK }    = require('../dist/SDK.js');
 
 ethers.errors.setLogLevel('error');
 

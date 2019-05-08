@@ -12,7 +12,7 @@ function testUpdateMaster(sdk, name)
 		const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 
 		it('authorized', async () => {
-			const masterAddress = (await sdk.contracts.getMasterInstance(name)).address;
+			const masterAddress = (await sdk.contracts.getActiveInstance(name)).address;
 
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
@@ -47,7 +47,7 @@ function testUpdateMaster(sdk, name)
 		});
 
 		it('authorized - dedicated function', async () => {
-			const masterAddress = (await sdk.contracts.getMasterInstance(name)).address;
+			const masterAddress = (await sdk.contracts.getActiveInstance(name)).address;
 
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');

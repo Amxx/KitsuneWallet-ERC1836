@@ -24,7 +24,6 @@ describe('Wallet', () => {
 	const sdk = new SDK(provider, relayer);
 
 	before(async () => {
-		await sdk.contracts.getMasterInstance("WalletMultisigRefundOutOfOrder", { allowDeploy: true });
 		targetContract = await deployContract(wallet, Target, []);
 		tokenContract  = await deployContract(wallet, Token,  []);
 	});

@@ -1,10 +1,18 @@
 import { ethers } from 'ethers';
-import * as types from "../typings/all";
+import * as types from '../typings/all';
 
-import ModuleBase from "./__ModuleBase";
+import ModuleBase from './__ModuleBase';
+import ActiveAdresses from '@kitsune-wallet/contracts/deployments/active.json';
 
 export class Contracts extends ModuleBase
 {
+	deployments : types.map<string, { address: string }>;
+
+	async init()
+	{
+		this.deployments = ActiveAdresses[(await this.sdk.provider.getNetwork()).chainId] || {};
+	}
+
 	viewContract(
 		name:    string,
 		address: types.ethereum.address,
@@ -24,46 +32,40 @@ export class Contracts extends ModuleBase
 				config.wallet || this.sdk.wallet || reject(Error("Missing wallet")),
 			))
 			.deploy(...args) // TRANSACTION
-			.then(instance => instance.deployed().then(resolve).catch(reject))
+			.then(_ => {
+				_.deployed()
+				.then(async instance => {
+					if (this.deployments == undefined) { await this.init(); }
+					this.deployments[name] = { "address": instance.address };
+					resolve(instance);
+				})
+				.catch(reject)
+			})
 			.catch(reject);
 		});
 	}
 
-	getMasterInstance(
+	getActiveInstance(
 		name:   string,
 		config: types.config = {},
 	) : Promise<types.contract> {
-		return new Promise((resolve, reject) => {
-			this.sdk.provider.getNetwork()
-			.then((network: types.network) => {
-				try
+		return new Promise(async (resolve, reject) => {
+			try
+			{
+				if (this.init == undefined) { await this.init(); }
+				resolve(this.viewContract(name, this.deployments[name].address));
+			}
+			catch
+			{
+				if (config.allowDeploy)
 				{
-					resolve(this.viewContract(name, this.sdk.ABIS[name].networks[network.chainId].address));
+					this.deployContract(name, [], config).then(resolve).catch(reject);
 				}
-				catch
+				else
 				{
-					if (config.allowDeploy)
-					{
-						this.deployContract(name, [], config)
-						.then(instance => {
-							this.sdk.ABIS[name].networks = this.sdk.ABIS[name].networks || {};
-							this.sdk.ABIS[name].networks[network.chainId] = {
-								"events": {}
-							, "links": {}
-							, "address": instance.address
-							, "transactionHash": instance.deployTransaction.hash
-							};
-							resolve(instance);
-						})
-						.catch(reject);
-					}
-					else
-					{
-						reject(Error("Master is not available on this network, try setting config.allowDeploy to true"));
-					}
+					reject(Error("Master is not available on this network, try setting config.allowDeploy to true"));
 				}
-			})
-			.catch(reject);
+			}
 		});
 	}
 
@@ -73,7 +75,7 @@ export class Contracts extends ModuleBase
 		config: types.config = {},
 	): Promise<types.contract> {
 		return new Promise((resolve, reject) => {
-			this.getMasterInstance(name, config)
+			this.getActiveInstance(name, config)
 			.then((instance: types.contract) => {
 				this.deployContract("Proxy", [ instance.address, this.sdk.transactions.initialization(name, args) ])
 				.then(proxy => resolve(this.viewContract(name, proxy.address)))

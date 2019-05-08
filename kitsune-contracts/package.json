@@ -6,7 +6,7 @@
 	"files": [
 		"/contracts",
 		"/build",
-		"/build-minified/",
+		"/deployments/active.json",
 		"/test"
 	],
 	"scripts": {

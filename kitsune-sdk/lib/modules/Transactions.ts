@@ -20,7 +20,7 @@ export class Transactions extends ModuleBase
 		config: types.config = {},
 	) : Promise<{}> {
 		return new Promise((resolve, reject) => {
-			this.sdk.contracts.getMasterInstance(name, config)
+			this.sdk.contracts.getActiveInstance(name, config)
 			.then((instance: types.contract) => {
 				resolve(new ethers.utils.Interface(IMaster.abi).functions.updateMaster.encode([
 					instance.address,

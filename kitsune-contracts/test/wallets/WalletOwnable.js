@@ -17,7 +17,7 @@ describe('WalletOwnable', () => {
 	const sdk = new SDK(provider, relayer);
 
 	before(async () => {
-		walletContract = await sdk.contracts.getMasterInstance("WalletOwnable", { allowDeploy: true });
+		walletContract = await sdk.contracts.getActiveInstance("WalletOwnable", { allowDeploy: true });
 		targetContract = await deployContract(wallet, Target, []);
 		dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 	});

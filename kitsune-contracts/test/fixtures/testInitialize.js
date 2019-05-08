@@ -13,7 +13,7 @@ function testInitialize(sdk, name)
 
 		it('Verify proxy initialization', async () => {
 			expect(await proxy.owner()).to.eq(proxy.address);
-			expect(await proxy.master()).to.eq((await sdk.contracts.getMasterInstance(name)).address);
+			expect(await proxy.master()).to.eq((await sdk.contracts.getActiveInstance(name)).address);
 			expect(await proxy.getManagementThreshold()).to.eq(1);
 			expect(await proxy.getActionThreshold()).to.eq(1);
 		});

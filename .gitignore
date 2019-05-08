@@ -1,3 +1,6 @@
 **/node_modules
 **/dist
 old
+
+**/yarn-error.log
+

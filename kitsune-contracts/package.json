@@ -21,7 +21,7 @@
 		"@types/mocha": "^5.2.6",
 		"chai": "^4.2.0",
 		"chai-as-promised": "^7.1.1",
-		"ethereum-waffle": "2.0.7",
+		"ethereum-waffle": "2.0.10",
 		"ethers": "^4.0.26",
 		"mocha": "^5.2.0",
 		"jq.node": "^2.1.2",

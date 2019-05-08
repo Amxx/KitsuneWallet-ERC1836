@@ -2354,6 +2354,17 @@ ethereum-common@^0.0.18:
   resolved "https://registry.yarnpkg.com/ethereum-common/-/ethereum-common-0.0.18.tgz#2fdc3576f232903358976eb39da783213ff9523f"
   integrity sha1-L9w1dvIykDNYl26znaeDIT/5Uj8=
 
+ethereum-waffle@2.0.10:
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/ethereum-waffle/-/ethereum-waffle-2.0.10.tgz#52ef78d88c4cc09fd67dfe7681dcb7f4819e98fc"
+  integrity sha512-EbO+aoeoNL0Hm81t549bLP7xFtmm/Pqk1xYfgcs/R3w+bbR0QaaANNY8ntwjaueLR0jS1Tiz3WYpQn7jkquo7A==
+  dependencies:
+    "@resolver-engine/imports" "^0.3.2"
+    "@resolver-engine/imports-fs" "^0.3.2"
+    ethers "^4.0.0"
+    ganache-core "2.4.0"
+    solc "^0.5.1"
+
 ethereum-waffle@2.0.7:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/ethereum-waffle/-/ethereum-waffle-2.0.7.tgz#1b8dbe3bb101c343d3577da600011ebda8ff5791"

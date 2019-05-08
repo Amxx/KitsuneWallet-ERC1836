@@ -3,7 +3,8 @@
 	{
 		"module": "commonjs",
 		"resolveJsonModule": true,
-		"skipLibCheck": true,
+		"esModuleInterop": true,
+		/* "skipLibCheck": true, */
 		/* "strict": true, */
 		/* "noImplicitAny": true, */
 		"removeComments": true,

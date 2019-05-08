@@ -1,12 +1,11 @@
 import { ethers } from 'ethers';
 import * as types from "./typings/all";
 
-import * as Proxy                          from '../build-minified/Proxy.json';
-import * as WalletOwnable                  from '../build-minified/WalletOwnable.json';
-import * as WalletMultisig                 from '../build-minified/WalletMultisig.json';
-import * as WalletMultisigRefund           from '../build-minified/WalletMultisigRefund.json';
-import * as WalletMultisigRefundOutOfOrder from '../build-minified/WalletMultisigRefundOutOfOrder.json';
-
+import { Proxy                          } from './abi';
+import { WalletOwnable                  } from './abi';
+import { WalletMultisig                 } from './abi';
+import { WalletMultisigRefund           } from './abi';
+import { WalletMultisigRefundOutOfOrder } from './abi';
 
 import { Contracts    } from "./modules/Contracts";
 import { Multisig     } from "./modules/Multisig";

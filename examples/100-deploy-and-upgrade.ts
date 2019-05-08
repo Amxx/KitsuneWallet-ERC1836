@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { SDK }    from '../dist/src/SDK.js';
+import { SDK }    from '../dist/kitsune.js';
 import { createMockProvider, getWallets, solidity} from 'ethereum-waffle';
 
 ethers.errors.setLogLevel('error');

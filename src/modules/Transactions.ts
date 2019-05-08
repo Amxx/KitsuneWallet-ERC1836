@@ -1,9 +1,9 @@
-import { ethers } from 'ethers';
-import * as types from "../typings/all";
+import { ethers }  from 'ethers';
+import * as types  from "../typings/all";
 
-import ModuleBase from "./__ModuleBase";
+import ModuleBase  from "./__ModuleBase";
 
-import * as IMaster from "../../build-minified/IMaster.json";
+import { IMaster } from '../abi';
 
 export class Transactions extends ModuleBase
 {

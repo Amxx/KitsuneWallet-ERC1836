@@ -1,6 +1,13 @@
 import { ethers } from 'ethers';
 import * as ethereum from './ethereum';
 
+// generic
+export interface map<K extends string | number, V>
+{
+	[key: string]: V;
+	[key: number]: V;
+}
+
 // export ethereum types
 export { ethereum };
 

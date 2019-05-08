@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import * as types from "../types/all";
+import * as types from "../typings/all";
 
 import ModuleBase from "./__ModuleBase";
 

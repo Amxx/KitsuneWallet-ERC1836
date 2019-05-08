@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import * as types from "./types/all";
+import * as types from "./typings/all";
 
 // import Proxy                          from "../build-minified/Proxy";
 // import WalletOwnable                  from "../build-minified/WalletOwnable";
@@ -36,8 +36,8 @@ export class SDK
 
 	constructor(
 		provider: types.provider = null,
-		wallet:   types.wallet = null)
-	{
+		wallet:   types.wallet   = null,
+	) {
 		this.provider = provider || new ethers.providers.JsonRpcProvider();
 		this.wallet   = wallet;
 		this.ABIS     = ABIS;

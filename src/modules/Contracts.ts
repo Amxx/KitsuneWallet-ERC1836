@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import * as types from "../types/all";
+import * as types from "../typings/all";
 
 import ModuleBase from "./__ModuleBase";
 
@@ -33,8 +33,7 @@ export class Contracts extends ModuleBase
 	getMasterInstance(
 		name:   string,
 		config: types.config = {},
-	) : Promise<types.contract>
-	{
+	) : Promise<types.contract> {
 		return new Promise((resolve, reject) => {
 			this.sdk.provider.getNetwork()
 			.then((network: types.network) => {
@@ -72,8 +71,7 @@ export class Contracts extends ModuleBase
 		name:   string,
 		args:   types.ethereum.args,
 		config: types.config = {},
-	): Promise<types.contract>
-	{
+	): Promise<types.contract> {
 		return new Promise((resolve, reject) => {
 			this.getMasterInstance(name, config)
 			.then((instance: types.contract) => {
@@ -91,8 +89,7 @@ export class Contracts extends ModuleBase
 		args:    types.ethereum.args,
 		execute: types.txExecutor,
 		config:  types.config = {},
-	) : Promise<types.contract>
-	{
+	) : Promise<types.contract> {
 		return new Promise((resolve, reject) => {
 			this.sdk.transactions.updateMaster(
 				name,

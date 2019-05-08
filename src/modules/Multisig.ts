@@ -1,9 +1,8 @@
 import { ethers } from 'ethers';
-import * as types from "../types/all";
-
-import { HASHING_METATX, PREPARE_TX, INLINE_TX } from './Meta'
+import * as types from "../typings/all";
 
 import ModuleBase from "./__ModuleBase";
+import { HASHING_METATX, PREPARE_TX, INLINE_TX } from './Meta'
 
 function toNumber(
 	n: types.ethereum.uint256

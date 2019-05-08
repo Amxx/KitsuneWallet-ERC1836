@@ -1,8 +1,7 @@
 import { ethers } from 'ethers';
 
 // Solidity
-export type BigNumber = { toNumber: () => number };
-export type uint256   = string | BigNumber | number;
+export type uint256   = string | number | ethers.utils.BigNumber;
 export type address   = string | Uint8Array;
 export type bytes32   = string | Uint8Array;
 export type bytes     = string | Uint8Array;
@@ -34,4 +33,4 @@ export interface tx
 	wait ? : () => Promise<{}>
 }
 
-type hashing<T> = (T) => bytes32;
+type hashing<T> = (arg: T) => bytes32;

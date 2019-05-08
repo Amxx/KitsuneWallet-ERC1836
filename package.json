@@ -1,41 +1,32 @@
 {
-	"name": "kitsune-wallet",
-	"version": "0.0.28",
-	"description": "Kitsune-wallet, an upgradable proxy pattern for wallet contracts (erc1836)",
+	"private": true,
+	"name": "@kitsune-wallet/monorepo",
+	"author": "Hadrien Croubois <hadrien.croubois@gmail.com>",
+	"version": "0.1.0",
+	"license": "MIT",
+	"workspaces": [
+		"kitsune-*"
+	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Amxx/ERC1836UpgradableIdentityProxy.git"
+		"url": "git+https://github.com/Amxx/KitsuneWallet-ERC1836.git"
 	},
 	"bugs": {
-		"url": "https://github.com/Amxx/ERC1836UpgradableIdentityProxy.git/issues"
+		"url": "https://github.com/Amxx/KitsuneWallet-ERC1836.git/issues"
 	},
-	"files": [
-		"/contracts",
-		"/build",
-		"/build-minified/",
-		"/src",
-		"/dist"
-	],
-	"author": "Hadrien Croubois (hc@iex.ec)",
-	"license": "ISC",
 	"scripts": {
-		"compile": "waffle",
-		"build":   "tsc",
-		"test":    "mocha \"test/**/*.{js,ts}\"",
-		"clean":   "rm -rf node_modules build dist"
+		"build": "yarn wsrun build --stages",
+		"test":  "yarn wsrun test --stages --fast-exit",
+		"clean": "yarn wsrun clean"
+	},
+	"engines": {
+		"node": ">=10.9",
+		"yarn": ">=1.9.4"
 	},
 	"dependencies": {
-		"@ensdomains/ens": "^0.3.5",
-		"@ensdomains/resolver": "^0.1.2",
-		"@types/chai": "^4.1.7",
-		"@types/chai-as-promised": "^7.1.0",
-		"@types/mocha": "^5.2.6",
-		"chai": "^4.2.0",
-		"chai-as-promised": "^7.1.1",
-		"ethereum-waffle": "^2.0.7",
-		"ethers": "^4.0.26",
-		"jq.node": "^2.1.2",
-		"mocha": "^6.0.2",
-		"openzeppelin-solidity": "^2.2.0"
+		"wsrun": "^2.2.1"
+	},
+	"devDependencies": {
+		"chalk": "^2.0.1"
 	}
 }

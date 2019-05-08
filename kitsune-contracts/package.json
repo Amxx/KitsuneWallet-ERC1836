@@ -1,0 +1,25 @@
+{
+	"name": "@kitsune-wallet/contracts",
+	"author": "Hadrien Croubois <hadrien.croubois@gmail.com>",
+	"version": "0.1.0",
+	"license": "MIT",
+	"scripts": {
+		"build": "waffle",
+		"test":  "mocha 'test/**/*.{js,ts}'"
+	},
+	"devDependencies": {
+		"@ensdomains/ens": "^0.3.5",
+		"@ensdomains/resolver": "^0.1.2",
+		"@types/chai": "^4.1.7",
+		"@types/chai-as-promised": "^7.1.0",
+		"@types/mocha": "^5.2.6",
+		"chai": "^4.2.0",
+		"chai-as-promised": "^7.1.1",
+		"ethereum-waffle": "2.0.7",
+		"ethers": "^4.0.26",
+		"mocha": "^5.2.0",
+		"jq.node": "^2.1.2",
+		"mocha": "^6.0.2",
+		"openzeppelin-solidity": "^2.2.0"
+	}
+}

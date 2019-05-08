@@ -10,7 +10,7 @@
 		"/test"
 	],
 	"scripts": {
-		"build": "waffle",
+		"build": "waffle waffle.json",
 		"test":  "mocha 'test/**/*.{js,ts}'"
 	},
 	"devDependencies": {

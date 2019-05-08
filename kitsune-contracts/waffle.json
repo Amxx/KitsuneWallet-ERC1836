@@ -1,0 +1,6 @@
+{
+	"sourcesPath": "./contracts",
+  "targetPath": "./build",
+	"npmPath": "../node_modules",
+	"solcVersion": "v0.5.8+commit.23d335f2"
+}

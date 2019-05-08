@@ -1,8 +1,14 @@
 {
 	"name": "@kitsune-wallet/contracts",
 	"author": "Hadrien Croubois <hadrien.croubois@gmail.com>",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"license": "MIT",
+	"files": [
+		"/contracts",
+		"/build",
+		"/build-minified/",
+		"/test"
+	],
 	"scripts": {
 		"build": "waffle",
 		"test":  "mocha 'test/**/*.{js,ts}'"

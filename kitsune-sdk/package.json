@@ -1,8 +1,14 @@
 {
 	"name": "@kitsune-wallet/sdk",
 	"author": "Hadrien Croubois <hadrien.croubois@gmail.com>",
-	"version": "0.1.0",
+	"version": "0.1.2",
 	"license": "MIT",
+	"files": [
+		"/lib",
+		"/dist",
+		"/example",
+		"/tsconfig.json"
+	],
 	"scripts": {
 		"build": "tsc",
 		"test":  "echo 'no tests for sdk'",

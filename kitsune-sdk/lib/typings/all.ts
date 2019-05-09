@@ -22,14 +22,7 @@ export interface config {
 	wallet    ? : wallet,
 	options   ? : ethereum.tx,
 	migration ? : { reset ? : boolean, },
-	deploy    ? : { allow ? : boolean, noTrack ? : boolean, },
-}
-
-export const default_config : config = {
-	wallet:    undefined,
-	options:   {},
-	migration: { reset: undefined, },
-	deploy:    { allow: undefined, noTrack: undefined, },
+	deploy    ? : { enable ? : boolean, noTrack ? : boolean, args ? : ethereum.args, },
 }
 
 export type txExecutor = (proxy: contract, tx: ethereum.tx, config: config) => Promise<{}>;

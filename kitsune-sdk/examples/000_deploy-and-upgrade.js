@@ -10,9 +10,6 @@ ethers.errors.setLogLevel('error');
 	const [ relayer, user1, user2, user3 ] = getWallets(provider);
 	await provider.ready;
 
-	// const provider = new ethers.providers.EtherscanProvider('kovan');
-	// const wallet   = new ethers.Wallet("0x564a9db84969c8159f7aa3d5393c5ecd014fce6a375842a45b12af6677b12407", provider);
-
 	const sdk = new SDK(provider, relayer);
 
 	// ------------------------ Check master deployments ------------------------
@@ -30,7 +27,7 @@ ethers.errors.setLogLevel('error');
 	{
 		console.log("Deploying proxy: WalletOwnable\n");
 
-		proxy = await sdk.contracts.deployProxy("WalletOwnable", [ user1.address ], { allowDeploy: true });
+		proxy = await sdk.contracts.deployProxy("WalletOwnable", [ user1.address ], { deploy: { enable: true } });
 
 		console.log(`proxy    : ${proxy.address}`         );
 		console.log(`master   : ${await proxy.master()}`  );
@@ -54,7 +51,7 @@ ethers.errors.setLogLevel('error');
 					1,
 				]
 			),
-			{ allowDeploy: true }
+			{ deploy: { enable: true } }
 		);
 
 		await sdk.ownable.execute(
@@ -82,7 +79,7 @@ ethers.errors.setLogLevel('error');
 		let updateMasterTx = await sdk.transactions.updateMaster(
 			"WalletMultisigRefundOutOfOrder",
 			"0x",
-			{ allowDeploy: true }
+			{ deploy: { enable: true } }
 		);
 
 		await sdk.multisig.execute(

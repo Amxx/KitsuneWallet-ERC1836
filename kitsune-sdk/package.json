@@ -11,7 +11,7 @@
 	],
 	"scripts": {
 		"build": "tsc",
-		"test":  "echo 'no tests for sdk'",
+		"test":  "node examples/000_deploy-and-upgrade.js && ts-node examples/100-deploy-and-upgrade.ts",
 		"clean": "rm -rf dist"
 	},
 	"dependencies": {

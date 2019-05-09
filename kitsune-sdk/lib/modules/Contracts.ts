@@ -60,13 +60,13 @@ export class Contracts extends ModuleBase
 			}
 			catch
 			{
-				if (config.deploy !== undefined && config.deploy.allow)
+				if (config.deploy !== undefined && config.deploy.enable)
 				{
-					this.deployContract(name, [], config).then(resolve).catch(reject);
+					this.deployContract(name, config.deploy.args || [], config).then(resolve).catch(reject);
 				}
 				else
 				{
-					reject(Error("Master is not available on this network, try setting config.allowDeploy to true"));
+					reject(Error("No active instance are tracked on this network, try setting config.deploy.enable to deploy one"));
 				}
 			}
 		});

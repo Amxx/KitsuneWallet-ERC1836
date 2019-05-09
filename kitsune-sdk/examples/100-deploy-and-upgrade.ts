@@ -9,15 +9,12 @@ ethers.errors.setLogLevel('error');
 	const provider = createMockProvider();
 	const [ wallet ] = getWallets(provider);
 
-	// const provider = new ethers.providers.EtherscanProvider('kovan');
-	// const wallet   = new ethers.Wallet("0x564a9db84969c8159f7aa3d5393c5ecd014fce6a375842a45b12af6677b12407", provider);
-
 	var sdk = new SDK(provider, wallet)
 
 	var proxy = await sdk.contracts.deployProxy(
 		"WalletOwnable",
 		[ wallet.address ],
-		{ "allowDeploy":true }
+		{ deploy: { enable: true } }
 	);
 	console.log(`proxy    : ${proxy.address}`         );
 	console.log(`master   : ${await proxy.master()}`  );
@@ -35,7 +32,7 @@ ethers.errors.setLogLevel('error');
 			1,
 		],
 		(proxy, tx, config) => sdk.ownable.execute(proxy, wallet, tx, config),
-		{ allowDeploy: true, options: { gasLimit: 1000000 } }
+		{ deploy: { enable: true }, options: { gasLimit: 1000000 } }
 	);
 
 	console.log(`proxy      : ${proxy.address}`         );
@@ -51,7 +48,7 @@ ethers.errors.setLogLevel('error');
 		"WalletMultisigRefund",
 		null,
 		(proxy, tx, config) => sdk.multisig.execute(proxy, [ wallet ], tx, config),
-		{ allowDeploy: true, options: { gasLimit: 1000000 } }
+		{ deploy: { enable: true }, options: { gasLimit: 1000000 } }
 	);
 
 	console.log(`proxy      : ${proxy.address}`         );

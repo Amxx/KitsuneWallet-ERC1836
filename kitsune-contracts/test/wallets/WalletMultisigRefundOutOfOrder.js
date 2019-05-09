@@ -41,7 +41,7 @@ describe('Wallet', () => {
 				1,
 				1,
 			],
-			{ allowDeploy: true }
+			{ deploy: { allow: true } }
 		);
 		relayerProxy = await sdk.contracts.deployProxy(
 			"WalletMultisigRefundOutOfOrder",
@@ -55,7 +55,7 @@ describe('Wallet', () => {
 				1,
 				1,
 			],
-			{ allowDeploy: true }
+			{ deploy: { allow: true } }
 		);
 
 		await wallet.sendTransaction({to: proxy.address, value: eth(1)});

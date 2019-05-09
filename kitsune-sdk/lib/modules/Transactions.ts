@@ -25,7 +25,7 @@ export class Transactions extends ModuleBase
 				resolve(new ethers.utils.Interface(IMaster.abi).functions.updateMaster.encode([
 					instance.address,
 					data,
-					(config.proxyReset !== undefined) ? config.proxyReset : data !== "0x",
+					(config.migration !== undefined && config.migration.reset !== undefined) ? config.migration.reset : data !== "0x",
 				]));
 			})
 			.catch(reject);

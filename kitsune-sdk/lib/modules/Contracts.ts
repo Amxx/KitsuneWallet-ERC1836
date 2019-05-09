@@ -35,8 +35,11 @@ export class Contracts extends ModuleBase
 			.then(_ => {
 				_.deployed()
 				.then(async instance => {
-					if (this.deployments == undefined) { await this.init(); }
-					this.deployments[name] = { "address": instance.address };
+					if (!(config.deploy !== undefined && config.deploy.noTrack))
+					{
+						if (this.deployments == undefined) { await this.init(); }
+						this.deployments[name] = { "address": instance.address };
+					}
 					resolve(instance);
 				})
 				.catch(reject)
@@ -57,7 +60,7 @@ export class Contracts extends ModuleBase
 			}
 			catch
 			{
-				if (config.allowDeploy)
+				if (config.deploy !== undefined && config.deploy.allow)
 				{
 					this.deployContract(name, [], config).then(resolve).catch(reject);
 				}

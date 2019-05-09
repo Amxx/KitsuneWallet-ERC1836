@@ -18,11 +18,18 @@ export type provider = ethers.providers.Provider;
 export type network  = { chainId: number, name: string }
 
 // SDK specific
-export type config = {
-	allowDeploy ? : boolean,
-	proxyReset  ? : boolean,
-	wallet      ? : wallet,
-	options     ? : ethereum.tx,
+export interface config {
+	wallet    ? : wallet,
+	options   ? : ethereum.tx,
+	migration ? : { reset ? : boolean, },
+	deploy    ? : { allow ? : boolean, noTrack ? : boolean, },
+}
+
+export const default_config : config = {
+	wallet:    undefined,
+	options:   {},
+	migration: { reset: undefined, },
+	deploy:    { allow: undefined, noTrack: undefined, },
 }
 
 export type txExecutor = (proxy: contract, tx: ethereum.tx, config: config) => Promise<{}>;

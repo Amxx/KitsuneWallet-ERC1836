@@ -18,7 +18,7 @@
 		"@kitsune-wallet/contracts": "^0.1.0"
 	},
 	"devDependencies": {
-		"ethereum-waffle": "2.0.7",
+		"ethereum-waffle": "2.0.10",
 		"ethers": "^4.0.26",
 		"typescript": "^3.4.4"
 	}

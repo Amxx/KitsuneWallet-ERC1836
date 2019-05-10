@@ -3,4 +3,5 @@
 old
 
 **/yarn-error.log
+**/yarn.lock
 

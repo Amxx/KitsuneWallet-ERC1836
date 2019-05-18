@@ -1,0 +1,17 @@
+{
+	"compilerOptions":
+	{
+		"module": "commonjs",
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		/* "skipLibCheck": true, */
+		/* "strict": true, */
+		/* "noImplicitAny": true, */
+		"removeComments": true,
+		"sourceMap": true,
+		"outDir": "dist"
+	},
+	"include": [
+		"lib"
+	]
+}

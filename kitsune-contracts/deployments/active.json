@@ -8,7 +8,7 @@
 	"42":
 	{
 		"WalletOwnable": {
-			"address": "0x1d20b1CFe1cc6D5E677B42e99916a92c3779780B",
+			"address": "0xe45cdc5e3091c15db9c7d9545d2698535ba15d73",
 			"hash": "b903e8256ae94884ee48b35546f64b56ab907b6f",
 			"solc": "v0.5.8+commit.23d335f2",
 			"options": {

@@ -1,5 +1,6 @@
 pragma solidity ^0.5.0;
 
+
 contract IERC1271
 {
 	// bytes4(keccak256("isValidSignature(bytes,bytes)")

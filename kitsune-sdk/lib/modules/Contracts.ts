@@ -55,7 +55,7 @@ export class Contracts extends ModuleBase
 		return new Promise(async (resolve, reject) => {
 			try
 			{
-				if (this.init == undefined) { await this.init(); }
+				if (this.deployments == undefined) { await this.init(); }
 				resolve(this.viewContract(name, this.deployments[name].address));
 			}
 			catch

@@ -13,13 +13,13 @@ contract ERC725Base is IERC725, Core
 	function () external payable {}
 
 	function getData(bytes32 _key)
-	external view returns (bytes memory)
+	public view returns (bytes memory)
 	{
 		return m_store[_key];
 	}
 
-	function setData(bytes32 _key, bytes calldata _value)
-	external protected
+	function setData(bytes32 _key, bytes memory _value)
+	public protected
 	{
 		m_store[_key] = _value;
 		emit DataChanged(_key, _value);
@@ -28,7 +28,13 @@ contract ERC725Base is IERC725, Core
 	function execute(uint256 _operationType, address _to, uint256 _value, bytes memory _data)
 	public
 	{
-		require(msg.sender == this.owner(), 'access-forbidden');
+		require(msg.sender == owner(), 'access-forbidden');
+		_execute(_operationType, _to, _value, _data);
+	}
+
+	function _execute(uint256 _operationType, address _to, uint256 _value, bytes memory _data)
+	internal
+	{
 		if (_operationType == OPERATION_CALL)
 		{
 			bool success;

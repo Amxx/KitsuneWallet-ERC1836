@@ -62,7 +62,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 
 	// ACCESSORS
 	function owner()
-	external view returns(address)
+	public view returns(address)
 	{
 		return address(this);
 	}
@@ -74,7 +74,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 	}
 
 	function managementKeyCount()
-	external view returns(uint256)
+	public view returns(uint256)
 	{
 		return m_managementKeyCount;
 	}
@@ -141,11 +141,11 @@ contract MasterKeysBase is MasterBase, IERC1271
 	}
 
 	// MULTISIG
-	function getManagementThreshold() external view returns (uint256) { return m_managementThreshold; }
-	function getActionThreshold    () external view returns (uint256) { return m_actionThreshold;     }
+	function getManagementThreshold() public view returns (uint256) { return m_managementThreshold; }
+	function getActionThreshold    () public view returns (uint256) { return m_actionThreshold;     }
 
 	function setManagementThreshold(uint256 _managementThreshold)
-	external protected
+	public protected
 	{
 		require(0 != _managementThreshold, "threshold-too-low");
 		require(m_managementKeyCount >= _managementThreshold, "threshold-too-high");
@@ -154,7 +154,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 	}
 
 	function setActionThreshold(uint256 _actionThreshold)
-	external protected
+	public protected
 	{
 		require(0 != _actionThreshold, "threshold-too-low");
 		emit ActionThresholdChange(m_actionThreshold, _actionThreshold);

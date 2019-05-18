@@ -75,7 +75,7 @@ contract WalletMultisigRefundOutOfOrder is ERC725Base, MasterKeysBase
 			lastSigner = signer;
 		}
 
-		this.execute(_operationType, _to, _value, _data);
+		_execute(_operationType, _to, _value, _data);
 
 		refund(
 			BASEGASE

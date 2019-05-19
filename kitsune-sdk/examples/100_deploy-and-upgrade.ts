@@ -31,7 +31,7 @@ ethers.errors.setLogLevel('error');
 			1,
 			1,
 		],
-		(proxy, tx, config) => sdk.ownable.execute(proxy, wallet, tx, config),
+		(proxy, tx, config) => wallet.sendTransaction({ ...tx, ...config.options }),
 		{ deploy: { enable: true }, options: { gasLimit: 1000000 } }
 	);
 

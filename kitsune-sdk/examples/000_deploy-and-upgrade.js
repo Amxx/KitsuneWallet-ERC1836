@@ -54,12 +54,11 @@ ethers.errors.setLogLevel('error');
 			{ deploy: { enable: true } }
 		);
 
-		await sdk.ownable.execute(
-			proxy,
-			user1,
-			{ to: proxy.address, data: updateMasterTx },
-			{ options: { gasLimit: 1000000 } }
-		);
+		await user1.sendTransaction({
+			to:       proxy.address,
+			data:     updateMasterTx,
+			gasLimit: 1000000
+		});
 
 		proxy = sdk.contracts.viewContract("WalletMultisig", proxy.address);
 

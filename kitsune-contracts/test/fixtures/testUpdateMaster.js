@@ -89,7 +89,7 @@ function testUpdateMaster(sdk, name)
 					),
 				),
 				{ gasLimit: 1000000 }
-			)).to.be.revertedWith('access-forbidden');
+			)).to.be.revertedWith('access-denied');
 		});
 	});
 }

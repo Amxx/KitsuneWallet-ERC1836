@@ -13,12 +13,6 @@ contract Core is Store
 	bytes32 constant MASTER_ID = bytes32(0x1618fcec65bce0693e931d337fc12424ee920bf56c4a74bc8ddb1361328af236); // keccak256("ERC1836_MASTER_ID")
 
 	// Modifiers
-	modifier protected()
-	{
-		require(msg.sender == address(this), "restricted-access");
-		_;
-	}
-
 	modifier onlyInitializing()
 	{
 		require(!m_initialized, "already-initialized");

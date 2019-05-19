@@ -57,7 +57,7 @@ function testExecute(sdk)
 				eth(0.1),
 				[],
 				{ gasLimit: 80000 }
-			)).to.be.revertedWith('access-forbidden');
+			)).to.be.revertedWith('access-denied');
 
 			expect(await sdk.provider.getBalance(proxy.address)).to.eq(eth(1.0));
 		});

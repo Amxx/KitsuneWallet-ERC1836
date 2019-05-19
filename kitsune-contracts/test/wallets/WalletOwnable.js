@@ -75,7 +75,7 @@ describe('WalletOwnable', () => {
 				eth(0.1),
 				[],
 				{ gasLimit: 80000 }
-			)).to.be.revertedWith('access-forbidden');
+			)).to.be.reverted; // onlyOwner overridden by openzeppelin's ownable
 
 			expect(await provider.getBalance(proxy.address)).to.eq(eth(1.0));
 		});
@@ -104,33 +104,23 @@ describe('WalletOwnable', () => {
 	describe('UpdateMaster', async () => {
 
 		it("authorized", async () => {
-			await expect(proxy.connect(user1).execute(
-				0,
-				proxy.address,
-				0,
-				await sdk.transactions.updateMaster(
-					"WalletOwnable",
-					sdk.transactions.initialization("WalletOwnable", [ user2.address ]),
-				),
+			await expect(proxy.connect(user1).updateMaster(
+				walletContract.address,
+				sdk.transactions.initialization("WalletOwnable", [ user2.address ]),
+				true,
 				{ gasLimit: 800000 }
-			)).to
-			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
-			.emit(proxy, 'MasterChange').withArgs(walletContract.address, walletContract.address);
+			)).to.emit(proxy, 'MasterChange').withArgs(walletContract.address, walletContract.address);
 
 			expect(await proxy.owner()).to.eq(user2.address);
 		});
 
 		it ("protected", async () => {
-			await expect(proxy.connect(user2).execute(
-				0,
-				proxy.address,
-				0,
-				await sdk.transactions.updateMaster(
-					"WalletOwnable",
-					sdk.transactions.initialization("WalletOwnable", [ user2.address ]),
-				),
+			await expect(proxy.connect(user2).updateMaster(
+				walletContract.address,
+				sdk.transactions.initialization("WalletOwnable", [ user2.address ]),
+				true,
 				{ gasLimit: 800000 }
-			)).to.be.revertedWith('access-forbidden');
+			)).to.be.reverted; // onlyOwner overridden by openzeppelin's ownable
 		});
 
 	});

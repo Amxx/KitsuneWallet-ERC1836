@@ -277,9 +277,7 @@ interface IMaster
 {
 	function master      ()                            external view returns (address);
 	function masterId    ()                            external pure returns (bytes32);
-	function updateMaster(address,bytes calldata,bool) external; /*protected*/
-	// params may vary -- must be initialization
-	// function initialize(...) external initialization;
+	function updateMaster(address,bytes calldata,bool) external;
 }
 
 
@@ -305,12 +303,6 @@ contract Core is Store
 	bytes32 constant MASTER_ID = bytes32(0x1618fcec65bce0693e931d337fc12424ee920bf56c4a74bc8ddb1361328af236); // keccak256("ERC1836_MASTER_ID")
 
 	// Modifiers
-	modifier protected()
-	{
-		require(msg.sender == address(this), "restricted-access");
-		_;
-	}
-
 	modifier onlyInitializing()
 	{
 		require(!m_initialized, "already-initialized");
@@ -345,6 +337,12 @@ contract ERC725Base is IERC725, Core
 	uint256 constant OPERATION_CALL   = 0;
 	uint256 constant OPERATION_CREATE = 1;
 
+	modifier onlyOwner()
+	{
+		require(msg.sender == owner(), "access-denied");
+		_;
+	}
+
 	// Need this to handle deposit call forwarded by the proxy
 	function () external payable {}
 
@@ -355,16 +353,15 @@ contract ERC725Base is IERC725, Core
 	}
 
 	function setData(bytes32 _key, bytes memory _value)
-	public protected
+	public onlyOwner()
 	{
 		m_store[_key] = _value;
 		emit DataChanged(_key, _value);
 	}
 
 	function execute(uint256 _operationType, address _to, uint256 _value, bytes memory _data)
-	public
+	public onlyOwner()
 	{
-		require(msg.sender == owner(), 'access-forbidden');
 		_execute(_operationType, _to, _value, _data);
 	}
 
@@ -424,7 +421,7 @@ contract MasterBase is IMaster, Core
 
 
 
-contract MasterKeysBase is MasterBase, IERC1271
+contract MasterKeysBase is ERC725Base, MasterBase, IERC1271
 {
 	using ECDSA for bytes32;
 
@@ -447,7 +444,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 		bytes32[] calldata _purposes,
 		uint256            _managementThreshold,
 		uint256            _actionThreshold)
-	external onlyInitializing
+	external onlyInitializing()
 	{
 		require(_keys.length == _purposes.length, "key-and-purpose-array-must-have-same-size");
 		for (uint256 i = 0; i < _keys.length; ++i)
@@ -460,7 +457,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 	}
 
 	function updateMaster(address _newMaster, bytes calldata _initData, bool _reset)
-	external protected
+	external onlyOwner()
 	{
 		if (_reset)
 		{
@@ -511,10 +508,10 @@ contract MasterKeysBase is MasterBase, IERC1271
 	function keyHasPurpose(bytes32 _key, uint256 _purpose) public view returns (bool) { return _keyHasPurpose(          _key , bytes32(_purpose)); }
 	function keyHasPurpose(address _key, bytes32 _purpose) public view returns (bool) { return _keyHasPurpose(addrToKey(_key),         _purpose ); }
 	function keyHasPurpose(address _key, uint256 _purpose) public view returns (bool) { return _keyHasPurpose(addrToKey(_key), bytes32(_purpose)); }
-	function setKey       (bytes32 _key, bytes32 _purpose) public protected { _setKey(          _key ,         _purpose ); }
-	function setKey       (bytes32 _key, uint256 _purpose) public protected { _setKey(          _key , bytes32(_purpose)); }
-	function setKey       (address _key, bytes32 _purpose) public protected { _setKey(addrToKey(_key),         _purpose ); }
-	function setKey       (address _key, uint256 _purpose) public protected { _setKey(addrToKey(_key), bytes32(_purpose)); }
+	function setKey       (bytes32 _key, bytes32 _purpose) public onlyOwner() { _setKey(          _key ,         _purpose ); }
+	function setKey       (bytes32 _key, uint256 _purpose) public onlyOwner() { _setKey(          _key , bytes32(_purpose)); }
+	function setKey       (address _key, bytes32 _purpose) public onlyOwner() { _setKey(addrToKey(_key),         _purpose ); }
+	function setKey       (address _key, uint256 _purpose) public onlyOwner() { _setKey(addrToKey(_key), bytes32(_purpose)); }
 
 	function _keyHasPurpose(bytes32 _key, bytes32 _purpose)
 	internal view returns (bool)
@@ -563,7 +560,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 	function getActionThreshold    () public view returns (uint256) { return m_actionThreshold;     }
 
 	function setManagementThreshold(uint256 _managementThreshold)
-	public protected
+	public onlyOwner()
 	{
 		require(0 != _managementThreshold, "threshold-too-low");
 		require(m_managementKeyCount >= _managementThreshold, "threshold-too-high");
@@ -572,7 +569,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 	}
 
 	function setActionThreshold(uint256 _actionThreshold)
-	public protected
+	public onlyOwner()
 	{
 		require(0 != _actionThreshold, "threshold-too-low");
 		emit ActionThresholdChange(m_actionThreshold, _actionThreshold);
@@ -608,7 +605,7 @@ contract WalletOwnable is ERC725Base, MasterBase, IERC1271, Ownable
 	}
 
 	function updateMaster(address _newMaster, bytes calldata _initData, bool _reset)
-	external protected
+	external onlyOwner()
 	{
 		if (_reset)
 		{
@@ -628,7 +625,7 @@ contract WalletOwnable is ERC725Base, MasterBase, IERC1271, Ownable
 
 
 
-contract WalletMultisig is ERC725Base, MasterKeysBase
+contract WalletMultisig is MasterKeysBase
 {
 	// This is a delegate contract, lock it
 	constructor()
@@ -686,7 +683,7 @@ contract WalletMultisig is ERC725Base, MasterKeysBase
 
 
 
-contract WalletMultisigRefund is ERC725Base, MasterKeysBase
+contract WalletMultisigRefund is MasterKeysBase
 {
 	using SafeMath for uint256;
 
@@ -776,7 +773,7 @@ contract WalletMultisigRefund is ERC725Base, MasterKeysBase
 
 
 
-contract WalletMultisigRefundOutOfOrder is ERC725Base, MasterKeysBase
+contract WalletMultisigRefundOutOfOrder is MasterKeysBase
 {
 	using SafeMath for uint256;
 

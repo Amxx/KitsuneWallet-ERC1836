@@ -2,11 +2,12 @@ pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 
+import "./ERC725Base.sol";
 import "./MasterBase.sol";
 import "../interfaces/IERC1271.sol";
 
 
-contract MasterKeysBase is MasterBase, IERC1271
+contract MasterKeysBase is ERC725Base, MasterBase, IERC1271
 {
 	using ECDSA for bytes32;
 
@@ -29,7 +30,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 		bytes32[] calldata _purposes,
 		uint256            _managementThreshold,
 		uint256            _actionThreshold)
-	external onlyInitializing
+	external onlyInitializing()
 	{
 		require(_keys.length == _purposes.length, "key-and-purpose-array-must-have-same-size");
 		for (uint256 i = 0; i < _keys.length; ++i)
@@ -42,7 +43,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 	}
 
 	function updateMaster(address _newMaster, bytes calldata _initData, bool _reset)
-	external protected
+	external onlyOwner()
 	{
 		if (_reset)
 		{
@@ -93,10 +94,10 @@ contract MasterKeysBase is MasterBase, IERC1271
 	function keyHasPurpose(bytes32 _key, uint256 _purpose) public view returns (bool) { return _keyHasPurpose(          _key , bytes32(_purpose)); }
 	function keyHasPurpose(address _key, bytes32 _purpose) public view returns (bool) { return _keyHasPurpose(addrToKey(_key),         _purpose ); }
 	function keyHasPurpose(address _key, uint256 _purpose) public view returns (bool) { return _keyHasPurpose(addrToKey(_key), bytes32(_purpose)); }
-	function setKey       (bytes32 _key, bytes32 _purpose) public protected { _setKey(          _key ,         _purpose ); }
-	function setKey       (bytes32 _key, uint256 _purpose) public protected { _setKey(          _key , bytes32(_purpose)); }
-	function setKey       (address _key, bytes32 _purpose) public protected { _setKey(addrToKey(_key),         _purpose ); }
-	function setKey       (address _key, uint256 _purpose) public protected { _setKey(addrToKey(_key), bytes32(_purpose)); }
+	function setKey       (bytes32 _key, bytes32 _purpose) public onlyOwner() { _setKey(          _key ,         _purpose ); }
+	function setKey       (bytes32 _key, uint256 _purpose) public onlyOwner() { _setKey(          _key , bytes32(_purpose)); }
+	function setKey       (address _key, bytes32 _purpose) public onlyOwner() { _setKey(addrToKey(_key),         _purpose ); }
+	function setKey       (address _key, uint256 _purpose) public onlyOwner() { _setKey(addrToKey(_key), bytes32(_purpose)); }
 
 	function _keyHasPurpose(bytes32 _key, bytes32 _purpose)
 	internal view returns (bool)
@@ -145,7 +146,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 	function getActionThreshold    () public view returns (uint256) { return m_actionThreshold;     }
 
 	function setManagementThreshold(uint256 _managementThreshold)
-	public protected
+	public onlyOwner()
 	{
 		require(0 != _managementThreshold, "threshold-too-low");
 		require(m_managementKeyCount >= _managementThreshold, "threshold-too-high");
@@ -154,7 +155,7 @@ contract MasterKeysBase is MasterBase, IERC1271
 	}
 
 	function setActionThreshold(uint256 _actionThreshold)
-	public protected
+	public onlyOwner()
 	{
 		require(0 != _actionThreshold, "threshold-too-low");
 		emit ActionThresholdChange(m_actionThreshold, _actionThreshold);

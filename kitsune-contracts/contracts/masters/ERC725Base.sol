@@ -9,6 +9,12 @@ contract ERC725Base is IERC725, Core
 	uint256 constant OPERATION_CALL   = 0;
 	uint256 constant OPERATION_CREATE = 1;
 
+	modifier onlyOwner()
+	{
+		require(msg.sender == owner(), 'access-denied');
+		_;
+	}
+
 	// Need this to handle deposit call forwarded by the proxy
 	function () external payable {}
 
@@ -19,16 +25,15 @@ contract ERC725Base is IERC725, Core
 	}
 
 	function setData(bytes32 _key, bytes memory _value)
-	public protected
+	public onlyOwner()
 	{
 		m_store[_key] = _value;
 		emit DataChanged(_key, _value);
 	}
 
 	function execute(uint256 _operationType, address _to, uint256 _value, bytes memory _data)
-	public
+	public onlyOwner()
 	{
-		require(msg.sender == owner(), 'access-forbidden');
 		_execute(_operationType, _to, _value, _data);
 	}
 

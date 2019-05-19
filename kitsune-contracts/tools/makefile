@@ -36,5 +36,5 @@ $(FILE_FLAT): $(FILES) makefile
 		echo " done";                                              \
 	)
 
-deploy: flatten
+deploy:
 	ts-node deployer.ts

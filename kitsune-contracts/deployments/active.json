@@ -6,7 +6,7 @@
 	{
 		"WalletOwnable": {
 			"address": "0xD875cC159ddD3c56da825514ACd9f52d836379Bd",
-			"hash": "b903e8256ae94884ee48b35546f64b56ab907b6f",
+			"hash": "243dd295e72f4b2368c00f51f171bddaaf597e49",
 			"solc": "v0.5.8+commit.23d335f2",
 			"options": {
 				"optimizer": {
@@ -18,7 +18,7 @@
 		},
 		"WalletMultisig": {
 			"address": "0x16392cc0c5E23720CE0e1937589F318C5b3057eF",
-			"hash": "b903e8256ae94884ee48b35546f64b56ab907b6f",
+			"hash": "6d01b800c446be79cf09bb53889e0db454cfbed8",
 			"solc": "v0.5.8+commit.23d335f2",
 			"options": {
 				"optimizer": {
@@ -30,7 +30,7 @@
 		},
 		"WalletMultisigRefund": {
 			"address": "0x87d7884db08a5e549dB0bbe14FF57EBF6FB058A4",
-			"hash": "b903e8256ae94884ee48b35546f64b56ab907b6f",
+			"hash": "c62a75c38e9e9478a69d30212bc6056158dad953",
 			"solc": "v0.5.8+commit.23d335f2",
 			"options": {
 				"optimizer": {
@@ -42,7 +42,7 @@
 		},
 		"WalletMultisigRefundOutOfOrder": {
 			"address": "0xf10c0E8b8303c87417812B8af06E74e81cDEFb49",
-			"hash": "b903e8256ae94884ee48b35546f64b56ab907b6f",
+			"hash": "842aed564072dd7ffe51c2651ac92da1761c27f8",
 			"solc": "v0.5.8+commit.23d335f2",
 			"options": {
 				"optimizer": {
@@ -57,7 +57,7 @@
 	{
 		"WalletOwnable": {
 			"address": "0x5e0Ad34eC9DD31086E946f463a6820ef522B2c58",
-			"hash": "b903e8256ae94884ee48b35546f64b56ab907b6f",
+			"hash": "243dd295e72f4b2368c00f51f171bddaaf597e49",
 			"solc": "v0.5.8+commit.23d335f2",
 			"options": {
 				"optimizer": {
@@ -69,7 +69,7 @@
 		},
 		"WalletMultisig": {
 			"address": "0x6E59DB8ed3cd44e22972C6a1C26253B671C3d353",
-			"hash": "b903e8256ae94884ee48b35546f64b56ab907b6f",
+			"hash": "6d01b800c446be79cf09bb53889e0db454cfbed8",
 			"solc": "v0.5.8+commit.23d335f2",
 			"options": {
 				"optimizer": {
@@ -81,7 +81,7 @@
 		},
 		"WalletMultisigRefund": {
 			"address": "0xAB5047aDAFa5493f885343FeF3c55241a51E7027",
-			"hash": "b903e8256ae94884ee48b35546f64b56ab907b6f",
+			"hash": "c62a75c38e9e9478a69d30212bc6056158dad953",
 			"solc": "v0.5.8+commit.23d335f2",
 			"options": {
 				"optimizer": {
@@ -93,7 +93,7 @@
 		},
 		"WalletMultisigRefundOutOfOrder": {
 			"address": "0x7C788C2B85E20B4Fa25bd579A6B1D0218D86BDd1",
-			"hash": "b903e8256ae94884ee48b35546f64b56ab907b6f",
+			"hash": "842aed564072dd7ffe51c2651ac92da1761c27f8",
 			"solc": "v0.5.8+commit.23d335f2",
 			"options": {
 				"optimizer": {
@@ -108,7 +108,7 @@
 	{
 		"WalletOwnable": {
 			"address": "0xe45cdc5e3091c15db9c7d9545d2698535ba15d73",
-			"hash": "b903e8256ae94884ee48b35546f64b56ab907b6f",
+			"hash": "243dd295e72f4b2368c00f51f171bddaaf597e49",
 			"solc": "v0.5.8+commit.23d335f2",
 			"options": {
 				"optimizer": {
@@ -120,7 +120,7 @@
 		},
 		"WalletMultisig": {
 			"address": "0xCDaFF623129800CFd00495030C61854d3A194483",
-			"hash": "b903e8256ae94884ee48b35546f64b56ab907b6f",
+			"hash": "6d01b800c446be79cf09bb53889e0db454cfbed8",
 			"solc": "v0.5.8+commit.23d335f2",
 			"options": {
 				"optimizer": {
@@ -132,7 +132,7 @@
 		},
 		"WalletMultisigRefund": {
 			"address": "0x5fEb81cF3B49e042C30E91EbC27D8037cFe69EE9",
-			"hash": "b903e8256ae94884ee48b35546f64b56ab907b6f",
+			"hash": "c62a75c38e9e9478a69d30212bc6056158dad953",
 			"solc": "v0.5.8+commit.23d335f2",
 			"options": {
 				"optimizer": {
@@ -144,7 +144,7 @@
 		},
 		"WalletMultisigRefundOutOfOrder": {
 			"address": "0x1Ec67913A10e8B7723285ac0a123f29f9CC958cE",
-			"hash": "b903e8256ae94884ee48b35546f64b56ab907b6f",
+			"hash": "842aed564072dd7ffe51c2651ac92da1761c27f8",
 			"solc": "v0.5.8+commit.23d335f2",
 			"options": {
 				"optimizer": {

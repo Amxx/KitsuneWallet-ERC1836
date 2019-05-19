@@ -1,13 +1,13 @@
 import { ethers }  from 'ethers';
-import crypto      from "crypto";
+import * as crypto from 'crypto';
+import * as fs     from 'fs';
 import { SDK }     from '@kitsune-wallet/sdk/dist/sdk';
 import { createMockProvider, getWallets, solidity} from 'ethereum-waffle';
 
-import ActiveAdresses from './active.json';
-import WaffleConfig   from './waffle.json';
-
 ethers.errors.setLogLevel('error');
 
+import ActiveAdresses from '@kitsune-wallet/contracts/deployments/active.json';
+import WaffleConfig   from './waffle.json';
 
 // const provider = ethers.getDefaultProvider('ropsten'); // 3
 // const provider = ethers.getDefaultProvider('goerli');  // 5
@@ -52,7 +52,8 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 		}
 		else
 		{
-			const address = (await sdk.contracts.deployContract(master, [])).address;
+			// const address = (await sdk.contracts.deployContract(master, [])).address;
+			const address = null;
 			deployed[master] = { address, ...options };
 			console.log(`${master} has been deployed to ${deployed[master].address} (chain ${chainId})`);
 		}

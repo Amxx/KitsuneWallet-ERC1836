@@ -10,8 +10,9 @@
 		"/test"
 	],
 	"scripts": {
-		"build": "waffle waffle.json",
-		"test":  "mocha 'test/**/*.{js,ts}'"
+		"build":  "waffle waffle.json",
+		"deploy": "ts-node deploy.ts",
+		"test":   "mocha 'test/**/*.{js,ts}'"
 	},
 	"devDependencies": {
 		"@ensdomains/ens": "^0.3.5",

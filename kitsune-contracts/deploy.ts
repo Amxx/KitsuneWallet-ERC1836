@@ -23,16 +23,10 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 
 	for (let master of [ "WalletOwnable", "WalletMultisig", "WalletMultisigRefund", "WalletMultisigRefundOutOfOrder" ])
 	{
-		// hash object bytecode
-		const hash = crypto
-			.createHash('sha1')
-			.update(sdk.ABIS[master].bytecode, 'utf8')
-			.digest('hex');
-
 		// compilation options
 		const options =
 		{
-			hash:    hash,
+			hash:    crypto.createHash('sha1').update(sdk.ABIS[master].bytecode, 'utf8').digest('hex'),
 			solc:    WaffleConfig.solcVersion,
 			options: WaffleConfig.compilerOptions,
 		}
@@ -40,7 +34,7 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 		// console.log(`-------------------------------------------------`);
 		// console.log(`Master:  ${master}`);
 		// console.log(`Chainid: ${chainId}`);
-		// console.log(`Source:  ${hash}`);
+		// console.log(`Source:  ${options.hash}`);
 		// console.log(`-------------------------------------------------`);
 
 		const deployedMaster = (ActiveAdresses[chainId] || {})[master] || {};
@@ -52,8 +46,7 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 		}
 		else
 		{
-			// const address = (await sdk.contracts.deployContract(master, [])).address;
-			const address = null;
+			const address = (await sdk.contracts.deployContract(master, [])).address;
 			deployed[master] = { address, ...options };
 			console.log(`${master} has been deployed to ${deployed[master].address} (chain ${chainId})`);
 		}

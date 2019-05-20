@@ -16,13 +16,23 @@ const ERC20ABI = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":
 
 	let RLC = new ethers.Contract("0xc57538846Ec405Ea25Deb00e0f9B29a432D53507", ERC20ABI, provider);
 
-	console.log("[RLC] proxy :", (await RLC.balanceOf(proxyAddr)).toNumber());
-	console.log("[RLC] wallet:", (await RLC.balanceOf(wallet.address)).toNumber());
+	console.log("-------------------------------------------------------------");
+	console.log("[ETH] proxy :", ethers.utils.formatEther(await provider.getBalance(proxyAddr)),      ethers.constants.EtherSymbol);
+	console.log("[ETH] wallet:", ethers.utils.formatEther(await provider.getBalance(wallet.address)), ethers.constants.EtherSymbol);
+	console.log("[RLC] proxy :", (await RLC.balanceOf(proxyAddr)).toNumber(),                         'nRLC'                      );
+	console.log("[RLC] wallet:", (await RLC.balanceOf(wallet.address)).toNumber(),                    'nRLC'                      );
+	console.log("-------------------------------------------------------------");
 
+	// await (await signer.sendTransaction({ to: wallet.address, value: ethers.utils.parseEther("1.0") })).wait();
+	// await (await wallet.sendTransaction({ to: proxyAddr,      value: ethers.utils.parseEther("1.0") })).wait();
 	// await (await RLC.connect(signer).transfer(wallet.address, 10)).wait();
 	// await (await RLC.connect(wallet).transfer(proxyAddr, 200)).wait();
 
-	console.log("[RLC] proxy :", (await RLC.balanceOf(proxyAddr)).toNumber());
-	console.log("[RLC] wallet:", (await RLC.balanceOf(wallet.address)).toNumber());
+	console.log("-------------------------------------------------------------");
+	console.log("[ETH] proxy :", ethers.utils.formatEther(await provider.getBalance(proxyAddr)),      ethers.constants.EtherSymbol);
+	console.log("[ETH] wallet:", ethers.utils.formatEther(await provider.getBalance(wallet.address)), ethers.constants.EtherSymbol);
+	console.log("[RLC] proxy :", (await RLC.balanceOf(proxyAddr)).toNumber(),                         'nRLC'                      );
+	console.log("[RLC] wallet:", (await RLC.balanceOf(wallet.address)).toNumber(),                    'nRLC'                      );
+	console.log("-------------------------------------------------------------");
 
 })();

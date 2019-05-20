@@ -17,13 +17,9 @@ SRCS   =                                                                      \
 	../contracts/masters/wallets/WalletMultisig.sol                             \
 	../contracts/masters/wallets/WalletMultisigRefund.sol                       \
 	../contracts/masters/wallets/WalletMultisigRefundOutOfOrder.sol             \
+	../contracts/proxy/Proxy.sol
 
-.PHONY: flatten deploy
-
-all:
-	@echo "Usage: make [flatten|deploy]"
-
-flatten: $(FILE_FLAT)
+all: $(FILE_FLAT)
 
 $(FILE_FLAT): $(FILES) makefile
 	#@mkdir -p $(PATH_FLAT)
@@ -35,6 +31,3 @@ $(FILE_FLAT): $(FILES) makefile
 		cat $(file) | sed '/^pragma/ d' | sed '/^import/ d' >> $@; \
 		echo " done";                                              \
 	)
-
-deploy:
-	ts-node deployer.ts

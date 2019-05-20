@@ -1,6 +1,6 @@
-import { ethers }      from 'ethers';
-import { SDK    }      from '@kitsune-wallet/sdk/dist/sdk';
-import { ProxySigner } from '@kitsune-wallet/provider/dist/provider'
+const { ethers }      = require('ethers');
+const { SDK    }      = require('@kitsune-wallet/sdk/dist/sdk');
+const { ProxySigner } = require('@kitsune-wallet/provider/dist/provider');
 
 ethers.errors.setLogLevel('error');
 
@@ -19,7 +19,7 @@ const ERC20ABI = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":
 	console.log("[RLC] proxy :", (await RLC.balanceOf(proxyAddr)).toNumber());
 	console.log("[RLC] wallet:", (await RLC.balanceOf(wallet.address)).toNumber());
 
-	await (await RLC.connect(signer).transfer(wallet.address, 10)).wait();
+	// await (await RLC.connect(signer).transfer(wallet.address, 10)).wait();
 	// await (await RLC.connect(wallet).transfer(proxyAddr, 200)).wait();
 
 	console.log("[RLC] proxy :", (await RLC.balanceOf(proxyAddr)).toNumber());

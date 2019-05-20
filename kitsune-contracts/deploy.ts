@@ -1,6 +1,4 @@
 import { ethers }  from 'ethers';
-import * as crypto from 'crypto';
-import * as fs     from 'fs';
 import { SDK }     from '@kitsune-wallet/sdk/dist/sdk';
 import { createMockProvider, getWallets, solidity} from 'ethereum-waffle';
 
@@ -26,7 +24,7 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 		// compilation options
 		const options =
 		{
-			hash:    crypto.createHash('sha1').update(sdk.ABIS[master].bytecode, 'utf8').digest('hex'),
+			hash:    ethers.utils.keccak256(`0x${sdk.ABIS[master].bytecode}`),
 			solc:    WaffleConfig.solcVersion,
 			options: WaffleConfig.compilerOptions,
 		}
@@ -39,7 +37,7 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 
 		const deployedMaster = (ActiveAdresses[chainId] || {})[master] || {};
 
-		if (JSON.stringify({ hash: deployedMaster.hash, solc: deployedMaster.solc, options: deployedMaster.options }) == JSON.stringify(options))
+		if (deployedMaster.hash == options.hash)
 		{
 			deployed[master] = deployedMaster;
 			console.log(`${master} is already deployed at ${deployed[master].address}`);

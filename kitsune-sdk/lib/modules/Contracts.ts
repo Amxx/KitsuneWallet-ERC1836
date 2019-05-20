@@ -6,7 +6,7 @@ import ActiveAdresses from '@kitsune-wallet/contracts/deployments/active.json';
 
 export class Contracts extends ModuleBase
 {
-	deployments : types.map<string, { address: string }>;
+	deployments : types.map<string, { address: types.ethereum.address, hash: types.ethereum.bytes32 }>;
 
 	async init()
 	{
@@ -38,7 +38,10 @@ export class Contracts extends ModuleBase
 					if (!(config.deploy !== undefined && config.deploy.noTrack))
 					{
 						if (this.deployments == undefined) { await this.init(); }
-						this.deployments[name] = { "address": instance.address };
+						this.deployments[name] = {
+							address: instance.address,
+							hash:    ethers.utils.keccak256(`0x${this.sdk.ABIS[name].bytecode}`),
+						};
 					}
 					resolve(instance);
 				})
@@ -55,7 +58,14 @@ export class Contracts extends ModuleBase
 		return new Promise(async (resolve, reject) => {
 			try
 			{
-				if (this.deployments == undefined) { await this.init(); }
+				if (this.deployments == undefined)
+				{
+					await this.init();
+				}
+				if (this.deployments[name].hash != ethers.utils.keccak256(`0x${this.sdk.ABIS[name].bytecode}`))
+				{
+					console.log(`[WARNING] deployed contract bytecode missmatch for ${name}`);
+				}
 				resolve(this.viewContract(name, this.deployments[name].address));
 			}
 			catch

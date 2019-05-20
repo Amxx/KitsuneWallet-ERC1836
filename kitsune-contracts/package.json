@@ -23,7 +23,7 @@
 		"chai": "^4.2.0",
 		"chai-as-promised": "^7.1.1",
 		"ethereum-waffle": "2.0.10",
-		"ethers": "^4.0.26",
+		"ethers": "^4.0.27",
 		"mocha": "^5.2.0",
 		"jq.node": "^2.1.2",
 		"mocha": "^6.0.2",

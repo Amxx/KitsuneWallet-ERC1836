@@ -48,3 +48,5 @@ export class SDK
 		this.utils        = new Utils(this);
 	}
 }
+
+export * from './typings/all';

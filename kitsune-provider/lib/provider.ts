@@ -1,22 +1,21 @@
 import { ethers } from 'ethers';
-const { SDK } = require('@kitsune-wallet/sdk/dist/sdk');
+import { SDK, types } from '@kitsune-wallet/sdk/dist/sdk';
 
 export class ProxySigner extends ethers.Signer
 {
-	provider;
-	_sdk;
-	_proxy;
+	provider: types.Provider;
+	_sdk:     SDK;
+	_proxy:   types.contract;
 
 	constructor(
-		provider: ethers.providers.Provider,
-		wallet:   ethers.Wallet,
-		proxyName,
-		proxyAddress,
+		proxyName:    string,
+		proxyAddress: types.ethereum.address,
+		wallet:       types.wallet,
 	)
 	{
 		super();
-		this.provider = provider;
-		this._sdk     = new SDK(provider, wallet);
+		this.provider = wallet.provider;
+		this._sdk     = new SDK(wallet.provider, wallet);
 		this._proxy   = this._sdk.contracts.viewContract(proxyName, proxyAddress);
 	}
 

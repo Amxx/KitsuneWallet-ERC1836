@@ -8,11 +8,11 @@ const ERC20ABI = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":
 
 (async() => {
 
-	let proxyAddr  = "0x61fc99E5A6bca03C56D1E6af82188Bb3A79ba11C";
+	const proxyAddr = "0x61fc99E5A6bca03C56D1E6af82188Bb3A79ba11C";
 
 	const provider = ethers.getDefaultProvider('kovan');
 	const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
-	const signer   = new ProxySigner(provider, wallet, "WalletMultisig", proxyAddr);
+	const signer   = new ProxySigner("WalletMultisig", proxyAddr, wallet);
 
 	let RLC = new ethers.Contract("0xc57538846Ec405Ea25Deb00e0f9B29a432D53507", ERC20ABI, provider);
 
@@ -25,8 +25,8 @@ const ERC20ABI = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":
 
 	// await (await signer.sendTransaction({ to: wallet.address, value: ethers.utils.parseEther("1.0") })).wait();
 	// await (await wallet.sendTransaction({ to: proxyAddr,      value: ethers.utils.parseEther("1.0") })).wait();
-	// await (await RLC.connect(signer).transfer(wallet.address, 10)).wait();
-	// await (await RLC.connect(wallet).transfer(proxyAddr, 200)).wait();
+	// await (await RLC.connect(signer).transfer(wallet.address,  10)).wait();
+	// await (await RLC.connect(wallet).transfer(proxyAddr,      200)).wait();
 
 	console.log("-------------------------------------------------------------");
 	console.log("[ETH] proxy :", ethers.utils.formatEther(await provider.getBalance(proxyAddr)),      ethers.constants.EtherSymbol);

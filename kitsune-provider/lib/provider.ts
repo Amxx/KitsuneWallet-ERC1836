@@ -31,6 +31,7 @@ export class ProxySigner extends ethers.Signer
 
 	signMessage(message)
 	{
+		// TODO: check that signer has the right purpose (0x4)
 		return this._signer.signMessage(message);
 	}
 

@@ -6,34 +6,39 @@ export class ProxySigner extends ethers.Signer
 	provider: types.Provider;
 	_sdk:     SDK;
 	_proxy:   types.contract;
+	_signer:  types.wallet;
+	_relayer: types.wallet;
 
 	constructor(
 		proxyName:    string,
 		proxyAddress: types.ethereum.address,
-		wallet:       types.wallet,
+		signer:       types.wallet,
+		relayer:      types.wallet = null,
 	)
 	{
 		super();
-		this.provider = wallet.provider;
-		this._sdk     = new SDK(wallet.provider, wallet);
+		this._signer  = signer;
+		this._relayer = relayer || signer;
+		this.provider = this._relayer.provider;
+		this._sdk     = new SDK(this.provider, this._relayer);
 		this._proxy   = this._sdk.contracts.viewContract(proxyName, proxyAddress);
 	}
 
 	getAddress()
 	{
-		return this._sdk.wallet.address;
+		return this._proxy.address;
 	}
 
 	signMessage(message)
 	{
-		return this._sdk.wallet.signMessage(message);
+		return this._signer.signMessage(message);
 	}
 
 	async sendTransaction(transaction)
 	{
 		return this._sdk.multisig.execute(
 			this._proxy,
-			[ this._sdk.wallet ],
+			[ this._signer ],
 			{
 				to:    await transaction.to,
 				value: await transaction.value || 0,

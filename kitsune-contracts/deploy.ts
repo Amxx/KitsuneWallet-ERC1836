@@ -19,7 +19,13 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 	const chainId  = (await provider.getNetwork()).chainId;
 	const deployed = {};
 
-	for (let master of [ "WalletOwnable", "WalletMultisig", "WalletMultisigRefund", "WalletMultisigRefundOutOfOrder" ])
+	for (let master of [
+		"WalletOwnable",
+		"WalletMultisig",
+		"WalletMultisigRefund",
+		"WalletMultisigRefundOutOfOrder",
+		"WalletMultisigRecovery"
+	])
 	{
 		// compilation options
 		const options =
@@ -46,7 +52,7 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 		{
 			const address = (await sdk.contracts.deployContract(master, [])).address;
 			deployed[master] = { address, ...options };
-			console.log(`${master} has been deployed to ${deployed[master].address} (chain ${chainId})`);
+			console.log(`${master} has been deployed to ${deployed[master].address} (chain ${chainId}, hash ${options.hash})`);
 		}
 	}
 	console.log(JSON.stringify(deployed, null, '\t'));

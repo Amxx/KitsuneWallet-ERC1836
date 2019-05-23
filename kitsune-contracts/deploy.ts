@@ -33,7 +33,9 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 			hash:    ethers.utils.keccak256(`0x${sdk.ABIS[master].bytecode}`),
 			solc:    WaffleConfig.solcVersion,
 			options: WaffleConfig.compilerOptions,
+			git:     process.env.GIT,
 		}
+		console.log(options)
 
 		// console.log(`-------------------------------------------------`);
 		// console.log(`Master:  ${master}`);
@@ -45,7 +47,7 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 
 		if (deployedMaster.hash == options.hash)
 		{
-			deployed[master] = deployedMaster;
+			deployed[master] = { ...deployedMaster, ...options };
 			console.log(`${master} is already deployed at ${deployed[master].address}`);
 		}
 		else

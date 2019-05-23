@@ -14,7 +14,7 @@ const testUpdateMaster  = require("../fixtures/testUpdateMaster.js");
 ethers.errors.setLogLevel('error');
 
 eth = x => ethers.utils.parseEther(x.toString())
-describe('Wallet', () => {
+describe('WalletMultisig', () => {
 
 	const provider = createMockProvider();
 	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);

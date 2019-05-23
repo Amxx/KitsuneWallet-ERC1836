@@ -26,11 +26,11 @@ contract MasterKeysBase is ERC725Base, MasterBase, IERC1271
 	event ActionThresholdChange(uint256 previousThreshold, uint256 newThreshold);
 
 	function initialize(
-		bytes32[] calldata _keys,
-		bytes32[] calldata _purposes,
-		uint256            _managementThreshold,
-		uint256            _actionThreshold)
-	external onlyInitializing()
+		bytes32[] memory _keys,
+		bytes32[] memory _purposes,
+		uint256          _managementThreshold,
+		uint256          _actionThreshold)
+	public onlyInitializing()
 	{
 		require(_keys.length == _purposes.length, "key-and-purpose-array-must-have-same-size");
 		for (uint256 i = 0; i < _keys.length; ++i)
@@ -42,8 +42,8 @@ contract MasterKeysBase is ERC725Base, MasterBase, IERC1271
 		m_actionThreshold     = _actionThreshold;
 	}
 
-	function updateMaster(address _newMaster, bytes calldata _initData, bool _reset)
-	external onlyOwner()
+	function updateMaster(address _newMaster, bytes memory _initData, bool _reset)
+	public onlyOwner()
 	{
 		if (_reset)
 		{

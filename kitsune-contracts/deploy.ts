@@ -50,9 +50,16 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 		}
 		else
 		{
-			const address = (await sdk.contracts.deployContract(master, [])).address;
-			deployed[master] = { address, ...options };
-			console.log(`${master} has been deployed to ${deployed[master].address} (chain ${chainId}, hash ${options.hash})`);
+			if (!process.env.DRYRUN)
+			{
+				const address = (await sdk.contracts.deployContract(master, [])).address;
+				deployed[master] = { address, ...options };
+				console.log(`${master} has been deployed to ${deployed[master].address} (chain ${chainId}, hash ${options.hash})`);
+			}
+			else
+			{
+				console.log(`[DRYRUN] current version ${master} is not deployed in chain ${chainId}.`)
+			}
 		}
 	}
 	console.log(JSON.stringify(deployed, null, '\t'));

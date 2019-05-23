@@ -29,11 +29,51 @@ function testRecovery(sdk, name)
 			expect(timeAfter - timeBefore).to.be.least(10); // could be 10 or 11
 		});
 
-		it ('authorized', async () => {
+		it ('authorized - random key', async () => {
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 
 			const recoveryCode = ethers.utils.randomBytes(32);
+			const recoveryhash = ethers.utils.keccak256(recoveryCode);
+
+			await expect(sdk.multisig.execute(
+				proxy,
+				[ user1 ],
+				{
+					to: proxy.address,
+					data: proxy.interface.functions.setRecoveryHash.encode([ recoveryhash ]),
+				},
+				{ options: { gasLimit: 1000000 } }
+			)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
+
+			await sdk.provider.send("evm_increaseTime", (await proxy.recoveryTimer()).toNumber());
+
+			const tx = proxy.connect(user2).recovery(
+				recoveryCode,
+				(await sdk.contracts.getActiveInstance(name)).address,
+				sdk.transactions.initialization(
+					name,
+					[
+						[ sdk.utils.addrToKey(user2.address) ],
+						[ "0x0000000000000000000000000000000000000000000000000000000000000007" ],
+						1,
+						1,
+					]
+				),
+				{ gasLimit: 1000000 }
+			);
+
+			await (await tx).wait();
+
+			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+		});
+
+		it ('authorized - text key', async () => {
+			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
+			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+			const recoveryCode = ethers.utils.toUtf8Bytes("my recovery passphrase");
 			const recoveryhash = ethers.utils.keccak256(recoveryCode);
 
 			await expect(sdk.multisig.execute(

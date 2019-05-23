@@ -3,8 +3,6 @@ import * as types  from "../typings/all";
 
 import ModuleBase  from "./__ModuleBase";
 
-import { IMaster } from '../abi';
-
 export class Transactions extends ModuleBase
 {
 	initialization(
@@ -22,7 +20,7 @@ export class Transactions extends ModuleBase
 		return new Promise((resolve, reject) => {
 			this.sdk.contracts.getActiveInstance(name, config)
 			.then((instance: types.contract) => {
-				resolve(new ethers.utils.Interface(IMaster.abi).functions.updateMaster.encode([
+				resolve(new ethers.utils.Interface(this.sdk.ABIS.IMaster.abi).functions.updateMaster.encode([
 					instance.address,
 					data,
 					(config.migration !== undefined && config.migration.reset !== undefined) ? config.migration.reset : data !== "0x",

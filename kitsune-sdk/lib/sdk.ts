@@ -1,11 +1,6 @@
-import { ethers } from 'ethers';
-import * as types from "./typings/all";
-
-import { Proxy                          } from './abi';
-import { WalletOwnable                  } from './abi';
-import { WalletMultisig                 } from './abi';
-import { WalletMultisigRefund           } from './abi';
-import { WalletMultisigRefundOutOfOrder } from './abi';
+import { ethers }     from 'ethers';
+import * as types     from "./typings/all";
+import * as contracts from './contracts';
 
 import { Contracts    } from "./modules/Contracts";
 import { Multisig     } from "./modules/Multisig";
@@ -32,14 +27,7 @@ export class SDK
 	) {
 		this.provider = provider || new ethers.providers.JsonRpcProvider();
 		this.wallet   = wallet;
-
-		this.ABIS = {
-			'Proxy':                          Proxy,
-			'WalletOwnable':                  WalletOwnable,
-			'WalletMultisig':                 WalletMultisig,
-			'WalletMultisigRefund':           WalletMultisigRefund,
-			'WalletMultisigRefundOutOfOrder': WalletMultisigRefundOutOfOrder,
-		};
+		this.ABIS     = contracts;
 
 		this.contracts    = new Contracts(this);
 		this.multisig     = new Multisig(this);

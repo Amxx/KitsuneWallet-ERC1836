@@ -4,18 +4,18 @@
       "constant": true,
       "inputs": [
         {
-          "name": "_data",
+          "name": "",
           "type": "bytes32"
         },
         {
-          "name": "_signature",
+          "name": "",
           "type": "bytes"
         }
       ],
       "name": "isValidSignature",
       "outputs": [
         {
-          "name": "isValid",
+          "name": "",
           "type": "bool"
         }
       ],
@@ -43,18 +43,18 @@
       "constant": true,
       "inputs": [
         {
-          "name": "_data",
+          "name": "",
           "type": "bytes32"
         },
         {
-          "name": "_signature",
+          "name": "",
           "type": "bytes"
         }
       ],
       "name": "isValidSignature",
       "outputs": [
         {
-          "name": "isValid",
+          "name": "",
           "type": "bool"
         }
       ],

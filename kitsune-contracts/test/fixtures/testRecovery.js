@@ -13,7 +13,7 @@ function testRecovery(sdk, name)
 
 
 		it('lastUsage', async () => {
-			const timeBefore = await proxy.recoveryLastUsage();
+			const timeBefore = await proxy.getRecoveryLastUsage();
 
 			await sdk.provider.send("evm_increaseTime", 10);
 
@@ -24,7 +24,7 @@ function testRecovery(sdk, name)
 				{ options: { gasLimit: 1000000 } }
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
 
-			const timeAfter = await proxy.recoveryLastUsage();
+			const timeAfter = await proxy.getRecoveryLastUsage();
 
 			expect(timeAfter - timeBefore).to.be.least(10); // could be 10 or 11
 		});
@@ -46,7 +46,7 @@ function testRecovery(sdk, name)
 				{ options: { gasLimit: 1000000 } }
 			)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 
-			await sdk.provider.send("evm_increaseTime", (await proxy.recoveryTimer()).toNumber());
+			await sdk.provider.send("evm_increaseTime", (await proxy.getRecoveryTimer()).toNumber());
 
 			const tx = proxy.connect(user2).recovery(
 				recoveryCode,
@@ -86,7 +86,7 @@ function testRecovery(sdk, name)
 				{ options: { gasLimit: 1000000 } }
 			)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 
-			await sdk.provider.send("evm_increaseTime", (await proxy.recoveryTimer()).toNumber());
+			await sdk.provider.send("evm_increaseTime", (await proxy.getRecoveryTimer()).toNumber());
 
 			const tx = proxy.connect(user2).recovery(
 				recoveryCode,
@@ -126,7 +126,7 @@ function testRecovery(sdk, name)
 				{ options: { gasLimit: 1000000 } }
 			)).to.emit(proxy, 'CallSuccess').withArgs(proxy.address);
 
-			await sdk.provider.send("evm_increaseTime", (await proxy.recoveryTimer()).toNumber());
+			await sdk.provider.send("evm_increaseTime", (await proxy.getRecoveryTimer()).toNumber());
 
 			expect(proxy.connect(user2).recovery(
 				ethers.constants.HashZero,

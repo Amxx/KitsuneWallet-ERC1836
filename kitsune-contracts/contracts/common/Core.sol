@@ -15,27 +15,28 @@ contract Core is Store
 	// Modifiers
 	modifier onlyInitializing()
 	{
-		require(!m_initialized, "already-initialized");
+		require(!_initialized, "already-initialized");
 		_;
-		m_initialized = true;
+		_initialized = true;
 	}
 
 	// Internal functions
-	function setMaster(address _newMaster, bytes memory _initData)
+	function setMaster(address newMaster, bytes memory initData)
 	internal
 	{
-		require(IMaster(_newMaster).masterId() == MASTER_ID, "invalid-master-uuid");
+		require(IMaster(newMaster).masterId() == MASTER_ID, "invalid-master-uuid");
 
 		// Update master pointer
-		emit MasterChange(m_master, _newMaster);
-		m_master = _newMaster;
+		emit MasterChange(_master, newMaster);
+		_master = newMaster;
 
 		// Allows the run of an initialization method in the new master.
 		// Will be reset to true by the initialization modifier of the initialize methode.
-		m_initialized = false;
+		_initialized = false;
 
 		// Call the initialize method in the new master
-		(bool success, /*bytes memory returndata*/) = _newMaster.delegatecall(_initData);
+		// solium-disable-next-line security/no-low-level-calls
+		(bool success, /*bytes memory returndata*/) = newMaster.delegatecall(initData);
 		require(success, "failed-to-initialize");
 	}
 }

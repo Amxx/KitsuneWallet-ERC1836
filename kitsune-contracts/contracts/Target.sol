@@ -1,9 +1,10 @@
 pragma solidity ^0.5.0;
 
+
 contract Target
 {
-	address public lastSender;
-	bytes32 public lastData;
+	address public _lastSender;
+	bytes32 public _lastData;
 
 	event Log(address sender, bytes32 data);
 
@@ -12,8 +13,8 @@ contract Target
 	function call(bytes32 data)
 	external
 	{
-		lastSender = msg.sender;
-		lastData   = data;
+		_lastSender = msg.sender;
+		_lastData = data;
 		emit Log(msg.sender, data);
 	}
 }

@@ -19,26 +19,26 @@ contract WalletOwnable is ERC725Base, MasterBase, IERC1271, Ownable
 		renounceOwnership();
 	}
 
-	function initialize(address _owner)
+	function initialize(address owner)
 	external onlyInitializing()
 	{
-		_transferOwnership(_owner);
+		_transferOwnership(owner);
 	}
 
-	function updateMaster(address _newMaster, bytes calldata _initData, bool _reset)
+	function updateMaster(address newMaster, bytes calldata initData, bool reset)
 	external onlyOwner()
 	{
-		if (_reset)
+		if (reset)
 		{
 			// set owner to 0
 			renounceOwnership();
 		}
-		setMaster(_newMaster, _initData);
+		setMaster(newMaster, initData);
 	}
 
-	function isValidSignature(bytes32 _data, bytes memory _signature)
+	function isValidSignature(bytes32 data, bytes memory signature)
 	public view returns (bool)
 	{
-		return owner() == _data.recover(_signature);
+		return owner() == data.recover(signature);
 	}
 }

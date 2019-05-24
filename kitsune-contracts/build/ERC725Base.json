@@ -4,19 +4,19 @@
       "constant": false,
       "inputs": [
         {
-          "name": "_operationType",
+          "name": "operationType",
           "type": "uint256"
         },
         {
-          "name": "_to",
+          "name": "to",
           "type": "address"
         },
         {
-          "name": "_value",
+          "name": "value",
           "type": "uint256"
         },
         {
-          "name": "_data",
+          "name": "data",
           "type": "bytes"
         }
       ],
@@ -30,7 +30,7 @@
       "constant": true,
       "inputs": [
         {
-          "name": "_key",
+          "name": "key",
           "type": "bytes32"
         }
       ],
@@ -49,11 +49,11 @@
       "constant": false,
       "inputs": [
         {
-          "name": "_key",
+          "name": "key",
           "type": "bytes32"
         },
         {
-          "name": "_value",
+          "name": "value",
           "type": "bytes"
         }
       ],
@@ -177,19 +177,19 @@
       "constant": false,
       "inputs": [
         {
-          "name": "_operationType",
+          "name": "operationType",
           "type": "uint256"
         },
         {
-          "name": "_to",
+          "name": "to",
           "type": "address"
         },
         {
-          "name": "_value",
+          "name": "value",
           "type": "uint256"
         },
         {
-          "name": "_data",
+          "name": "data",
           "type": "bytes"
         }
       ],
@@ -203,7 +203,7 @@
       "constant": true,
       "inputs": [
         {
-          "name": "_key",
+          "name": "key",
           "type": "bytes32"
         }
       ],
@@ -222,11 +222,11 @@
       "constant": false,
       "inputs": [
         {
-          "name": "_key",
+          "name": "key",
           "type": "bytes32"
         },
         {
-          "name": "_value",
+          "name": "value",
           "type": "bytes"
         }
       ],

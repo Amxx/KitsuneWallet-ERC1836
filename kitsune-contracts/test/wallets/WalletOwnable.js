@@ -62,8 +62,8 @@ describe('WalletOwnable', () => {
 				{ gasLimit: 80000 }
 			)).to.emit(proxy, 'CallSuccess').withArgs(targetContract.address);
 
-			expect(await targetContract.lastSender()).to.eq(proxy.address);
-			expect(await targetContract.lastData()).to.eq(randomdata);
+			expect(await targetContract._lastSender()).to.eq(proxy.address);
+			expect(await targetContract._lastData()).to.eq(randomdata);
 		});
 
 		it("protected", async () => {

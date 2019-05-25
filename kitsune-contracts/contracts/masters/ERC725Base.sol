@@ -11,64 +11,77 @@ contract ERC725Base is IERC725, Core
 
 	modifier onlyOwner()
 	{
-		require(msg.sender == owner(), 'access-denied');
+		require(msg.sender == owner(), "access-denied");
 		_;
 	}
 
 	// Need this to handle deposit call forwarded by the proxy
 	function () external payable {}
 
-	function getData(bytes32 _key)
+	function getData(bytes32 key)
 	public view returns (bytes memory)
 	{
-		return m_store[_key];
+		return _store[key];
 	}
 
-	function setData(bytes32 _key, bytes memory _value)
+	function setData(bytes32 key, bytes memory value)
 	public onlyOwner()
 	{
-		m_store[_key] = _value;
-		emit DataChanged(_key, _value);
+		_store[key] = value;
+		emit DataChanged(key, value);
 	}
 
-	function execute(uint256 _operationType, address _to, uint256 _value, bytes memory _data)
+	function execute(
+		uint256 operationType,
+		address to,
+		uint256 value,
+		bytes memory data)
 	public onlyOwner()
 	{
-		_execute(_operationType, _to, _value, _data);
+		_execute(
+			operationType,
+			to,
+			value,
+			data
+		);
 	}
 
-	function _execute(uint256 _operationType, address _to, uint256 _value, bytes memory _data)
+	function _execute(
+		uint256 operationType,
+		address to,
+		uint256 value,
+		bytes memory data)
 	internal
 	{
-		if (_operationType == OPERATION_CALL)
+		if (operationType == OPERATION_CALL)
 		{
 			bool success;
 			bytes memory returndata;
-			(success, returndata) = _to.call.value(_value)(_data);
+			// solium-disable-next-line security/no-call-value
+			(success, returndata) = to.call.value(value)(data);
 			// Don't revert if call reverted, just log the failure
-			// require(success, string(returndata));
 			if (success)
 			{
-				emit CallSuccess(_to);
+				emit CallSuccess(to);
 			}
 			else
 			{
-				emit CallFailure(_to, returndata);
-				// emit CallFailure(_to, string(returndata));
+				emit CallFailure(to, returndata);
 			}
 		}
-		else if (_operationType == OPERATION_CREATE)
+		else if (operationType == OPERATION_CREATE)
 		{
 			address newContract;
+			// solium-disable-next-line security/no-inline-assembly
 			assembly
 			{
-				newContract := create(0, add(_data, 0x20), mload(_data))
+				newContract := create(0, add(data, 0x20), mload(data))
 			}
 			emit ContractCreated(newContract);
 		}
 		else
 		{
-			revert('invalid-operation-type');
+			revert("invalid-operation-type");
 		}
 	}
 }

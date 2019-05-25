@@ -4,10 +4,12 @@ pragma experimental ABIEncoderV2;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
+import "../MasterBase.sol";
 import "../MasterKeysBase.sol";
+import "../ERC721Receiver.sol";
 
 
-contract WalletMultisigRefundOutOfOrder is MasterKeysBase
+contract WalletMultisigRefundOutOfOrder is MasterBase, MasterKeysBase, ERC721Receiver
 {
 	using SafeMath for uint256;
 
@@ -20,68 +22,75 @@ contract WalletMultisigRefundOutOfOrder is MasterKeysBase
 	{
 	}
 
-	function execute
-	( uint256        _operationType
-	, address        _to
-	, uint256        _value
-	, bytes   memory _data
-	, uint256        _nonce
-	, bytes32        _salt
-	, address        _gasToken
-	, uint256        _gasPrice
-	, bytes[] memory _sigs
-	)
+	function execute(
+		uint256        operationType,
+		address        to,
+		uint256        value,
+		bytes   memory data,
+		uint256        nonce,
+		bytes32        salt,
+		address        gasToken,
+		uint256        gasPrice,
+		bytes[] memory sigs)
 	public
 	{
 		uint256 gasBefore = gasleft();
 
-		++m_nonce;
-		require(_nonce == 0 || _nonce == m_nonce, "invalid-nonce");
+		++_nonce;
+		require(nonce == 0 || nonce == _nonce, "invalid-nonce");
 
 		bytes32 neededPurpose;
-		if (_to == address(this))
+		if (to == address(this))
 		{
-			require(_sigs.length >= m_managementThreshold, "missing-signers");
+			require(sigs.length >= _managementThreshold, "missing-signers");
 			neededPurpose = PURPOSE_MANAGEMENT;
 		}
 		else
 		{
-			require(_sigs.length >= m_actionThreshold, "missing-signers");
+			require(sigs.length >= _actionThreshold, "missing-signers");
 			neededPurpose = PURPOSE_ACTION;
 		}
 
-		bytes32 executionID = keccak256(abi.encodePacked(
+		bytes32 executionID = keccak256(
+			abi.encodePacked(
 				address(this),
-				_operationType,
-				_to,
-				_value,
-				keccak256(_data),
-				_nonce,
-				_salt,
-				_gasToken,
-				_gasPrice
-			)).toEthSignedMessageHash();
+				operationType,
+				to,
+				value,
+				keccak256(data),
+				nonce,
+				salt,
+				gasToken,
+				gasPrice
+			)
+		)
+		.toEthSignedMessageHash();
 
-		require(m_persistent[executionID] == bytes32(0), 'transaction-replay');
-		m_persistent[executionID] = bytes32(0xa50daf8ffad995556f094fb7bb26ec5c7aadc7f574c741d0237ea13300bc1dd7);
+		require(_persistent[executionID] == bytes32(0), "transaction-replay");
+		_persistent[executionID] = bytes32(0xa50daf8ffad995556f094fb7bb26ec5c7aadc7f574c741d0237ea13300bc1dd7);
 
 		address lastSigner = address(0);
-		for (uint256 i = 0; i < _sigs.length; ++i)
+		for (uint256 i = 0; i < sigs.length; ++i)
 		{
-			address signer  = executionID.recover(_sigs[i]);
+			address signer = executionID.recover(sigs[i]);
 			require(signer > lastSigner, "invalid-signatures-ordering");
 			require(keyHasPurpose(addrToKey(signer), neededPurpose), "invalid-signature");
 			lastSigner = signer;
 		}
 
-		_execute(_operationType, _to, _value, _data);
+		_execute(
+			operationType,
+			to,
+			value,
+			data
+		);
 
 		refund(
 			BASEGASE
 			.add(gasBefore)
 			.sub(gasleft())
-			.mul(_gasPrice),
-			_gasToken
+			.mul(gasPrice),
+			gasToken
 		);
 	}
 

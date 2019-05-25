@@ -38,7 +38,7 @@ function testKeyManagement(sdk)
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxy.getActiveKeys()).to.deep.eq([sdk.utils.addrToKey(user1.address)]);
-			expect(await proxy.managementKeyCount()).to.be.eq(1);
+			expect(await proxy.getManagementKeyCount()).to.be.eq(1);
 
 			await expect(sdk.multisig.setKey(
 				proxy,
@@ -53,14 +53,14 @@ function testKeyManagement(sdk)
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000004');
 			expect(await proxy.getActiveKeys()).to.deep.eq([sdk.utils.addrToKey(user1.address),sdk.utils.addrToKey(user2.address)]);
-			expect(await proxy.managementKeyCount()).to.be.eq(1);
+			expect(await proxy.getManagementKeyCount()).to.be.eq(1);
 		});
 
 		it('UpdateKey', async () => {
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxy.getActiveKeys()).to.deep.eq([sdk.utils.addrToKey(user1.address)]);
-			expect(await proxy.managementKeyCount()).to.be.eq(1);
+			expect(await proxy.getManagementKeyCount()).to.be.eq(1);
 
 			await expect(sdk.multisig.setKey(
 				proxy,
@@ -75,14 +75,14 @@ function testKeyManagement(sdk)
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x000000000000000000000000000000000000000000000000000000000000000f');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxy.getActiveKeys()).to.deep.eq([sdk.utils.addrToKey(user1.address)]);
-			expect(await proxy.managementKeyCount()).to.be.eq(1);
+			expect(await proxy.getManagementKeyCount()).to.be.eq(1);
 		});
 
 		it('Cannot remove last management key', async () => {
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxy.getActiveKeys()).to.deep.eq([sdk.utils.addrToKey(user1.address)]);
-			expect(await proxy.managementKeyCount()).to.be.eq(1);
+			expect(await proxy.getManagementKeyCount()).to.be.eq(1);
 
 			await expect(sdk.multisig.setKey(
 				proxy,
@@ -95,7 +95,7 @@ function testKeyManagement(sdk)
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxy.getActiveKeys()).to.deep.eq([sdk.utils.addrToKey(user1.address)]);
-			expect(await proxy.managementKeyCount()).to.be.eq(1);
+			expect(await proxy.getManagementKeyCount()).to.be.eq(1);
 		});
 
 		it('Add then Remove', async () => {
@@ -103,7 +103,7 @@ function testKeyManagement(sdk)
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxy.getActiveKeys()).to.deep.eq([sdk.utils.addrToKey(user1.address)]);
-			expect(await proxy.managementKeyCount()).to.be.eq(1);
+			expect(await proxy.getManagementKeyCount()).to.be.eq(1);
 
 			await expect(sdk.multisig.setKey(
 				proxy,
@@ -118,7 +118,7 @@ function testKeyManagement(sdk)
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.getActiveKeys()).to.deep.eq([sdk.utils.addrToKey(user1.address),sdk.utils.addrToKey(user2.address)]);
-			expect(await proxy.managementKeyCount()).to.be.eq(2);
+			expect(await proxy.getManagementKeyCount()).to.be.eq(2);
 
 			await expect(sdk.multisig.setKey(
 				proxy,
@@ -133,7 +133,7 @@ function testKeyManagement(sdk)
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.getActiveKeys()).to.deep.eq([sdk.utils.addrToKey(user2.address)]);
-			expect(await proxy.managementKeyCount()).to.be.eq(1);
+			expect(await proxy.getManagementKeyCount()).to.be.eq(1);
 		});
 	});
 }

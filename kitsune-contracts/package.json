@@ -13,7 +13,10 @@
 		"build":      "waffle waffle.json",
 		"deploy":     "GIT=$(git rev-parse HEAD) ts-node deploy.ts",
 		"dry-deploy": "GIT=$(git rev-parse HEAD) DRYRUN=true ts-node deploy.ts",
-		"test":       "mocha 'test/**/*.{js,ts}'"
+		"test":       "mocha 'test/**/*.{js,ts}'",
+		"lint":       "yarn lint:sol",
+		"lint:sol":   "solium -d contracts",
+		"clean":      "rm -rf build"
 	},
 	"devDependencies": {
 		"@ensdomains/ens": "^0.3.5",

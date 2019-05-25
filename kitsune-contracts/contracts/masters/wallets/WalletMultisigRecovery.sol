@@ -6,9 +6,9 @@ import "./WalletMultisig.sol";
 
 contract WalletMultisigRecovery is WalletMultisig
 {
-	uint256 public recoveryLastUsage;
-	uint256 public recoveryTimer;
-	bytes32 public recoveryHash;
+	uint256 _recoveryLastUsage;
+	uint256 _recoveryTimer;
+	bytes32 _recoveryHash;
 
 	// This is a delegate contract, lock it
 	constructor()
@@ -17,57 +17,92 @@ contract WalletMultisigRecovery is WalletMultisig
 	}
 
 	function initialize(
-		bytes32[] memory _keys,
-		bytes32[] memory _purposes,
-		uint256          _managementThreshold,
-		uint256          _actionThreshold)
+		bytes32[] memory keys,
+		bytes32[] memory purposes,
+		uint256          managementThreshold,
+		uint256          actionThreshold)
 	public onlyInitializing()
 	{
-		recoveryLastUsage = now;
-		recoveryTimer     = 365 days;
-		super.initialize(_keys, _purposes, _managementThreshold, _actionThreshold);
+		_recoveryLastUsage = now;
+		_recoveryTimer = 365 days;
+		super.initialize(
+			keys,
+			purposes,
+			managementThreshold,
+			actionThreshold
+		);
 	}
 
-	function updateMaster(address _newMaster, bytes memory _initData, bool _reset)
+	function updateMaster(address newMaster, bytes memory initData, bool reset)
 	public onlyOwner()
 	{
-		if (_reset)
+		if (reset)
 		{
-			delete recoveryLastUsage;
-			delete recoveryHash;
-			delete recoveryTimer;
+			delete _recoveryLastUsage;
+			delete _recoveryHash;
+			delete _recoveryTimer;
 		}
-		super.updateMaster(_newMaster, _initData, _reset);
+		super.updateMaster(
+			newMaster,
+			initData,
+			reset
+		);
 	}
 
-	function _execute(uint256 _operationType, address _to, uint256 _value, bytes memory _data)
+	function getRecoveryLastUsage()
+	external view returns (uint256)
+	{
+		return _recoveryLastUsage;
+	}
+
+	function getRecoveryTimer()
+	external view returns (uint256)
+	{
+		return _recoveryTimer;
+	}
+
+	function getRecoveryHash()
+	external view returns (bytes32)
+	{
+		return _recoveryHash;
+	}
+
+	function setRecoveryHash(bytes32 recoveryHash)
+	external onlyOwner()
+	{
+		_recoveryHash = recoveryHash;
+	}
+
+	function setRecoveryTimer(uint256 recoveryTimer)
+	external onlyOwner()
+	{
+		_recoveryTimer = recoveryTimer;
+	}
+
+	function _execute(
+		uint256      operationType,
+		address      to,
+		uint256      value,
+		bytes memory data)
 	internal
 	{
-		recoveryLastUsage = now;
-		super._execute(_operationType, _to, _value, _data);
+		_recoveryLastUsage = now;
+		super._execute(
+			operationType,
+			to,
+			value,
+			data
+		);
 	}
 
-	function recovery(bytes memory _recovery, address _newMaster, bytes memory _initData)
+	function recovery(bytes memory recoveryKey, address newMaster, bytes memory initData)
 	public
 	{
 		// check recoverykey
-		require(recoveryHash == keccak256(_recovery), "invalid-recovery-key");
+		require(_recoveryHash == keccak256(recoveryKey), "invalid-recovery-key");
 		// check timmer
-		require(recoveryLastUsage + recoveryTimer <= now, "invalid-recovery-timmer"); // TODO: check overflow
+		require(_recoveryLastUsage + _recoveryTimer <= now, "invalid-recovery-timmer"); // TODO: check overflow
 		// call will pass ownership protection
-		this.updateMaster(_newMaster, _initData, true);
+		this.updateMaster(newMaster, initData, true);
 	}
-
-	function setRecoveryHash(bytes32 _hash)
-	external onlyOwner()
-	{
-		recoveryHash = _hash;
-	}
-
-	function setRecoveryTimer(uint256 _duration)
-	external onlyOwner()
-	{
-		recoveryTimer = _duration;
-	}
-
 }

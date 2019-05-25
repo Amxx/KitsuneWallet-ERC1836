@@ -9,7 +9,7 @@ contract MasterBase is IMaster, Core
 	function master()
 	external view returns (address)
 	{
-		return m_master;
+		return _master;
 	}
 
 	function masterId()

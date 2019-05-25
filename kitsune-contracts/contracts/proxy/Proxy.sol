@@ -5,17 +5,18 @@ import "../common/Core.sol";
 
 contract Proxy is Core
 {
-	constructor(address _master, bytes memory _initData)
+	constructor(address master, bytes memory initData)
 	public
 	{
-		setMaster(_master, _initData);
+		setMaster(master, initData);
 	}
 
 	function ()
 	external payable
 	{
-		if (m_master != address(0))
+		if (_master != address(0))
 		{
+			// solium-disable-next-line security/no-inline-assembly
 			assembly
 			{
 				let to  := and(sload(0x0), 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF) // m_master

@@ -3,12 +3,13 @@ pragma solidity ^0.5.0;
 import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
-import "../../interfaces/IERC1271.sol";
-import "../ERC725Base.sol";
 import "../MasterBase.sol";
+import "../ERC725Base.sol";
+import "../ERC721Receiver.sol";
+import "../../interfaces/IERC1271.sol";
 
 
-contract WalletOwnable is ERC725Base, MasterBase, IERC1271, Ownable
+contract WalletOwnable is MasterBase, Ownable, ERC725Base, ERC721Receiver, IERC1271
 {
 	using ECDSA for bytes32;
 
@@ -19,26 +20,26 @@ contract WalletOwnable is ERC725Base, MasterBase, IERC1271, Ownable
 		renounceOwnership();
 	}
 
-	function initialize(address _owner)
+	function initialize(address owner)
 	external onlyInitializing()
 	{
-		_transferOwnership(_owner);
+		_transferOwnership(owner);
 	}
 
-	function updateMaster(address _newMaster, bytes calldata _initData, bool _reset)
+	function updateMaster(address newMaster, bytes calldata initData, bool reset)
 	external onlyOwner()
 	{
-		if (_reset)
+		if (reset)
 		{
 			// set owner to 0
 			renounceOwnership();
 		}
-		setMaster(_newMaster, _initData);
+		setMaster(newMaster, initData);
 	}
 
-	function isValidSignature(bytes32 _data, bytes memory _signature)
+	function isValidSignature(bytes32 data, bytes memory signature)
 	public view returns (bool)
 	{
-		return owner() == _data.recover(_signature);
+		return owner() == data.recover(signature);
 	}
 }

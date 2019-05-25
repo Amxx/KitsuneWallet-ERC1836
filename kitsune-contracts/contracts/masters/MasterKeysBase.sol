@@ -3,11 +3,10 @@ pragma solidity ^0.5.0;
 import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 
 import "./ERC725Base.sol";
-import "./MasterBase.sol";
 import "../interfaces/IERC1271.sol";
 
 
-contract MasterKeysBase is ERC725Base, MasterBase, IERC1271
+contract MasterKeysBase is ERC725Base, IERC1271
 {
 	using ECDSA for bytes32;
 
@@ -15,50 +14,50 @@ contract MasterKeysBase is ERC725Base, MasterBase, IERC1271
 	bytes32 constant PURPOSE_ACTION     = 0x0000000000000000000000000000000000000000000000000000000000000002;
 	bytes32 constant PURPOSE_SIGN       = 0x0000000000000000000000000000000000000000000000000000000000000004;
 
-	mapping(bytes32 => bytes32) internal m_keyPurposes;
-	bytes32[]                   internal m_activeKeys;
-	uint256                     internal m_managementKeyCount;
-	uint256                     internal m_managementThreshold;
-	uint256                     internal m_actionThreshold;
+	mapping(bytes32 => bytes32) internal _keyPurposes;
+	bytes32[]                   internal _activeKeys;
+	uint256                     internal _managementKeyCount;
+	uint256                     internal _managementThreshold;
+	uint256                     internal _actionThreshold;
 
 	event SetKey(bytes32 indexed key, bytes32 indexed previousPurpose, bytes32 indexed newPurpose);
 	event ManagementThresholdChange(uint256 previousThreshold, uint256 newThreshold);
 	event ActionThresholdChange(uint256 previousThreshold, uint256 newThreshold);
 
 	function initialize(
-		bytes32[] memory _keys,
-		bytes32[] memory _purposes,
-		uint256          _managementThreshold,
-		uint256          _actionThreshold)
+		bytes32[] memory keys,
+		bytes32[] memory purposes,
+		uint256          managementThreshold,
+		uint256          actionThreshold)
 	public onlyInitializing()
 	{
-		require(_keys.length == _purposes.length, "key-and-purpose-array-must-have-same-size");
-		for (uint256 i = 0; i < _keys.length; ++i)
+		require(keys.length == purposes.length, "key-and-purpose-array-must-have-same-size");
+		for (uint256 i = 0; i < keys.length; ++i)
 		{
-			_setKey(_keys[i], _purposes[i]);
+			_setKey(keys[i], purposes[i]);
 		}
-		require(m_managementKeyCount >= _managementThreshold, "not-enough-management-keys");
-		m_managementThreshold = _managementThreshold;
-		m_actionThreshold     = _actionThreshold;
+		require(_managementKeyCount >= managementThreshold, "not-enough-management-keys");
+		_managementThreshold = managementThreshold;
+		_actionThreshold = actionThreshold;
 	}
 
-	function updateMaster(address _newMaster, bytes memory _initData, bool _reset)
+	function updateMaster(address newMaster, bytes memory initData, bool reset)
 	public onlyOwner()
 	{
-		if (_reset)
+		if (reset)
 		{
 			// reset memory space
-			for (uint256 i = 0; i < m_activeKeys.length; ++i)
+			for (uint256 i = 0; i < _activeKeys.length; ++i)
 			{
-				delete m_keyPurposes[m_activeKeys[i]];
+				delete _keyPurposes[_activeKeys[i]];
 			}
-			delete m_activeKeys;
-			delete m_managementKeyCount;
-			delete m_managementThreshold;
-			delete m_actionThreshold;
+			delete _activeKeys;
+			delete _managementKeyCount;
+			delete _managementThreshold;
+			delete _actionThreshold;
 		}
 		// setMaster
-		setMaster(_newMaster, _initData);
+		setMaster(newMaster, initData);
 	}
 
 	// ACCESSORS
@@ -71,101 +70,171 @@ contract MasterKeysBase is ERC725Base, MasterBase, IERC1271
 	function nonce()
 	public view returns (uint256)
 	{
-		return m_nonce;
+		return _nonce;
 	}
 
-	function managementKeyCount()
+	function getManagementKeyCount()
 	public view returns(uint256)
 	{
-		return m_managementKeyCount;
+		return _managementKeyCount;
 	}
 
-	function addrToKey(address _addr)
+	function getManagementThreshold()
+	public view returns (uint256)
+	{
+		return _managementThreshold;
+	}
+
+	function getActionThreshold()
+	public view returns (uint256)
+	{
+		return _actionThreshold;
+	}
+
+	function addrToKey(address addr)
 	public pure returns (bytes32)
 	{
-		return bytes32(uint256(_addr));
+		return bytes32(uint256(addr));
 	}
 
 	// KEYS
-	function getActiveKeys()                               public view returns (bytes32[] memory) { return m_activeKeys; }
-	function getKey       (bytes32 _key)                   public view returns (bytes32) { return m_keyPurposes[          _key ]; }
-	function getKey       (address _key)                   public view returns (bytes32) { return m_keyPurposes[addrToKey(_key)]; }
-	function keyHasPurpose(bytes32 _key, bytes32 _purpose) public view returns (bool) { return _keyHasPurpose(          _key ,         _purpose ); }
-	function keyHasPurpose(bytes32 _key, uint256 _purpose) public view returns (bool) { return _keyHasPurpose(          _key , bytes32(_purpose)); }
-	function keyHasPurpose(address _key, bytes32 _purpose) public view returns (bool) { return _keyHasPurpose(addrToKey(_key),         _purpose ); }
-	function keyHasPurpose(address _key, uint256 _purpose) public view returns (bool) { return _keyHasPurpose(addrToKey(_key), bytes32(_purpose)); }
-	function setKey       (bytes32 _key, bytes32 _purpose) public onlyOwner() { _setKey(          _key ,         _purpose ); }
-	function setKey       (bytes32 _key, uint256 _purpose) public onlyOwner() { _setKey(          _key , bytes32(_purpose)); }
-	function setKey       (address _key, bytes32 _purpose) public onlyOwner() { _setKey(addrToKey(_key),         _purpose ); }
-	function setKey       (address _key, uint256 _purpose) public onlyOwner() { _setKey(addrToKey(_key), bytes32(_purpose)); }
-
-	function _keyHasPurpose(bytes32 _key, bytes32 _purpose)
-	internal view returns (bool)
+	function getActiveKeys()
+	public view returns (bytes32[] memory)
 	{
-		return _purpose & ~m_keyPurposes[_key] == bytes32(0);
+		return _activeKeys;
 	}
 
-	function _setKey(bytes32 _key, bytes32 _purpose)
+	function getKey(bytes32 key)
+	public view returns (bytes32)
+	{
+		return _keyPurposes[key];
+	}
+
+	function getKey(address key)
+	public view returns (bytes32)
+	{
+		return _keyPurposes[addrToKey(key)];
+	}
+
+	function keyHasPurpose(bytes32 key, bytes32 purpose)
+	public view returns (bool)
+	{
+		return _keyHasPurpose(key, purpose);
+	}
+
+	function keyHasPurpose(bytes32 key, uint256 purpose)
+	public view returns (bool)
+	{
+		return _keyHasPurpose(key, bytes32(purpose));
+	}
+
+	function keyHasPurpose(address key, bytes32 purpose)
+	public view returns (bool)
+	{
+		return _keyHasPurpose(addrToKey(key), purpose);
+	}
+
+	function keyHasPurpose(address key, uint256 purpose)
+	public view returns (bool)
+	{
+		return _keyHasPurpose(addrToKey(key), bytes32(purpose));
+	}
+
+	function setKey(bytes32 key, bytes32 purpose)
+	public onlyOwner()
+	{
+		_setKey(key, purpose);
+	}
+
+	function setKey(bytes32 key, uint256 purpose)
+	public onlyOwner()
+	{
+		_setKey(key, bytes32(purpose));
+	}
+
+	function setKey(address key, bytes32 purpose)
+	public onlyOwner()
+	{
+		_setKey(addrToKey(key), purpose);
+	}
+
+	function setKey(address key, uint256 purpose)
+	public onlyOwner()
+	{
+		_setKey(addrToKey(key), bytes32(purpose));
+	}
+
+	function _keyHasPurpose(bytes32 key, bytes32 purpose)
+	internal view returns (bool)
+	{
+		return purpose & ~_keyPurposes[key] == bytes32(0);
+	}
+
+	function _setKey(bytes32 key, bytes32 purpose)
 	internal
 	{
 		// Update management key count
-		if (PURPOSE_MANAGEMENT & ~m_keyPurposes[_key] == bytes32(0) && PURPOSE_MANAGEMENT &  _purpose == bytes32(0)) { --m_managementKeyCount; }
-		if (PURPOSE_MANAGEMENT &  m_keyPurposes[_key] == bytes32(0) && PURPOSE_MANAGEMENT & ~_purpose == bytes32(0)) { ++m_managementKeyCount; }
-		require(m_managementKeyCount >= m_managementThreshold, "cannot-remove-critical-management-key");
+		if (PURPOSE_MANAGEMENT & ~_keyPurposes[key] == bytes32(0) && PURPOSE_MANAGEMENT & purpose == bytes32(0))
+		{
+			--_managementKeyCount;
+		}
+
+		if (PURPOSE_MANAGEMENT & _keyPurposes[key] == bytes32(0) && PURPOSE_MANAGEMENT & ~purpose == bytes32(0))
+		{
+			++_managementKeyCount;
+		}
+
+		require(_managementKeyCount >= _managementThreshold, "cannot-remove-critical-management-key");
 
 		// Update list of active keys (add)
-		if (m_keyPurposes[_key] == bytes32(0))
+		if (_keyPurposes[key] == bytes32(0))
 		{
-			m_activeKeys.push(_key);
+			_activeKeys.push(key);
 		}
 
 		// emit event
-		emit SetKey(_key, m_keyPurposes[_key], _purpose);
+		emit SetKey(key, _keyPurposes[key], purpose);
 
 		// Set key purpose
-		m_keyPurposes[_key] = _purpose;
+		_keyPurposes[key] = purpose;
 
 		// Update list of active keys (rem)
-		if (m_keyPurposes[_key] == bytes32(0))
+		if (_keyPurposes[key] == bytes32(0))
 		{
-			for (uint256 i = 0; i < m_activeKeys.length; ++i)
+			for (uint256 i = 0; i < _activeKeys.length; ++i)
 			{
-				if (m_activeKeys[i] == _key)
+				if (_activeKeys[i] == key)
 				{
-					m_activeKeys[i] = m_activeKeys[m_activeKeys.length - 1];
-					delete m_activeKeys[m_activeKeys.length - 1];
-					m_activeKeys.length--;
+					_activeKeys[i] = _activeKeys[_activeKeys.length - 1];
+					delete _activeKeys[_activeKeys.length - 1];
+					_activeKeys.length--;
 					break;
 				}
 			}
 		}
 	}
 
-	// MULTISIG
-	function getManagementThreshold() public view returns (uint256) { return m_managementThreshold; }
-	function getActionThreshold    () public view returns (uint256) { return m_actionThreshold;     }
-
-	function setManagementThreshold(uint256 _managementThreshold)
+	function setManagementThreshold(uint256 managementThreshold)
 	public onlyOwner()
 	{
-		require(0 != _managementThreshold, "threshold-too-low");
-		require(m_managementKeyCount >= _managementThreshold, "threshold-too-high");
-		emit ManagementThresholdChange(m_managementThreshold, _managementThreshold);
-		m_managementThreshold = _managementThreshold;
+		require(0 != managementThreshold, "threshold-too-low");
+		require(_managementKeyCount >= managementThreshold, "threshold-too-high");
+		emit ManagementThresholdChange(_managementThreshold, managementThreshold);
+		_managementThreshold = managementThreshold;
 	}
 
-	function setActionThreshold(uint256 _actionThreshold)
+	function setActionThreshold(uint256 actionThreshold)
 	public onlyOwner()
 	{
-		require(0 != _actionThreshold, "threshold-too-low");
-		emit ActionThresholdChange(m_actionThreshold, _actionThreshold);
-		m_actionThreshold = _actionThreshold;
+		require(0 != actionThreshold, "threshold-too-low");
+		emit ActionThresholdChange(_actionThreshold, actionThreshold);
+		_actionThreshold = actionThreshold;
 	}
 
 	// ERC1271 SIGNING
-	function isValidSignature(bytes32 _data, bytes memory _signature)
+	function isValidSignature(bytes32 data, bytes memory signature)
 	public view returns (bool)
 	{
-		return keyHasPurpose(addrToKey(_data.recover(_signature)), PURPOSE_SIGN);
+		return keyHasPurpose(addrToKey(data.recover(signature)), PURPOSE_SIGN);
 	}
 }

@@ -3,11 +3,10 @@ pragma solidity ^0.5.0;
 import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 
 import "./ERC725Base.sol";
-import "./MasterBase.sol";
 import "../interfaces/IERC1271.sol";
 
 
-contract MasterKeysBase is ERC725Base, MasterBase, IERC1271
+contract MasterKeysBase is ERC725Base, IERC1271
 {
 	using ECDSA for bytes32;
 

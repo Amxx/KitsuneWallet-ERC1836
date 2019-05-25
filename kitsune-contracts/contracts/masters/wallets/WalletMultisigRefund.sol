@@ -4,10 +4,12 @@ pragma experimental ABIEncoderV2;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
+import "../MasterBase.sol";
 import "../MasterKeysBase.sol";
+import "../ERC721Receiver.sol";
 
 
-contract WalletMultisigRefund is MasterKeysBase
+contract WalletMultisigRefund is MasterBase, MasterKeysBase, ERC721Receiver
 {
 	using SafeMath for uint256;
 

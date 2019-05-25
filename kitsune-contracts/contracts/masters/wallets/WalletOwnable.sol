@@ -3,12 +3,13 @@ pragma solidity ^0.5.0;
 import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
-import "../../interfaces/IERC1271.sol";
-import "../ERC725Base.sol";
 import "../MasterBase.sol";
+import "../ERC725Base.sol";
+import "../ERC721Receiver.sol";
+import "../../interfaces/IERC1271.sol";
 
 
-contract WalletOwnable is ERC725Base, MasterBase, IERC1271, Ownable
+contract WalletOwnable is MasterBase, Ownable, ERC725Base, ERC721Receiver, IERC1271
 {
 	using ECDSA for bytes32;
 

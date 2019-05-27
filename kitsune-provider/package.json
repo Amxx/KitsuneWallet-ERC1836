@@ -1,7 +1,7 @@
 {
 	"name": "@kitsune-wallet/provider",
 	"author": "Hadrien Croubois <hadrien.croubois@gmail.com>",
-	"version": "0.1.9",
+	"version": "0.1.10",
 	"license": "MIT",
 	"files": [
 		"/lib",
@@ -10,6 +10,7 @@
 	],
 	"scripts": {
 		"build": "tsc",
+		"test": "echo 'There are no tests for kitsune-provider'",
 		"clean": "rm -rf dist"
 	},
 	"dependencies": {

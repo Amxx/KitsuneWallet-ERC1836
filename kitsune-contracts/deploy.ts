@@ -35,7 +35,6 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 			options: WaffleConfig.compilerOptions,
 			git:     process.env.GIT,
 		}
-		console.log(options)
 
 		// console.log(`-------------------------------------------------`);
 		// console.log(`Master:  ${master}`);

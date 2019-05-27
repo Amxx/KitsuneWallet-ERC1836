@@ -1,7 +1,7 @@
 pragma solidity ^0.5.0;
 
-import "../interfaces/IERC725.sol";
-import "../common/Core.sol";
+import "../../interfaces/IERC725.sol";
+import "../../common/Core.sol";
 
 
 contract ERC725Base is IERC725, Core

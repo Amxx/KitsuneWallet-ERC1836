@@ -4,8 +4,8 @@ import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 import "../MasterBase.sol";
-import "../ERC725Base.sol";
-import "../ERC721Receiver.sol";
+import "../modules/ERC725Base.sol";
+import "../modules/ERC721Receiver.sol";
 import "../../interfaces/IERC1271.sol";
 
 

@@ -5,11 +5,11 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 import "../MasterBase.sol";
-import "../MasterKeysBase.sol";
-import "../ERC721Receiver.sol";
+import "../modules/Multisig.sol";
+import "../modules/ERC721Receiver.sol";
 
 
-contract WalletMultisigRefundOutOfOrder is MasterBase, MasterKeysBase, ERC721Receiver
+contract WalletMultisigRefundOutOfOrder is MasterBase, Multisig, ERC721Receiver
 {
 	using SafeMath for uint256;
 

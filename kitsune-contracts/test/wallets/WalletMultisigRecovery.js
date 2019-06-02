@@ -6,6 +6,7 @@ const { createMockProvider, deployContract, getWallets, solidity } = require('et
 const Target = require('../../build/Target');
 
 const testInitialize    = require("../fixtures/testInitialize.js");
+const testENS           = require('../fixtures/testENS');
 const testExecute       = require("../fixtures/testExecute.js");
 const testKeyManagement = require("../fixtures/testKeyManagement.js");
 const testMultisig      = require("../fixtures/testMultisig.js");
@@ -44,6 +45,7 @@ describe('WalletMultisigRecovery', () => {
 	});
 
 	testInitialize   (sdk, "WalletMultisigRecovery");
+	testENS          (sdk, "WalletMultisigRecovery");
 	testExecute      (sdk, "WalletMultisigRecovery");
 	testKeyManagement(sdk, "WalletMultisigRecovery");
 	testMultisig     (sdk, "WalletMultisigRecovery");

@@ -7,6 +7,7 @@ const Target = require('../../build/Target');
 const Token  = require('../../contracts/Token');
 
 const testInitialize    = require("../fixtures/testInitialize.js");
+const testENS           = require('../fixtures/testENS');
 const testExecute       = require("../fixtures/testExecute.js");
 const testRefund        = require("../fixtures/testRefund.js");
 const testKeyManagement = require("../fixtures/testKeyManagement.js");
@@ -62,6 +63,7 @@ describe('WalletMultisigRefund', () => {
 	});
 
 	testInitialize   (sdk, "WalletMultisigRefund");
+	testENS          (sdk, "WalletMultisigRefund");
 	testExecute      (sdk, "WalletMultisigRefund");
 	testRefund       (sdk, "WalletMultisigRefund");
 	testKeyManagement(sdk, "WalletMultisigRefund");

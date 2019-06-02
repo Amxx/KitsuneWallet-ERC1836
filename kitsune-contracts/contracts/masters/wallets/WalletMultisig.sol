@@ -3,10 +3,11 @@ pragma experimental ABIEncoderV2;
 
 import "../MasterBase.sol";
 import "../modules/Multisig.sol";
+import "../modules/ENSRegistered.sol";
 import "../modules/ERC721Receiver.sol";
 
 
-contract WalletMultisig is MasterBase, Multisig, ERC721Receiver
+contract WalletMultisig is MasterBase, Multisig, ENSRegistered, ERC721Receiver
 {
 	// This is a delegate contract, lock it
 	constructor()

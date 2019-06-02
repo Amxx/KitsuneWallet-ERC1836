@@ -7,6 +7,7 @@ const Target = require('../../build/Target');
 const Token  = require('../../contracts/Token');
 
 const testInitialize    = require("../fixtures/testInitialize.js");
+const testENS           = require('../fixtures/testENS');
 const testExecute       = require("../fixtures/testExecute.js");
 const testRefund        = require("../fixtures/testRefund.js");
 const testKeyManagement = require("../fixtures/testKeyManagement.js");
@@ -63,6 +64,7 @@ describe('WalletMultisigRefundOutOfOrder', () => {
 	});
 
 	testInitialize   (sdk, "WalletMultisigRefundOutOfOrder");
+	testENS          (sdk, "WalletMultisigRefundOutOfOrder");
 	testExecute      (sdk, "WalletMultisigRefundOutOfOrder");
 	testRefund       (sdk, "WalletMultisigRefundOutOfOrder");
 	testKeyManagement(sdk, "WalletMultisigRefundOutOfOrder");

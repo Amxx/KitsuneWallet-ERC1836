@@ -12,10 +12,10 @@ function testInitialize(sdk, name)
 		const [ wallet, relayer, user1, user2, user3 ] = getWallets(sdk.provider);
 
 		it('Verify proxy initialization', async () => {
-			expect(await proxy.owner()).to.eq(proxy.address);
-			expect(await proxy.master()).to.eq((await sdk.contracts.getActiveInstance(name)).address);
-			expect(await proxy.getManagementThreshold()).to.eq(1);
-			expect(await proxy.getActionThreshold()).to.eq(1);
+			expect(await proxy.owner()).to.be.eq(proxy.address);
+			expect(await proxy.master()).to.be.eq((await sdk.contracts.getActiveInstance(name)).address);
+			expect(await proxy.getManagementThreshold()).to.be.eq(1);
+			expect(await proxy.getActionThreshold()).to.be.eq(1);
 		});
 
 		it('reintrance protection', async () => {

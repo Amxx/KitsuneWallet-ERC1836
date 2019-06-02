@@ -14,8 +14,8 @@ function testExecute(sdk)
 		const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 
 		it('authorized - pay with proxy', async () => {
-			expect(await sdk.provider.getBalance(proxy.address)).to.eq(eth(1.0));
-			expect(await sdk.provider.getBalance(dest         )).to.eq(eth(0.0));
+			expect(await sdk.provider.getBalance(proxy.address)).to.be.eq(eth(1.0));
+			expect(await sdk.provider.getBalance(dest         )).to.be.eq(eth(0.0));
 
 			await expect(sdk.multisig.execute(
 				proxy,
@@ -27,8 +27,8 @@ function testExecute(sdk)
 				{ options: { gasLimit: 1000000 } }
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
 
-			expect(await sdk.provider.getBalance(proxy.address)).to.eq(eth(0.9));
-			expect(await sdk.provider.getBalance(dest         )).to.eq(eth(0.1));
+			expect(await sdk.provider.getBalance(proxy.address)).to.be.eq(eth(0.9));
+			expect(await sdk.provider.getBalance(dest         )).to.be.eq(eth(0.1));
 		});
 
 		it('authorized - call with proxy', async () => {
@@ -44,12 +44,12 @@ function testExecute(sdk)
 				{ options: { gasLimit: 1000000 } }
 			)).to.emit(proxy, 'CallSuccess').withArgs(targetContract.address);
 
-			expect(await targetContract._lastSender()).to.eq(proxy.address);
-			expect(await targetContract._lastData()).to.eq(randomdata);
+			expect(await targetContract._lastSender()).to.be.eq(proxy.address);
+			expect(await targetContract._lastData()).to.be.eq(randomdata);
 		});
 
 		it('protected', async () => {
-			expect(await sdk.provider.getBalance(proxy.address)).to.eq(eth(1.0));
+			expect(await sdk.provider.getBalance(proxy.address)).to.be.eq(eth(1.0));
 
 			await expect(proxy.connect(user1).execute(
 				0,
@@ -59,7 +59,7 @@ function testExecute(sdk)
 				{ gasLimit: 80000 }
 			)).to.be.revertedWith('access-denied');
 
-			expect(await sdk.provider.getBalance(proxy.address)).to.eq(eth(1.0));
+			expect(await sdk.provider.getBalance(proxy.address)).to.be.eq(eth(1.0));
 		});
 	});
 }

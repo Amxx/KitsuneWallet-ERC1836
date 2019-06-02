@@ -3,6 +3,7 @@ const ethers = require('ethers');
 const { SDK } = require('@kitsune-wallet/sdk/dist/sdk');
 const {createMockProvider, deployContract, getWallets, solidity} = require('ethereum-waffle');
 
+const withENS = require('../utils/withENS.js');
 const Target = require('../../build/Target');
 
 const {expect} = chai;
@@ -28,16 +29,60 @@ describe('WalletOwnable', () => {
 		await wallet.sendTransaction({to: proxy.address, value: eth(1.0)});
 	});
 
-	it ("Verify proxy initialization", async () => {
-		expect(await proxy.owner()).to.eq(user1.address);
-		expect(await proxy.master()).to.eq(walletContract.address);
+	describe('Initialize', async () => {
+		it('Verify proxy initialization', async () => {
+			expect(await proxy.owner()).to.be.eq(user1.address);
+			expect(await proxy.master()).to.be.eq(walletContract.address);
+		});
+
+		it('reintrance protection', async () => {
+			await expect(proxy.connect(user1).initialize(user2.address)).to.be.revertedWith('already-initialized');
+		});
 	});
+
+	describe('ENS', async () => {
+		let ensAddress       = undefined;
+		let resolverAddress  = undefined;
+		let registrarAddress = undefined;
+		let providerWithENS  = undefined;
+
+		it('ENS deployment', async () => {
+			({ ensAddress, resolverAddress, registrarAddress, providerWithENS } = await withENS(wallet));
+			expect(ensAddress).to.not.eq(undefined);
+			expect(resolverAddress).to.not.eq(undefined);
+			expect(registrarAddress).to.not.eq(undefined);
+		});
+
+		it('ENS registration', async () => {
+			const domain    = 'kitsune.eth';
+			const label     = 'proxy';
+			const hashLabel = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(label));
+			const name      = `${label}.${domain}`;
+			const node      = ethers.utils.namehash(name);
+
+			expect(await providerWithENS.resolveName(name)).to.be.eq(null);
+			expect(await providerWithENS.lookupAddress(proxy.address)).to.be.eq(null);
+
+			await expect(proxy.connect(user1).registerENS(
+				hashLabel,        /* bytes32        */
+				name,             /* string         */
+				node,             /* bytes32        */
+				ensAddress,       /* ENSRegistry    */
+				registrarAddress, /* FIFSRegistrar  */
+				resolverAddress,  /* PublicResolver */
+				{ gasLimit: 230000 }
+			)).to.not.reverted;
+
+			expect(await providerWithENS.resolveName(name)).to.be.eq(proxy.address);
+			expect(await providerWithENS.lookupAddress(proxy.address)).to.be.eq(name);
+		});
+	})
 
 	describe('Execute', async () => {
 
 		it ("authorized - pay with proxy", async () => {
-			expect(await provider.getBalance(proxy.address)).to.eq(eth(1.0));
-			expect(await provider.getBalance(dest         )).to.eq(eth(0.0));
+			expect(await provider.getBalance(proxy.address)).to.be.eq(eth(1.0));
+			expect(await provider.getBalance(dest         )).to.be.eq(eth(0.0));
 
 			await expect(proxy.connect(user1).execute(
 				0,
@@ -47,8 +92,8 @@ describe('WalletOwnable', () => {
 				{ gasLimit: 80000 }
 			)).to.emit(proxy, 'CallSuccess').withArgs(dest);
 
-			expect(await provider.getBalance(proxy.address)).to.eq(eth(0.9));
-			expect(await provider.getBalance(dest         )).to.eq(eth(0.1));
+			expect(await provider.getBalance(proxy.address)).to.be.eq(eth(0.9));
+			expect(await provider.getBalance(dest         )).to.be.eq(eth(0.1));
 		});
 
 		it ("authorized - call with proxy", async () => {
@@ -62,12 +107,12 @@ describe('WalletOwnable', () => {
 				{ gasLimit: 80000 }
 			)).to.emit(proxy, 'CallSuccess').withArgs(targetContract.address);
 
-			expect(await targetContract._lastSender()).to.eq(proxy.address);
-			expect(await targetContract._lastData()).to.eq(randomdata);
+			expect(await targetContract._lastSender()).to.be.eq(proxy.address);
+			expect(await targetContract._lastData()).to.be.eq(randomdata);
 		});
 
 		it("protected", async () => {
-			expect(await provider.getBalance(proxy.address)).to.eq(eth(1.0));
+			expect(await provider.getBalance(proxy.address)).to.be.eq(eth(1.0));
 
 			await expect(proxy.connect(user2).execute(
 				0,
@@ -77,7 +122,7 @@ describe('WalletOwnable', () => {
 				{ gasLimit: 80000 }
 			)).to.be.reverted; // onlyOwner overridden by openzeppelin's ownable
 
-			expect(await provider.getBalance(proxy.address)).to.eq(eth(1.0));
+			expect(await provider.getBalance(proxy.address)).to.be.eq(eth(1.0));
 		});
 	});
 
@@ -89,7 +134,7 @@ describe('WalletOwnable', () => {
 				{ gasLimit: 80000 }
 			)).to.emit(proxy, 'OwnershipTransferred').withArgs(user1.address, user2.address);
 
-			expect(await proxy.owner()).to.eq(user2.address);
+			expect(await proxy.owner()).to.be.eq(user2.address);
 		});
 
 		it("protected", async () => {
@@ -111,7 +156,7 @@ describe('WalletOwnable', () => {
 				{ gasLimit: 800000 }
 			)).to.emit(proxy, 'MasterChange').withArgs(walletContract.address, walletContract.address);
 
-			expect(await proxy.owner()).to.eq(user2.address);
+			expect(await proxy.owner()).to.be.eq(user2.address);
 		});
 
 		it ("protected", async () => {
@@ -124,15 +169,5 @@ describe('WalletOwnable', () => {
 		});
 
 	});
-
-	describe('Initialize', async () => {
-
-		it ("reintrance protection", async () => {
-			await expect(proxy.connect(user1).initialize(user2.address)).to.be.revertedWith('already-initialized');
-		});
-
-	});
-
-
 
 });

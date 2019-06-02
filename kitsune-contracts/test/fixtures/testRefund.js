@@ -20,9 +20,9 @@ function testRefund(sdk)
 			expect(await relayerProxy.getKey(sdk.utils.addrToKey(relayer.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 
-			expect(await sdk.provider.getBalance(proxy.address       )).to.eq(eth(1.0));
-			expect(await sdk.provider.getBalance(relayerProxy.address)).to.eq(eth(0.0));
-			expect(await sdk.provider.getBalance(dest                )).to.eq(eth(0.0));
+			expect(await sdk.provider.getBalance(proxy.address       )).to.be.eq(eth(1.0));
+			expect(await sdk.provider.getBalance(relayerProxy.address)).to.be.eq(eth(0.0));
+			expect(await sdk.provider.getBalance(dest                )).to.be.eq(eth(0.0));
 
 			await expect(sdk.multisig.execute(
 				relayerProxy,
@@ -46,13 +46,13 @@ function testRefund(sdk)
 
 			const proxyBalanceDelta        = (await sdk.provider.getBalance(proxy.address)).sub(eth(0.9));
 			const relayerProxyBalanceDelta = (await sdk.provider.getBalance(relayerProxy.address));
-			expect(proxyBalanceDelta.add(relayerProxyBalanceDelta)).to.eq(0);
+			expect(proxyBalanceDelta.add(relayerProxyBalanceDelta)).to.be.eq(0);
 
 			console.log("gas refunded:", relayerProxyBalanceDelta.div(gasPrice).toNumber());
 
-			expect(await sdk.provider.getBalance(proxy.address       )).to.eq(eth(0.9).sub(relayerProxyBalanceDelta));
-			expect(await sdk.provider.getBalance(relayerProxy.address)).to.eq(eth(0.0).add(relayerProxyBalanceDelta));
-			expect(await sdk.provider.getBalance(dest                )).to.eq(eth(0.1));
+			expect(await sdk.provider.getBalance(proxy.address       )).to.be.eq(eth(0.9).sub(relayerProxyBalanceDelta));
+			expect(await sdk.provider.getBalance(relayerProxy.address)).to.be.eq(eth(0.0).add(relayerProxyBalanceDelta));
+			expect(await sdk.provider.getBalance(dest                )).to.be.eq(eth(0.1));
 		});
 
 		it('Refund in ether - Fine Tunning', async () => {
@@ -62,8 +62,8 @@ function testRefund(sdk)
 
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 
-			expect(await sdk.provider.getBalance(proxy.address)).to.eq(eth(1.0));
-			expect(await sdk.provider.getBalance(dest         )).to.eq(eth(0.0));
+			expect(await sdk.provider.getBalance(proxy.address)).to.be.eq(eth(1.0));
+			expect(await sdk.provider.getBalance(dest         )).to.be.eq(eth(0.0));
 
 			const balanceBefore = await sdk.provider.getBalance(relayer.address);
 			const tx = await sdk.multisig.execute(
@@ -89,7 +89,7 @@ function testRefund(sdk)
 
 			expect(relayerBalanceDelta.div(gasPrice).toNumber()).to.lt(1000);
 
-			expect(await sdk.provider.getBalance(dest)).to.eq(eth(0.1));
+			expect(await sdk.provider.getBalance(dest)).to.be.eq(eth(0.1));
 		});
 
 		it('Refund in tokens', async () => {
@@ -99,10 +99,10 @@ function testRefund(sdk)
 
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
 
-			expect(await sdk.provider.getBalance(proxy.address  )).to.eq(eth(1.0));
-			expect(await sdk.provider.getBalance(dest           )).to.eq(eth(0.0));
-			expect(await tokenContract.balanceOf(proxy.address  )).to.eq(eth(1.0));
-			expect(await tokenContract.balanceOf(relayer.address)).to.eq(eth(0.0));
+			expect(await sdk.provider.getBalance(proxy.address  )).to.be.eq(eth(1.0));
+			expect(await sdk.provider.getBalance(dest           )).to.be.eq(eth(0.0));
+			expect(await tokenContract.balanceOf(proxy.address  )).to.be.eq(eth(1.0));
+			expect(await tokenContract.balanceOf(relayer.address)).to.be.eq(eth(0.0));
 
 			await expect( sdk.multisig.execute(
 				proxy,
@@ -120,14 +120,14 @@ function testRefund(sdk)
 
 			const proxyBalanceDelta   = (await tokenContract.balanceOf(proxy.address)).sub(eth(1.0));
 			const relayerBalanceDelta = (await tokenContract.balanceOf(relayer.address)).sub(eth(0.0));
-			expect(proxyBalanceDelta.add(relayerBalanceDelta)).to.eq(0);
+			expect(proxyBalanceDelta.add(relayerBalanceDelta)).to.be.eq(0);
 
 			console.log("gas refunded:", relayerBalanceDelta.div(gasPrice).toNumber());
 
-			expect(await sdk.provider.getBalance(proxy.address  )).to.eq(eth(0.9));
-			expect(await sdk.provider.getBalance(dest           )).to.eq(eth(0.1));
-			expect(await tokenContract.balanceOf(proxy.address  )).to.eq(eth(1.0).sub(relayerBalanceDelta));
-			expect(await tokenContract.balanceOf(relayer.address)).to.eq(eth(0.0).add(relayerBalanceDelta));
+			expect(await sdk.provider.getBalance(proxy.address  )).to.be.eq(eth(0.9));
+			expect(await sdk.provider.getBalance(dest           )).to.be.eq(eth(0.1));
+			expect(await tokenContract.balanceOf(proxy.address  )).to.be.eq(eth(1.0).sub(relayerBalanceDelta));
+			expect(await tokenContract.balanceOf(relayer.address)).to.be.eq(eth(0.0).add(relayerBalanceDelta));
 		});
 
 	});

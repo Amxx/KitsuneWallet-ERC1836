@@ -64,7 +64,7 @@ function testMultisig(sdk)
 
 		describe('Change management threshold', async () => {
 			it('valid', async () => {
-				expect(await proxy.getManagementThreshold()).to.eq(1);
+				expect(await proxy.getManagementThreshold()).to.be.eq(1);
 
 				await expect(sdk.multisig.setKey(
 					proxy,
@@ -85,11 +85,11 @@ function testMultisig(sdk)
 				.emit(proxy, 'CallSuccess').withArgs(proxy.address)
 				.emit(proxy, 'ManagementThresholdChange').withArgs(1, 2);
 
-				expect(await proxy.getManagementThreshold()).to.eq(2);
+				expect(await proxy.getManagementThreshold()).to.be.eq(2);
 			});
 
 			it('invalid (too low)', async () => {
-				expect(await proxy.getManagementThreshold()).to.eq(1);
+				expect(await proxy.getManagementThreshold()).to.be.eq(1);
 
 				await expect(sdk.multisig.execute(
 					proxy,
@@ -101,11 +101,11 @@ function testMultisig(sdk)
 					{ options: { gasLimit: 1000000 } },
 				)).to.emit(proxy, 'CallFailure'); //.withArgs(proxy.address, 'threshold-too-low');
 
-				expect(await proxy.getManagementThreshold()).to.eq(1);
+				expect(await proxy.getManagementThreshold()).to.be.eq(1);
 			});
 
 			it('invalid (too high)', async () => {
-				expect(await proxy.getManagementThreshold()).to.eq(1);
+				expect(await proxy.getManagementThreshold()).to.be.eq(1);
 
 				await expect(sdk.multisig.execute(
 					proxy,
@@ -117,13 +117,13 @@ function testMultisig(sdk)
 					{ options: { gasLimit: 1000000 } },
 				)).to.emit(proxy, 'CallFailure'); //.withArgs(proxy.address, 'threshold-too-high');
 
-				expect(await proxy.getManagementThreshold()).to.eq(1);
+				expect(await proxy.getManagementThreshold()).to.be.eq(1);
 			});
 		});
 
 		describe('Manage with multiple signatures', async () => {
 			it('valid', async () => {
-				expect(await proxy.getManagementThreshold()).to.eq(1);
+				expect(await proxy.getManagementThreshold()).to.be.eq(1);
 
 				await expect(sdk.multisig.setKey(
 					proxy,
@@ -157,11 +157,11 @@ function testMultisig(sdk)
 				.emit(proxy, 'CallSuccess').withArgs(proxy.address)
 				.emit(proxy, 'ManagementThresholdChange').withArgs(2, 1);
 
-				expect(await proxy.getManagementThreshold()).to.eq(1);
+				expect(await proxy.getManagementThreshold()).to.be.eq(1);
 			});
 
 			it('invalid', async () => {
-				expect(await proxy.getManagementThreshold()).to.eq(1);
+				expect(await proxy.getManagementThreshold()).to.be.eq(1);
 
 				await expect(sdk.multisig.setKey(
 					proxy,
@@ -193,13 +193,13 @@ function testMultisig(sdk)
 					{ options: { gasLimit: 1000000 } },
 				)).to.be.revertedWith('missing-signers');
 
-				expect(await proxy.getManagementThreshold()).to.eq(2);
+				expect(await proxy.getManagementThreshold()).to.be.eq(2);
 			});
 		});
 
 		describe('Change execution threshold', async () => {
 			it('valid', async () => {
-				expect(await proxy.getActionThreshold()).to.eq(1);
+				expect(await proxy.getActionThreshold()).to.be.eq(1);
 
 				await expect(sdk.multisig.execute(
 					proxy,
@@ -213,11 +213,11 @@ function testMultisig(sdk)
 				.emit(proxy, 'CallSuccess').withArgs(proxy.address)
 				.emit(proxy, 'ActionThresholdChange').withArgs(1, 2);
 
-				expect(await proxy.getActionThreshold()).to.eq(2);
+				expect(await proxy.getActionThreshold()).to.be.eq(2);
 			});
 
 			it('invalid', async () => {
-				expect(await proxy.getActionThreshold()).to.eq(1);
+				expect(await proxy.getActionThreshold()).to.be.eq(1);
 
 				await expect(sdk.multisig.execute(
 					proxy,
@@ -229,7 +229,7 @@ function testMultisig(sdk)
 					{ options: { gasLimit: 1000000 } },
 				)).to.emit(proxy, 'CallFailure'); //.withArgs(proxy.address, 'threshold-too-low');
 
-				expect(await proxy.getActionThreshold()).to.eq(1);
+				expect(await proxy.getActionThreshold()).to.be.eq(1);
 			});
 		});
 

@@ -7,7 +7,7 @@ import "../masters/IMaster.sol";
 contract Core is Store
 {
 	// Events
-	event MasterChange(address indexed previousMaster, address indexed newMaster);
+	event ImplementationChange(address indexed previousImplementation, address indexed newImplementation);
 
 	// Constants
 	bytes32 constant MASTER_ID = bytes32(0x1618fcec65bce0693e931d337fc12424ee920bf56c4a74bc8ddb1361328af236); // keccak256("ERC1836_MASTER_ID")
@@ -21,22 +21,22 @@ contract Core is Store
 	}
 
 	// Internal functions
-	function setMaster(address newMaster, bytes memory initData)
+	function setImplementation(address newImplementation, bytes memory initializationData)
 	internal
 	{
-		require(IMaster(newMaster).masterId() == MASTER_ID, "invalid-master-uuid");
+		require(IMaster(newImplementation).implementationId() == MASTER_ID, "invalid-implementation-id");
 
-		// Update master pointer
-		emit MasterChange(_master, newMaster);
-		_master = newMaster;
+		// Update _implementation pointer
+		emit ImplementationChange(_implementation, newImplementation);
+		_implementation = newImplementation;
 
-		// Allows the run of an initialization method in the new master.
+		// Allows the run of an initialization method in the new implementation.
 		// Will be reset to true by the initialization modifier of the initialize methode.
 		_initialized = false;
 
-		// Call the initialize method in the new master
+		// Call the initialize method in the new implementation
 		// solium-disable-next-line security/no-low-level-calls
-		(bool success, /*bytes memory returndata*/) = newMaster.delegatecall(initData);
+		(bool success, /*bytes memory returndata*/) = newImplementation.delegatecall(initializationData);
 		require(success, "failed-to-initialize");
 	}
 }

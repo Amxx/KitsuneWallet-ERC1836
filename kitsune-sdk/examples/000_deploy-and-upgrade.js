@@ -29,18 +29,18 @@ ethers.errors.setLogLevel('error');
 
 		proxy = await sdk.contracts.deployProxy("WalletOwnable", [ user1.address ], { deploy: { enable: true } });
 
-		console.log(`proxy    : ${proxy.address}`         );
-		console.log(`master   : ${await proxy.master()}`  );
-		console.log(`masterId : ${await proxy.masterId()}`);
-		console.log(`owner    : ${await proxy.owner()}`   );
+		console.log(`proxy            : ${proxy.address}`         );
+		console.log(`implementation   : ${await proxy.implementation()}`  );
+		console.log(`implementationId : ${await proxy.implementationId()}`);
+		console.log(`owner            : ${await proxy.owner()}`   );
 		console.log("");
 	}
 
-	// ----------------- master: WalletOwnable → WalletMultisig -----------------
+	// --------------------- WalletOwnable → WalletMultisig ---------------------
 	{
 		console.log("\nUpdating proxy: WalletOwnable → WalletMultisig\n");
 
-		let updateMasterTx = sdk.transactions.updateMaster(
+		let updateMasterTx = sdk.transactions.updateImplementation(
 			"WalletMultisig",
 			sdk.transactions.initialization(
 				"WalletMultisig",
@@ -62,20 +62,20 @@ ethers.errors.setLogLevel('error');
 
 		proxy = sdk.contracts.viewContract("WalletMultisig", proxy.address);
 
-		console.log(`proxy      : ${proxy.address}`         );
-		console.log(`master     : ${await proxy.master()}`  );
-		console.log(`masterId   : ${await proxy.masterId()}`);
-		console.log(`owner      : ${await proxy.owner()}`   );
-		console.log(`getKey(U1) : ${await proxy.functions['getKey(address)'](user1.address)}`);
-		console.log(`getKey(U2) : ${await proxy.functions['getKey(address)'](user2.address)}`);
-		console.log(`getKey(U3) : ${await proxy.functions['getKey(address)'](user3.address)}`);
+		console.log(`proxy             : ${proxy.address}`                );
+		console.log(`implementation   : ${await proxy.implementation()}`  );
+		console.log(`implementationId : ${await proxy.implementationId()}`);
+		console.log(`owner            : ${await proxy.owner()}`           );
+		console.log(`getKey(U1)       : ${await proxy.functions['getKey(address)'](user1.address)}`);
+		console.log(`getKey(U2)       : ${await proxy.functions['getKey(address)'](user2.address)}`);
+		console.log(`getKey(U3)       : ${await proxy.functions['getKey(address)'](user3.address)}`);
 	}
 
-	// -------- master: WalletMultisig → WalletMultisigRefundOutOfOrder ---------
+	// ------------ WalletMultisig → WalletMultisigRefundOutOfOrder -------------
 	{
 		console.log("\nUpdating proxy: WalletMultisig → WalletMultisigRefundOutOfOrder\n");
 
-		let updateMasterTx = await sdk.transactions.updateMaster(
+		let updateMasterTx = await sdk.transactions.updateImplementation(
 			"WalletMultisigRefundOutOfOrder",
 			"0x",
 			{ deploy: { enable: true } }
@@ -90,13 +90,13 @@ ethers.errors.setLogLevel('error');
 
 		proxy = sdk.contracts.viewContract("WalletMultisigRefundOutOfOrder", proxy.address);
 
-		console.log(`proxy      : ${proxy.address}`         );
-		console.log(`master     : ${await proxy.master()}`  );
-		console.log(`masterId   : ${await proxy.masterId()}`);
-		console.log(`owner      : ${await proxy.owner()}`   );
-		console.log(`getKey(U1) : ${await proxy.functions['getKey(address)'](user1.address)}`);
-		console.log(`getKey(U2) : ${await proxy.functions['getKey(address)'](user2.address)}`);
-		console.log(`getKey(U3) : ${await proxy.functions['getKey(address)'](user3.address)}`);
+		console.log(`proxy             : ${proxy.address}`                );
+		console.log(`implementation   : ${await proxy.implementation()}`  );
+		console.log(`implementationId : ${await proxy.implementationId()}`);
+		console.log(`owner            : ${await proxy.owner()}`           );
+		console.log(`getKey(U1)       : ${await proxy.functions['getKey(address)'](user1.address)}`);
+		console.log(`getKey(U2)       : ${await proxy.functions['getKey(address)'](user2.address)}`);
+		console.log(`getKey(U3)       : ${await proxy.functions['getKey(address)'](user3.address)}`);
 	}
 
 })();

@@ -41,7 +41,7 @@ contract Multisig is ERC725Base, IERC1271
 		_actionThreshold = actionThreshold;
 	}
 
-	function updateMaster(address newMaster, bytes memory initData, bool reset)
+	function updateImplementation(address newImplementation, bytes memory initializationData, bool reset)
 	public onlyOwner()
 	{
 		if (reset)
@@ -56,8 +56,7 @@ contract Multisig is ERC725Base, IERC1271
 			delete _managementThreshold;
 			delete _actionThreshold;
 		}
-		// setMaster
-		setMaster(newMaster, initData);
+		setImplementation(newImplementation, initializationData);
 	}
 
 	// ACCESSORS

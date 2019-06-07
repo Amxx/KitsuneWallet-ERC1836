@@ -4,7 +4,7 @@ pragma solidity ^0.5.0;
 contract Store
 {
 	// Storage for Upgradability
-	address                     internal _master;
+	address                     internal _implementation;
 	bool                        internal _initialized;
 	// Generic store
 	uint256                     internal _nonce;

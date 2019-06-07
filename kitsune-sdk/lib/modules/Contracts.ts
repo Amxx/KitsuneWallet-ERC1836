@@ -106,13 +106,13 @@ export class Contracts extends ModuleBase
 		config:  types.config = {},
 	) : Promise<types.contract> {
 		return new Promise((resolve, reject) => {
-			this.sdk.transactions.updateMaster(
+			this.sdk.transactions.updateImplementation(
 				name,
 				args ? this.sdk.transactions.initialization(name, args) : "0x",
 				config
 			)
-			.then((initData: types.ethereum.bytes) => {
-				execute(proxy, { to: proxy.address, data: initData }, config)
+			.then((initializationData: types.ethereum.bytes) => {
+				execute(proxy, { to: proxy.address, data: initializationData }, config)
 				.then(() => {
 					proxy = this.viewContract(name, proxy.address);
 					resolve(proxy);

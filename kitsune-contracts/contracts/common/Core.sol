@@ -1,16 +1,17 @@
 pragma solidity ^0.5.0;
 
 import "./Store.sol";
-import "../masters/IMaster.sol";
+import "./ITyped.sol";
 
 
-contract Core is Store
+contract Core is Store, ITyped
 {
 	// Events
 	event ImplementationChange(address indexed previousImplementation, address indexed newImplementation);
 
 	// Constants
-	bytes32 constant MASTER_ID = bytes32(0x1618fcec65bce0693e931d337fc12424ee920bf56c4a74bc8ddb1361328af236); // keccak256("ERC1836_MASTER_ID")
+	bytes32 constant PROXY_ID          = bytes32(0x4c43adc484b2c8f92ea203bb6f9dadab93aa087ceb311e900447f1d79f93b824); // keccak256("ERC1836_PROXY_ID")
+	bytes32 constant IMPLEMENTATION_ID = bytes32(0x45dfc21fadc203f5400175cdf9926209cce1c778ede6ea4469f55f63233cac98); // keccak256("ERC1836_IMPLEMENTATION_ID")
 
 	// Modifiers
 	modifier onlyInitializing()
@@ -24,7 +25,7 @@ contract Core is Store
 	function setImplementation(address newImplementation, bytes memory initializationData)
 	internal
 	{
-		require(IMaster(newImplementation).implementationId() == MASTER_ID, "invalid-implementation-id");
+		require(ITyped(newImplementation).contractType() == IMPLEMENTATION_ID, "invalid-implementation-id");
 
 		// Update _implementation pointer
 		emit ImplementationChange(_implementation, newImplementation);

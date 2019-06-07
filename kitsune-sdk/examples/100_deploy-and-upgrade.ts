@@ -16,10 +16,10 @@ ethers.errors.setLogLevel('error');
 		[ wallet.address ],
 		{ deploy: { enable: true } }
 	);
-	console.log(`proxy            : ${proxy.address}`                 );
-	console.log(`implementation   : ${await proxy.implementation()}`  );
-	console.log(`implementationId : ${await proxy.implementationId()}`);
-	console.log(`owner            : ${await proxy.owner()}`           );
+	console.log(`proxy          : ${proxy.address}`               );
+	console.log(`implementation : ${await proxy.implementation()}`);
+	console.log(`contractType   : ${await proxy.contractType()}`  );
+	console.log(`owner          : ${await proxy.owner()}`         );
 	console.log("");
 
 	proxy = await sdk.contracts.upgradeProxy(
@@ -35,11 +35,11 @@ ethers.errors.setLogLevel('error');
 		{ deploy: { enable: true }, options: { gasLimit: 1000000 } }
 	);
 
-	console.log(`proxy            : ${proxy.address}`                 );
-	console.log(`implementation   : ${await proxy.implementation()}`  );
-	console.log(`implementationId : ${await proxy.implementationId()}`);
-	console.log(`owner            : ${await proxy.owner()}`           );
-	console.log(`getKey(U1)       : ${await proxy.functions['getKey(address)'](wallet.address)}`);
+	console.log(`proxy          : ${proxy.address}`               );
+	console.log(`implementation : ${await proxy.implementation()}`);
+	console.log(`contractType   : ${await proxy.contractType()}`  );
+	console.log(`owner          : ${await proxy.owner()}`         );
+	console.log(`getKey(U1)     : ${await proxy.functions['getKey(address)'](wallet.address)}`);
 	console.log("");
 
 
@@ -51,11 +51,11 @@ ethers.errors.setLogLevel('error');
 		{ deploy: { enable: true }, options: { gasLimit: 1000000 } }
 	);
 
-	console.log(`proxy            : ${proxy.address}`                 );
-	console.log(`implementation   : ${await proxy.implementation()}`  );
-	console.log(`implementationId : ${await proxy.implementationId()}`);
-	console.log(`owner            : ${await proxy.owner()}`           );
-	console.log(`getKey(U1)       : ${await proxy.functions['getKey(address)'](wallet.address)}`);
+	console.log(`proxy          : ${proxy.address}`               );
+	console.log(`implementation : ${await proxy.implementation()}`);
+	console.log(`contractType   : ${await proxy.contractType()}`  );
+	console.log(`owner          : ${await proxy.owner()}`         );
+	console.log(`getKey(U1)     : ${await proxy.functions['getKey(address)'](wallet.address)}`);
 	console.log("");
 
 })();

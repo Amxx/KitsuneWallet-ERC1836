@@ -25,5 +25,5 @@ contract MasterBase is Core, IERC897
 	}
 
 	function updateImplementation(address,bytes calldata,bool)
-	external;
+		external;
 }

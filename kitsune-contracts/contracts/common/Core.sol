@@ -10,8 +10,11 @@ contract Core is Store, ITyped
 	event ImplementationChange(address indexed previousImplementation, address indexed newImplementation);
 
 	// Constants
-	bytes32 constant PROXY_ID          = bytes32(0x4c43adc484b2c8f92ea203bb6f9dadab93aa087ceb311e900447f1d79f93b824); // keccak256("ERC1836_PROXY_ID")
-	bytes32 constant IMPLEMENTATION_ID = bytes32(0x45dfc21fadc203f5400175cdf9926209cce1c778ede6ea4469f55f63233cac98); // keccak256("ERC1836_IMPLEMENTATION_ID")
+
+	// keccak256("ERC1836_PROXY_ID")
+	bytes32 constant PROXY_ID = bytes32(0x4c43adc484b2c8f92ea203bb6f9dadab93aa087ceb311e900447f1d79f93b824);
+	// keccak256("ERC1836_IMPLEMENTATION_ID")
+	bytes32 constant IMPLEMENTATION_ID = bytes32(0x45dfc21fadc203f5400175cdf9926209cce1c778ede6ea4469f55f63233cac98);
 
 	// Modifiers
 	modifier onlyInitializing()

@@ -1,11 +1,10 @@
 pragma solidity ^0.5.0;
 
-import "./IMaster.sol";
 import "../interfaces/IERC897.sol";
 import "../common/Core.sol";
 
 
-contract MasterBase is IMaster, IERC897, Core
+contract MasterBase is Core, IERC897
 {
 	function implementation()
 	external view returns (address)
@@ -13,10 +12,10 @@ contract MasterBase is IMaster, IERC897, Core
 		return _implementation;
 	}
 
-	function implementationId()
+	function contractType()
 	external pure returns (bytes32)
 	{
-		return MASTER_ID;
+		return IMPLEMENTATION_ID;
 	}
 
 	function proxyType()
@@ -24,4 +23,7 @@ contract MasterBase is IMaster, IERC897, Core
 	{
 		return 2;
 	}
+
+	function updateImplementation(address,bytes calldata,bool)
+	external;
 }

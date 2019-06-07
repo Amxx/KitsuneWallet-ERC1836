@@ -5,10 +5,16 @@ import "../common/Core.sol";
 
 contract Proxy is Core
 {
-	constructor(address implementation, bytes memory initData)
+	constructor(address implementation, bytes memory initializationData)
 	public
 	{
-		setImplementation(implementation, initData);
+		setImplementation(implementation, initializationData);
+	}
+
+	function contractType()
+	external pure returns (bytes32)
+	{
+		return PROXY_ID;
 	}
 
 	function ()

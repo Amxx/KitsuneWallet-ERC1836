@@ -32,7 +32,7 @@ describe('WalletOwnable', () => {
 	describe('Initialize', async () => {
 		it('Verify proxy initialization', async () => {
 			expect(await proxy.owner()).to.be.eq(user1.address);
-			expect(await proxy.master()).to.be.eq(walletContract.address);
+			expect(await proxy.implementation()).to.be.eq(walletContract.address);
 		});
 
 		it('reintrance protection', async () => {
@@ -149,18 +149,18 @@ describe('WalletOwnable', () => {
 	describe('UpdateMaster', async () => {
 
 		it("authorized", async () => {
-			await expect(proxy.connect(user1).updateMaster(
+			await expect(proxy.connect(user1).updateImplementation(
 				walletContract.address,
 				sdk.transactions.initialization("WalletOwnable", [ user2.address ]),
 				true,
 				{ gasLimit: 800000 }
-			)).to.emit(proxy, 'MasterChange').withArgs(walletContract.address, walletContract.address);
+			)).to.emit(proxy, 'ImplementationChange').withArgs(walletContract.address, walletContract.address);
 
 			expect(await proxy.owner()).to.be.eq(user2.address);
 		});
 
 		it ("protected", async () => {
-			await expect(proxy.connect(user2).updateMaster(
+			await expect(proxy.connect(user2).updateImplementation(
 				walletContract.address,
 				sdk.transactions.initialization("WalletOwnable", [ user2.address ]),
 				true,

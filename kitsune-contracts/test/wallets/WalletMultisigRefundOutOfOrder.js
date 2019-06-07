@@ -6,14 +6,14 @@ const { createMockProvider, deployContract, getWallets, solidity } = require('et
 const Target = require('../../build/Target');
 const Token  = require('../../contracts/Token');
 
-const testInitialize    = require("../fixtures/testInitialize.js");
-const testENS           = require('../fixtures/testENS');
-const testExecute       = require("../fixtures/testExecute.js");
-const testRefund        = require("../fixtures/testRefund.js");
-const testKeyManagement = require("../fixtures/testKeyManagement.js");
-const testMultisig      = require("../fixtures/testMultisig.js");
-const testOutOfOrder    = require("../fixtures/testOutOfOrder.js");
-const testUpdateMaster  = require("../fixtures/testUpdateMaster.js");
+const testInitialize           = require("../fixtures/testInitialize.js");
+const testENS                  = require('../fixtures/testENS');
+const testExecute              = require("../fixtures/testExecute.js");
+const testRefund               = require("../fixtures/testRefund.js");
+const testKeyManagement        = require("../fixtures/testKeyManagement.js");
+const testMultisig             = require("../fixtures/testMultisig.js");
+const testOutOfOrder           = require("../fixtures/testOutOfOrder.js");
+const testUpdateImplementation = require("../fixtures/testUpdateImplementation.js");
 
 ethers.errors.setLogLevel('error');
 
@@ -63,13 +63,13 @@ describe('WalletMultisigRefundOutOfOrder', () => {
 		await tokenContract.connect(wallet).transfer(proxy.address, eth(1));
 	});
 
-	testInitialize   (sdk, "WalletMultisigRefundOutOfOrder");
-	testENS          (sdk, "WalletMultisigRefundOutOfOrder");
-	testExecute      (sdk, "WalletMultisigRefundOutOfOrder");
-	testRefund       (sdk, "WalletMultisigRefundOutOfOrder");
-	testKeyManagement(sdk, "WalletMultisigRefundOutOfOrder");
-	testOutOfOrder   (sdk, "WalletMultisigRefundOutOfOrder");
-	testMultisig     (sdk, "WalletMultisigRefundOutOfOrder");
-	testUpdateMaster (sdk, "WalletMultisigRefundOutOfOrder");
+	testInitialize          (sdk, "WalletMultisigRefundOutOfOrder");
+	testENS                 (sdk, "WalletMultisigRefundOutOfOrder");
+	testExecute             (sdk, "WalletMultisigRefundOutOfOrder");
+	testRefund              (sdk, "WalletMultisigRefundOutOfOrder");
+	testKeyManagement       (sdk, "WalletMultisigRefundOutOfOrder");
+	testOutOfOrder          (sdk, "WalletMultisigRefundOutOfOrder");
+	testMultisig            (sdk, "WalletMultisigRefundOutOfOrder");
+	testUpdateImplementation(sdk, "WalletMultisigRefundOutOfOrder");
 
 });

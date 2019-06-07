@@ -12,7 +12,7 @@ export class Transactions extends ModuleBase
 		return new ethers.utils.Interface(this.sdk.ABIS[name].abi).functions.initialize.encode(args);
 	}
 
-	updateMaster(
+	updateImplementation(
 		name: string,
 		data: types.ethereum.bytes,
 		config: types.config = {},
@@ -20,7 +20,7 @@ export class Transactions extends ModuleBase
 		return new Promise((resolve, reject) => {
 			this.sdk.contracts.getActiveInstance(name, config)
 			.then((instance: types.contract) => {
-				resolve(new ethers.utils.Interface(this.sdk.ABIS.IMaster.abi).functions.updateMaster.encode([
+				resolve(new ethers.utils.Interface(this.sdk.ABIS.IMaster.abi).functions.updateImplementation.encode([
 					instance.address,
 					data,
 					(config.migration !== undefined && config.migration.reset !== undefined) ? config.migration.reset : data !== "0x",

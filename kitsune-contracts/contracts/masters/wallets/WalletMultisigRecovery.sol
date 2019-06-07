@@ -40,23 +40,23 @@ contract WalletMultisigRecovery is WalletMultisig, Recovery
 		);
 	}
 
-	function updateMaster(address newMaster, bytes memory initData, bool reset)
+	function updateImplementation(address newImplementation, bytes memory initializationData, bool reset)
 	public onlyOwner()
 	{
 		if (reset)
 		{
 			_resetRecovery();
 		}
-		super.updateMaster(
-			newMaster,
-			initData,
+		super.updateImplementation(
+			newImplementation,
+			initializationData,
 			reset
 		);
 	}
 
-	function recovery(bytes memory recoveryKey, address newMaster, bytes memory initData)
+	function recovery(bytes memory recoveryKey, address newImplementation, bytes memory initializationData)
 	public onlyRecovery(recoveryKey)
 	{
-		this.updateMaster(newMaster, initData, true);
+		this.updateImplementation(newImplementation, initializationData, true);
 	}
 }

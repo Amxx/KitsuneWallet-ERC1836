@@ -6,13 +6,13 @@ const { createMockProvider, deployContract, getWallets, solidity } = require('et
 const Target = require('../../build/Target');
 const Token  = require('../../contracts/Token');
 
-const testInitialize    = require("../fixtures/testInitialize.js");
-const testENS           = require('../fixtures/testENS');
-const testExecute       = require("../fixtures/testExecute.js");
-const testRefund        = require("../fixtures/testRefund.js");
-const testKeyManagement = require("../fixtures/testKeyManagement.js");
-const testMultisig      = require("../fixtures/testMultisig.js");
-const testUpdateMaster  = require("../fixtures/testUpdateMaster.js");
+const testInitialize           = require("../fixtures/testInitialize.js");
+const testENS                  = require('../fixtures/testENS');
+const testExecute              = require("../fixtures/testExecute.js");
+const testRefund               = require("../fixtures/testRefund.js");
+const testKeyManagement        = require("../fixtures/testKeyManagement.js");
+const testMultisig             = require("../fixtures/testMultisig.js");
+const testUpdateImplementation = require("../fixtures/testUpdateImplementation.js");
 
 ethers.errors.setLogLevel('error');
 
@@ -62,12 +62,12 @@ describe('WalletMultisigRefund', () => {
 		await tokenContract.connect(wallet).transfer(proxy.address, eth(1));
 	});
 
-	testInitialize   (sdk, "WalletMultisigRefund");
-	testENS          (sdk, "WalletMultisigRefund");
-	testExecute      (sdk, "WalletMultisigRefund");
-	testRefund       (sdk, "WalletMultisigRefund");
-	testKeyManagement(sdk, "WalletMultisigRefund");
-	testMultisig     (sdk, "WalletMultisigRefund");
-	testUpdateMaster (sdk, "WalletMultisigRefund");
+	testInitialize          (sdk, "WalletMultisigRefund");
+	testENS                 (sdk, "WalletMultisigRefund");
+	testExecute             (sdk, "WalletMultisigRefund");
+	testRefund              (sdk, "WalletMultisigRefund");
+	testKeyManagement       (sdk, "WalletMultisigRefund");
+	testMultisig            (sdk, "WalletMultisigRefund");
+	testUpdateImplementation(sdk, "WalletMultisigRefund");
 
 });

@@ -1,20 +1,27 @@
 pragma solidity ^0.5.0;
 
 import "./IMaster.sol";
+import "../interfaces/IERC897.sol";
 import "../common/Core.sol";
 
 
-contract MasterBase is IMaster, Core
+contract MasterBase is IMaster, IERC897, Core
 {
-	function master()
+	function implementation()
 	external view returns (address)
 	{
-		return _master;
+		return _implementation;
 	}
 
-	function masterId()
+	function implementationId()
 	external pure returns (bytes32)
 	{
 		return MASTER_ID;
+	}
+
+	function proxyType()
+	external pure returns (uint256)
+	{
+		return 2;
 	}
 }

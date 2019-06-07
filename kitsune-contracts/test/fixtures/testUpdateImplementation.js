@@ -5,9 +5,9 @@ const {getWallets, solidity} = require('ethereum-waffle');
 const {expect} = chai;
 chai.use(solidity);
 
-function testUpdateMaster(sdk, name)
+function testUpdateImplementation(sdk, name)
 {
-	describe('UpdateMaster', async () => {
+	describe('UpdateImplementation', async () => {
 		const [ wallet, relayer, user1, user2, user3 ] = getWallets(sdk.provider);
 		const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 
@@ -23,7 +23,7 @@ function testUpdateMaster(sdk, name)
 				[ user1 ],
 				{
 					to: proxy.address,
-					data: await sdk.transactions.updateMaster(
+					data: await sdk.transactions.updateImplementation(
 						name,
 						sdk.transactions.initialization(
 							name,
@@ -39,7 +39,7 @@ function testUpdateMaster(sdk, name)
 				{ options: { gasLimit: 1000000 } },
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
-			.emit(proxy, 'MasterChange').withArgs(masterAddress, masterAddress);
+			.emit(proxy, 'ImplementationChange').withArgs(masterAddress, masterAddress);
 
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');
@@ -76,7 +76,7 @@ function testUpdateMaster(sdk, name)
 				0,
 				proxy.address,
 				0,
-				await sdk.transactions.updateMaster(
+				await sdk.transactions.updateImplementation(
 					name,
 					sdk.transactions.initialization(
 						name,
@@ -94,4 +94,4 @@ function testUpdateMaster(sdk, name)
 	});
 }
 
-module.exports = testUpdateMaster;
+module.exports = testUpdateImplementation;

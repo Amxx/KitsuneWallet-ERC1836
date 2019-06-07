@@ -27,7 +27,7 @@ contract WalletOwnable is MasterBase, Ownable, ERC725Base, ENSRegistered, ERC721
 		_transferOwnership(owner);
 	}
 
-	function updateMaster(address newMaster, bytes calldata initData, bool reset)
+	function updateImplementation(address newImplementation, bytes calldata initializationData, bool reset)
 	external onlyOwner()
 	{
 		if (reset)
@@ -35,7 +35,7 @@ contract WalletOwnable is MasterBase, Ownable, ERC725Base, ENSRegistered, ERC721
 			// set owner to 0
 			renounceOwnership();
 		}
-		setMaster(newMaster, initData);
+		setImplementation(newImplementation, initializationData);
 	}
 
 	function isValidSignature(bytes32 data, bytes memory signature)

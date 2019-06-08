@@ -1,4 +1,4 @@
-import MasterBase                     from '@kitsune-wallet/contracts/build/MasterBase.json';
+import IMaster                        from '@kitsune-wallet/contracts/build/IMaster.json';
 import Proxy                          from '@kitsune-wallet/contracts/build/Proxy.json';
 import WalletOwnable                  from '@kitsune-wallet/contracts/build/WalletOwnable.json';
 import WalletMultisig                 from '@kitsune-wallet/contracts/build/WalletMultisig.json';
@@ -7,7 +7,7 @@ import WalletMultisigRefundOutOfOrder from '@kitsune-wallet/contracts/build/Wall
 import WalletMultisigRecovery         from '@kitsune-wallet/contracts/build/WalletMultisigRecovery.json';
 
 export {
-	MasterBase
+	IMaster
 ,	Proxy
 ,	WalletOwnable
 ,	WalletMultisig

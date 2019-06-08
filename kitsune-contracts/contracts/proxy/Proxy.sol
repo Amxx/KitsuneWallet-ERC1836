@@ -11,12 +11,6 @@ contract Proxy is Core
 		setImplementation(implementation, initializationData);
 	}
 
-	function selector()
-	external pure returns (bytes4)
-	{
-		return PROXY_SELECTOR;
-	}
-
 	function ()
 	external payable
 	{

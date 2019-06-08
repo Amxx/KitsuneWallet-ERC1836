@@ -1,10 +1,11 @@
 pragma solidity ^0.5.0;
 
 import "./Store.sol";
-import "./ITyped.sol";
+import "../interfaces/IERC897.sol";
+import "../interfaces/ITyped.sol";
 
 
-contract Core is Store, ITyped
+contract Core is Store
 {
 	// Events
 	event ImplementationChange(address indexed previousImplementation, address indexed newImplementation);
@@ -25,7 +26,8 @@ contract Core is Store, ITyped
 	function setImplementation(address newImplementation, bytes memory initializationData)
 	internal
 	{
-		require(ITyped(newImplementation).selector() == MASTER_SELECTOR, "invalid-implementation-selector");
+		require(ITyped(newImplementation).selector() == MASTER_SELECTOR, "invalid-master-selector");
+		require(IERC897(newImplementation).implementation() == address(0), "invalid-master-implementation");
 
 		// Update _implementation pointer
 		emit ImplementationChange(_implementation, newImplementation);

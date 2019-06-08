@@ -35,7 +35,7 @@ describe('ContractType', () => {
 			await expect(sdk.contracts.deployContract("Proxy", [
 				proxy.address,
 				sdk.transactions.initialization("WalletOwnable", [ user1.address ])
-			])).to.be.revertedWith("invalid-implementation-selector");
+			])).to.be.revertedWith("invalid-master-implementation");
 		});
 
 		it('Cant upgrade a proxy to use itself', async () => {
@@ -44,7 +44,7 @@ describe('ContractType', () => {
 				sdk.transactions.initialization("WalletOwnable", [ user2.address ]),
 				true,
 				{ gasLimit: 800000 }
-			)).to.be.revertedWith("invalid-implementation-selector");
+			)).to.be.revertedWith("invalid-master-implementation");
 		});
 
 	});

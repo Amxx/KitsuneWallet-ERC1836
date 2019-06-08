@@ -18,7 +18,7 @@ ethers.errors.setLogLevel('error');
 	);
 	console.log(`proxy          : ${proxy.address}`               );
 	console.log(`implementation : ${await proxy.implementation()}`);
-	console.log(`contractType   : ${await proxy.contractType()}`  );
+	console.log(`selector       : ${await proxy.selector()}`      );
 	console.log(`owner          : ${await proxy.owner()}`         );
 	console.log("");
 
@@ -37,7 +37,7 @@ ethers.errors.setLogLevel('error');
 
 	console.log(`proxy          : ${proxy.address}`               );
 	console.log(`implementation : ${await proxy.implementation()}`);
-	console.log(`contractType   : ${await proxy.contractType()}`  );
+	console.log(`selector       : ${await proxy.selector()}`      );
 	console.log(`owner          : ${await proxy.owner()}`         );
 	console.log(`getKey(U1)     : ${await proxy.functions['getKey(address)'](wallet.address)}`);
 	console.log("");
@@ -53,7 +53,7 @@ ethers.errors.setLogLevel('error');
 
 	console.log(`proxy          : ${proxy.address}`               );
 	console.log(`implementation : ${await proxy.implementation()}`);
-	console.log(`contractType   : ${await proxy.contractType()}`  );
+	console.log(`selector       : ${await proxy.selector()}`      );
 	console.log(`owner          : ${await proxy.owner()}`         );
 	console.log(`getKey(U1)     : ${await proxy.functions['getKey(address)'](wallet.address)}`);
 	console.log("");

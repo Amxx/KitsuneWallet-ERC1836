@@ -15,7 +15,7 @@
 		"clean": "rm -rf dist"
 	},
 	"dependencies": {
-		"@kitsune-wallet/contracts": "^0.1.0"
+		"@kitsune-wallet/contracts": "^0.2.1"
 	},
 	"devDependencies": {
 		"ethereum-waffle": "2.0.10",

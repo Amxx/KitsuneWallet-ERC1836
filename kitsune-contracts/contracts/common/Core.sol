@@ -10,11 +10,8 @@ contract Core is Store, ITyped
 	event ImplementationChange(address indexed previousImplementation, address indexed newImplementation);
 
 	// Constants
-
-	// keccak256("ERC1836_PROXY_ID")
-	bytes32 constant PROXY_ID = bytes32(0x4c43adc484b2c8f92ea203bb6f9dadab93aa087ceb311e900447f1d79f93b824);
-	// keccak256("ERC1836_IMPLEMENTATION_ID")
-	bytes32 constant IMPLEMENTATION_ID = bytes32(0x45dfc21fadc203f5400175cdf9926209cce1c778ede6ea4469f55f63233cac98);
+	bytes4 constant PROXY_SELECTOR  = bytes4(0x55f8d406); // bytes4(keccak256("ERC1836_PROXY_SELECTOR"))
+	bytes4 constant MASTER_SELECTOR = bytes4(0x5541c30d); // bytes4(keccak256("ERC1836_MASTER_SELECTOR"))
 
 	// Modifiers
 	modifier onlyInitializing()
@@ -28,7 +25,7 @@ contract Core is Store, ITyped
 	function setImplementation(address newImplementation, bytes memory initializationData)
 	internal
 	{
-		require(ITyped(newImplementation).contractType() == IMPLEMENTATION_ID, "invalid-implementation-id");
+		require(ITyped(newImplementation).selector() == MASTER_SELECTOR, "invalid-implementation-selector");
 
 		// Update _implementation pointer
 		emit ImplementationChange(_implementation, newImplementation);

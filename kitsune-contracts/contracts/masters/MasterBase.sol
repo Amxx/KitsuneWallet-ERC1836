@@ -12,16 +12,16 @@ contract MasterBase is Core, IERC897
 		return _implementation;
 	}
 
-	function contractType()
-	external pure returns (bytes32)
-	{
-		return IMPLEMENTATION_ID;
-	}
-
 	function proxyType()
 	external pure returns (uint256)
 	{
 		return 2;
+	}
+
+	function selector()
+	external pure returns (bytes4)
+	{
+		return MASTER_SELECTOR;
 	}
 
 	function updateImplementation(address,bytes calldata,bool)

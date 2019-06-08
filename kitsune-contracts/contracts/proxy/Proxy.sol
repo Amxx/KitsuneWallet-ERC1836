@@ -11,10 +11,10 @@ contract Proxy is Core
 		setImplementation(implementation, initializationData);
 	}
 
-	function contractType()
-	external pure returns (bytes32)
+	function selector()
+	external pure returns (bytes4)
 	{
-		return PROXY_ID;
+		return PROXY_SELECTOR;
 	}
 
 	function ()

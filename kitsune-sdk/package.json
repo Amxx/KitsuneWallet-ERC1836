@@ -1,7 +1,7 @@
 {
 	"name": "@kitsune-wallet/sdk",
 	"author": "Hadrien Croubois <hadrien.croubois@gmail.com>",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"license": "MIT",
 	"files": [
 		"/lib",

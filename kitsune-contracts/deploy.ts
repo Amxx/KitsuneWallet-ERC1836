@@ -7,9 +7,9 @@ ethers.errors.setLogLevel('error');
 import ActiveAdresses from '@kitsune-wallet/contracts/deployments/active.json';
 import WaffleConfig   from './waffle.json';
 
-// const provider = ethers.getDefaultProvider('ropsten'); // 3
+const provider = ethers.getDefaultProvider('ropsten'); // 3
 // const provider = ethers.getDefaultProvider('goerli');  // 5
-const provider = ethers.getDefaultProvider('kovan');   // 42
+// const provider = ethers.getDefaultProvider('kovan');   // 42
 const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 
 

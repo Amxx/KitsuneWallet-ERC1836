@@ -11,8 +11,9 @@
 	],
 	"scripts": {
 		"build":      "waffle waffle.json",
-		"deploy":     "GIT=$(git rev-parse HEAD) ts-node deploy.ts",
 		"dry-deploy": "GIT=$(git rev-parse HEAD) DRYRUN=true ts-node deploy.ts",
+		"deploy":     "GIT=$(git rev-parse HEAD) ts-node deploy.ts",
+		"deploy-all": "yarn deploy ropsten && yarn deploy goerli && yarn deploy kovan",
 		"test":       "mocha 'test/**/*.{js,ts}'",
 		"lint":       "yarn lint:sol",
 		"lint:sol":   "solium -d contracts",

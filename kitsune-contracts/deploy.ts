@@ -55,11 +55,21 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 			}
 		}
 	}
+
 	if (!process.env.DRYRUN)
 	{
-		const path    = `deployments/pending.${options.git}.json`;
-		const content = JSON.stringify({chainId: deployed}, null, '\t') + '\n';
-		await fs.promises.writeFile(path, content, { encoding: 'utf-8', flag: 'a' })
+		let path = `deployments/${options.git}.json`;
+		new Promise((resolve, reject) => {
+			fs.readFile(path, (err, data) => {
+				try { resolve(JSON.parse(data.toString())); } catch { resolve({}); }
+			});
+		})
+		.then(content => {
+			const data = JSON.stringify({ ...content, [chainId]: deployed }, null, '\t');
+			fs.writeFile(path, data, (err) => {
+				if (err) { console.error(`ERROR: ${err}`); }
+			});
+		});
 		console.log(`content written to ${path}`)
 	}
 })();

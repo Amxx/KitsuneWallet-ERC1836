@@ -40,18 +40,11 @@ contract WalletMultisigRecovery is WalletMultisig, Recovery
 		);
 	}
 
-	function updateImplementation(address newImplementation, bytes memory initializationData, bool reset)
-	public onlyOwner()
+	function cleanup()
+	internal
 	{
-		if (reset)
-		{
-			_resetRecovery();
-		}
-		super.updateImplementation(
-			newImplementation,
-			initializationData,
-			reset
-		);
+		super.cleanup();
+		_resetRecovery();
 	}
 
 	function recovery(bytes memory recoveryKey, address newImplementation, bytes memory initializationData)

@@ -19,7 +19,6 @@ contract Core is Store
 	{
 		require(!_initialized, "already-initialized");
 		_;
-		_initialized = true;
 	}
 
 	// Internal functions
@@ -34,12 +33,14 @@ contract Core is Store
 		_implementation = newImplementation;
 
 		// Allows the run of an initialization method in the new implementation.
-		// Will be reset to true by the initialization modifier of the initialize methode.
 		_initialized = false;
 
 		// Call the initialize method in the new implementation
 		// solium-disable-next-line security/no-low-level-calls
 		(bool success, /*bytes memory returndata*/) = newImplementation.delegatecall(initializationData);
 		require(success, "failed-to-initialize");
+
+		// Prevent furter runs of the initialization specific methods
+		_initialized = true;
 	}
 }

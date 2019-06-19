@@ -6,6 +6,18 @@ import "../interfaces/ITyped.sol";
 
 contract IMaster is IERC897, ITyped
 {
-	function updateImplementation(address,bytes calldata,bool)
+	function implementation()
+		external view returns (address);
+
+	function proxyType()
+		external pure returns (uint256);
+
+	function selector()
+		external pure returns (bytes4);
+
+	function updateImplementation(address, bytes calldata, bool)
 		external;
+
+	function controller()
+		public view returns (address);
 }

@@ -41,25 +41,27 @@ contract Multisig is ERC725Base, IERC1271
 		_actionThreshold = actionThreshold;
 	}
 
-	function updateImplementation(address newImplementation, bytes memory initializationData, bool reset)
-	public onlyOwner()
+	function cleanup()
+	internal
 	{
-		if (reset)
+		// reset memory space
+		for (uint256 i = 0; i < _activeKeys.length; ++i)
 		{
-			// reset memory space
-			for (uint256 i = 0; i < _activeKeys.length; ++i)
-			{
-				delete _keyPurposes[_activeKeys[i]];
-			}
-			delete _activeKeys;
-			delete _managementKeyCount;
-			delete _managementThreshold;
-			delete _actionThreshold;
+			delete _keyPurposes[_activeKeys[i]];
 		}
-		setImplementation(newImplementation, initializationData);
+		delete _activeKeys;
+		delete _managementKeyCount;
+		delete _managementThreshold;
+		delete _actionThreshold;
 	}
 
 	// ACCESSORS
+	function controller()
+	public view returns(address)
+	{
+		return address(this);
+	}
+
 	function owner()
 	public view returns(address)
 	{

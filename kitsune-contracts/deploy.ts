@@ -8,6 +8,22 @@ ethers.errors.setLogLevel('error');
 import ActiveAdresses from '@kitsune-wallet/contracts/deployments/active.json';
 import WaffleConfig   from './waffle.json';
 
+function updateJSONFile(path, object)
+{
+	return new Promise((resolve, reject) = {
+		new Promise((resolve, reject) => {
+			fs.readFile(path, (err, data) => {
+				try { resolve(JSON.parse(data.toString())); } catch { resolve({}); }
+			});
+		})
+		.then(content => {
+			const data = JSON.stringify({ ...content, object }, null, '\t');
+			fs.writeFile(path, data, (err) => {
+				if (!err) { resolve(); } else { reject(err); }
+			});
+		});
+	});
+}
 
 const chain    = process.argv[2] || "kovan";
 const provider = ethers.getDefaultProvider(chain);
@@ -58,18 +74,10 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 
 	if (!process.env.DRYRUN)
 	{
-		let path = `deployments/${options.git}.json`;
-		new Promise((resolve, reject) => {
-			fs.readFile(path, (err, data) => {
-				try { resolve(JSON.parse(data.toString())); } catch { resolve({}); }
-			});
-		})
-		.then(content => {
-			const data = JSON.stringify({ ...content, [chainId]: deployed }, null, '\t');
-			fs.writeFile(path, data, (err) => {
-				if (err) { console.error(`ERROR: ${err}`); }
-			});
-		});
+		await updateJSONFile(
+			`deployments/${options.git}.json`,
+			{ [chainId]: deployed }
+		);
 		console.log(`content written to ${path}`)
 	}
 })();

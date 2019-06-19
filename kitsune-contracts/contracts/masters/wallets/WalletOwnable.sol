@@ -27,15 +27,17 @@ contract WalletOwnable is MasterBase, Ownable, ERC725Base, ENSRegistered, ERC721
 		_transferOwnership(owner);
 	}
 
-	function updateImplementation(address newImplementation, bytes calldata initializationData, bool reset)
-	external onlyOwner()
+	function cleanup()
+	internal
 	{
-		if (reset)
-		{
-			// set owner to 0
-			renounceOwnership();
-		}
-		setImplementation(newImplementation, initializationData);
+		renounceOwnership();
+	}
+
+	// ACCESSORS
+	function controller()
+	public view returns(address)
+	{
+		return owner();
 	}
 
 	function isValidSignature(bytes32 data, bytes memory signature)

@@ -10,14 +10,15 @@ import WaffleConfig   from './waffle.json';
 
 function updateJSONFile(path, object)
 {
-	return new Promise((resolve, reject) = {
+	return new Promise((resolve, reject) => {
 		new Promise((resolve, reject) => {
 			fs.readFile(path, (err, data) => {
 				try { resolve(JSON.parse(data.toString())); } catch { resolve({}); }
 			});
 		})
 		.then(content => {
-			const data = JSON.stringify({ ...content, object }, null, '\t');
+			const data = JSON.stringify({ ...content, ...object }, null, '\t');
+			console.log(data)
 			fs.writeFile(path, data, (err) => {
 				if (!err) { resolve(); } else { reject(err); }
 			});
@@ -74,10 +75,8 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 
 	if (!process.env.DRYRUN)
 	{
-		await updateJSONFile(
-			`deployments/${options.git}.json`,
-			{ [chainId]: deployed }
-		);
+		const path = `deployments/${options.git}.json`;
+		await updateJSONFile(path, { [chainId]: deployed });
 		console.log(`content written to ${path}`)
 	}
 })();

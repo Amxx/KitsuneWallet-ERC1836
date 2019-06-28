@@ -1,45 +1,52 @@
 pragma solidity ^0.5.0;
 
-import "../common/Core.sol";
+import "../proxy/BaseKitsuneProxy.sol";
+
 import "./IMaster.sol";
+import "../tools/Controlled.sol";
 
-
-contract MasterBase is IMaster, Core
+/**
+ * @title MasterBase
+ * @dev This contract the base kitsune's masters.
+ */
+contract MasterBase is IMaster, BaseKitsuneProxy, Controlled
 {
-	modifier onlyController()
-	{
-		require(msg.sender == controller(), "access-denied");
-		_;
-	}
+	function () payable external {}
 
+	// IERC897
 	function implementation()
 	external view returns (address)
 	{
-		return _implementation;
+		return _implementation();
 	}
 
+	// IERC897
 	function proxyType()
 	external pure returns (uint256)
 	{
 		return 2;
 	}
 
-	function selector()
-	external pure returns (bytes4)
+	// Controlled → IMaster
+	function controller()
+	external view returns (address)
 	{
-		return MASTER_SELECTOR;
+		return _controller();
 	}
 
-	function updateImplementation(address newImplementation, bytes calldata initializationData, bool reset)
+	// IMaster
+	function updateImplementation(address logic, bytes calldata data, bool reset)
 	external onlyController()
 	{
 		if (reset) { cleanup(); }
-		setImplementation(newImplementation, initializationData);
+		_upgradeToAndInitialize(logic, data);
 	}
 
+	// Master virtual
 	function cleanup()
 	internal
 	{
 		revert("not-implemented");
 	}
+
 }

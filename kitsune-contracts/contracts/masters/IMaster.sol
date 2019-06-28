@@ -1,14 +1,13 @@
 pragma solidity ^0.5.0;
 
 import "../interfaces/IERC897.sol";
-import "../interfaces/ITyped.sol";
 
 
-contract IMaster is IERC897, ITyped
+contract IMaster is IERC897
 {
 	function controller()
-		public view returns (address);
+	external view returns (address);
 
-	function updateImplementation(address, bytes calldata, bool)
-		external;
+	function updateImplementation(address logic, bytes calldata data, bool reset)
+	external;
 }

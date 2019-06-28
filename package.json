@@ -16,7 +16,7 @@
 	},
 	"scripts": {
 		"build": "yarn wsrun build --stages",
-		"test":  "yarn wsrun test --stages --fast-exit",
+		"test": "yarn wsrun test --stages --fast-exit",
 		"clean": "yarn wsrun clean"
 	},
 	"engines": {

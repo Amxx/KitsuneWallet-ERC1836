@@ -4,13 +4,13 @@ import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 import "../MasterBase.sol";
-import "../modules/ERC725Base.sol";
+import "../modules/ERC725Module.sol";
 import "../modules/ENSRegistered.sol";
 import "../modules/ERC721Receiver.sol";
 import "../../interfaces/IERC1271.sol";
 
 
-contract WalletOwnable is MasterBase, Ownable, ERC725Base, ENSRegistered, ERC721Receiver, IERC1271
+contract WalletOwnable is MasterBase, ERC725Module, ERC721Receiver, IERC1271, ENSRegistered, Ownable
 {
 	using ECDSA for bytes32;
 
@@ -34,8 +34,8 @@ contract WalletOwnable is MasterBase, Ownable, ERC725Base, ENSRegistered, ERC721
 	}
 
 	// ACCESSORS
-	function controller()
-	public view returns(address)
+	function _controller()
+	internal view returns (address)
 	{
 		return owner();
 	}

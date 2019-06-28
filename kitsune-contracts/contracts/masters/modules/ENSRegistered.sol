@@ -5,12 +5,11 @@ import "@ensdomains/ens/contracts/FIFSRegistrar.sol";
 import "@ensdomains/ens/contracts/ReverseRegistrar.sol";
 import "@ensdomains/resolver/contracts/PublicResolver.sol";
 
-import "./ERC725Base.sol";
+import "./ERC725Module.sol";
 
-
-contract ENSRegistered is ERC725Base
+contract ENSRegistered is ERC725Module
 {
-	bytes32 constant ADDR_REVERSE_NODE = 0x91d1777781884d03a6757a803996e38de2a42967fb37eeaca72729271025a9e2;
+	bytes32 internal constant ADDR_REVERSE_NODE = 0x91d1777781884d03a6757a803996e38de2a42967fb37eeaca72729271025a9e2;
 
 	function registerENS(
 		bytes32         hashLabel,

@@ -1,13 +1,12 @@
 pragma solidity ^0.5.0;
 
 import "../../interfaces/IERC725.sol";
-import "../../common/Core.sol";
+import "../../tools/Storage.sol";
 
-
-contract ERC725Base is IERC725, Core
+contract ERC725Module is IERC725, Storage
 {
-	uint256 constant OPERATION_CALL   = 0;
-	uint256 constant OPERATION_CREATE = 1;
+	uint256 internal constant OPERATION_CALL   = 0;
+	uint256 internal constant OPERATION_CREATE = 1;
 
 	modifier onlyOwner()
 	{
@@ -15,19 +14,16 @@ contract ERC725Base is IERC725, Core
 		_;
 	}
 
-	// Need this to handle deposit call forwarded by the proxy
-	function () external payable {}
-
 	function getData(bytes32 key)
-	public view returns (bytes memory)
+	public view returns (bytes32)
 	{
-		return _store[key];
+		return _get(key);
 	}
 
-	function setData(bytes32 key, bytes memory value)
+	function setData(bytes32 key, bytes32 value)
 	public onlyOwner()
 	{
-		_store[key] = value;
+		_set(key, value);
 		emit DataChanged(key, value);
 	}
 

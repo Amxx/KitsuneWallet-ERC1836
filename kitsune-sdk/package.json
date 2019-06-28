@@ -1,7 +1,7 @@
 {
 	"name": "@kitsune-wallet/sdk",
 	"author": "Hadrien Croubois <hadrien.croubois@gmail.com>",
-	"version": "0.2.2",
+	"version": "0.3.0",
 	"license": "MIT",
 	"files": [
 		"/lib",
@@ -15,7 +15,7 @@
 		"clean": "rm -rf dist"
 	},
 	"dependencies": {
-		"@kitsune-wallet/contracts": "^0.2.2"
+		"@kitsune-wallet/contracts": "^0.3.0"
 	},
 	"devDependencies": {
 		"ethereum-waffle": "2.0.10",

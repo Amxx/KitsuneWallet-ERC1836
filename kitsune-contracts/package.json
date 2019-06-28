@@ -1,7 +1,7 @@
 {
 	"name": "@kitsune-wallet/contracts",
 	"author": "Hadrien Croubois <hadrien.croubois@gmail.com>",
-	"version": "0.2.4",
+	"version": "0.3.0",
 	"license": "MIT",
 	"files": [
 		"/contracts",
@@ -33,6 +33,7 @@
 		"mocha": "^5.2.0",
 		"jq.node": "^2.1.2",
 		"mocha": "^6.0.2",
-		"openzeppelin-solidity": "^2.2.0"
+		"openzeppelin-solidity": "^2.2.0",
+		"zos-lib": "^2.4.0"
 	}
 }

@@ -39,7 +39,7 @@ function testUpdateImplementation(sdk, name)
 				{ options: { gasLimit: 1000000 } },
 			)).to
 			.emit(proxy, 'CallSuccess').withArgs(proxy.address)
-			.emit(proxy, 'ImplementationChange').withArgs(masterAddress, masterAddress);
+			.emit(proxy, 'Upgraded').withArgs(masterAddress);
 
 			expect(await proxy.getKey(sdk.utils.addrToKey(user1.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000000');
 			expect(await proxy.getKey(sdk.utils.addrToKey(user2.address))).to.be.eq('0x0000000000000000000000000000000000000000000000000000000000000007');

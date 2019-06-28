@@ -22,6 +22,7 @@ describe('WalletMultisig', () => {
 	const sdk = new SDK(provider, relayer);
 
 	before(async () => {
+		walletContract = await sdk.contracts.getActiveInstance("WalletMultisig", { deploy: { enable: true } });
 		targetContract = await deployContract(wallet, Target, []);
 	});
 

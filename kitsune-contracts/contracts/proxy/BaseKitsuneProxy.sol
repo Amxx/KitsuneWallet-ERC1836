@@ -12,7 +12,7 @@ contract BaseKitsuneProxy is BaseUpgradeabilityProxy, Initializable
 	{
 		require(IERC897(_logic).implementation() == address(0), "invalid-master-implementation");
 		_upgradeTo(_logic);
-		if(_data.length > 0)
+		if (_data.length > 0)
 		{
 			_setInitializing(true);
 			(bool success,) = _logic.delegatecall(_data);

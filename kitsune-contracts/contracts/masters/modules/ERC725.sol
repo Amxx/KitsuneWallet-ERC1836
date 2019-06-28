@@ -3,7 +3,7 @@ pragma solidity ^0.5.0;
 import "../../interfaces/IERC725.sol";
 import "../../tools/Storage.sol";
 
-contract ERC725Module is IERC725, Storage
+contract ERC725 is IERC725, Storage
 {
 	uint256 internal constant OPERATION_CALL   = 0;
 	uint256 internal constant OPERATION_CREATE = 1;
@@ -17,13 +17,13 @@ contract ERC725Module is IERC725, Storage
 	function getData(bytes32 key)
 	public view returns (bytes32)
 	{
-		return _get(key);
+		return _getData(key);
 	}
 
 	function setData(bytes32 key, bytes32 value)
 	public onlyOwner()
 	{
-		_set(key, value);
+		_setData(key, value);
 		emit DataChanged(key, value);
 	}
 

@@ -14,10 +14,10 @@ contract BaseKitsuneProxy is BaseUpgradeabilityProxy, Initializable
 		_upgradeTo(_logic);
 		if (_data.length > 0)
 		{
-			_setInitializing(true);
+			_setInitialized(false);
 			(bool success,) = _logic.delegatecall(_data);
 			require(success, "failed-to-initialize");
-			_setInitializing(false);
+			_setInitialized(true);
 		}
 	}
 }

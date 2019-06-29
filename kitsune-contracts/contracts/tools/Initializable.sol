@@ -17,7 +17,7 @@ contract Initializable
 	 */
 	modifier onlyInitializing()
 	{
-		require(_initializing(), "already-initialized");
+		require(!_initialized(), "already-initialized");
 		_;
 	}
 
@@ -25,7 +25,7 @@ contract Initializable
 	 * @dev Returns the current initialization status.
 	 * @return Current initialization status
 	 */
-	function _initializing()
+	function _initialized()
 	internal view returns (bool initialized)
 	{
 		bytes32 slot = INITIALIZED_SLOT;
@@ -39,7 +39,7 @@ contract Initializable
 	 * @dev Sets the initialization status.
 	 * @param initialized Bool value of the initialization status.
 	 */
-	function _setInitializing(bool initialized)
+	function _setInitialized(bool initialized)
 	internal
 	{
 		bytes32 slot = INITIALIZED_SLOT;

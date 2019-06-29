@@ -17,7 +17,6 @@ contract BaseKitsuneProxy is BaseUpgradeabilityProxy, Initializable
 			_setInitialized(false);
 			(bool success,) = _logic.delegatecall(_data);
 			require(success, "failed-to-initialize");
-			_setInitialized(true);
 		}
 	}
 }

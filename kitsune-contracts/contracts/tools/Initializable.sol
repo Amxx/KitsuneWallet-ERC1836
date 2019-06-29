@@ -19,6 +19,7 @@ contract Initializable
 	{
 		require(!_initialized(), "already-initialized");
 		_;
+		_setInitialized(true);
 	}
 
 	/**

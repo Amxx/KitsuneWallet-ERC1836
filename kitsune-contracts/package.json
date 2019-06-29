@@ -1,7 +1,7 @@
 {
 	"name": "@kitsune-wallet/contracts",
 	"author": "Hadrien Croubois <hadrien.croubois@gmail.com>",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"license": "MIT",
 	"files": [
 		"/contracts",
@@ -19,6 +19,10 @@
 		"lint:sol":   "solium -d contracts",
 		"clean":      "rm -rf build"
 	},
+	"dependencies": {
+		"openzeppelin-solidity": "^2.2.0",
+		"zos-lib": "^2.4.0"
+	},
 	"devDependencies": {
 		"@ensdomains/ens": "^0.3.11",
 		"@ensdomains/resolver": "^0.1.6",
@@ -32,8 +36,6 @@
 		"ethers": "^4.0.27",
 		"mocha": "^5.2.0",
 		"jq.node": "^2.1.2",
-		"mocha": "^6.0.2",
-		"openzeppelin-solidity": "^2.2.0",
-		"zos-lib": "^2.4.0"
+		"mocha": "^6.0.2"
 	}
 }

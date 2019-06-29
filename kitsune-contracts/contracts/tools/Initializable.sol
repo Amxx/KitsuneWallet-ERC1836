@@ -1,8 +1,11 @@
 pragma solidity ^0.5.0;
 
+
 /**
  * @title Initializable
- * @dev TODO
+ * @dev Contains the logic to control the initializing functions.
+ * Objective is to enshure generic upgradeability while preventing
+ * unauthorized re-initialization.
  */
 contract Initializable
 {
@@ -19,34 +22,49 @@ contract Initializable
 	{
 		require(!_initialized(), "already-initialized");
 		_;
-		_setInitialized(true);
+		_lock();
 	}
 
 	/**
 	 * @dev Returns the current initialization status.
-	 * @return Current initialization status
+	 * @return Current locking status
 	 */
 	function _initialized()
-	internal view returns (bool initialized)
+	internal view returns (bool locked)
 	{
 		bytes32 slot = INITIALIZED_SLOT;
+		// solium-disable-next-line security/no-inline-assembly
 		assembly
 		{
-			initialized := sload(slot)
+			locked := sload(slot)
 		}
 	}
 
 	/**
-	 * @dev Sets the initialization status.
-	 * @param initialized Bool value of the initialization status.
+	 * @dev Lock to prevent re-initialization.
 	 */
-	function _setInitialized(bool initialized)
+	function _lock()
 	internal
 	{
 		bytes32 slot = INITIALIZED_SLOT;
+		// solium-disable-next-line security/no-inline-assembly
 		assembly
 		{
-			sstore(slot, initialized)
+			sstore(slot, 0x1)
+		}
+	}
+
+	/**
+	 * @dev Unlock to allow initialization.
+	 */
+	function _unlock()
+	internal
+	{
+		bytes32 slot = INITIALIZED_SLOT;
+		// solium-disable-next-line security/no-inline-assembly
+		assembly
+		{
+			sstore(slot, 0x0)
 		}
 	}
 }

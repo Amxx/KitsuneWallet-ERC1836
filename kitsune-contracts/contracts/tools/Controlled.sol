@@ -1,8 +1,10 @@
 pragma solidity ^0.5.0;
 
+
 /**
- * @title ControlledUpgradeabilityProxy
- * @dev TODO
+ * @title Controlled
+ * @dev Virtual class with modifier to restrict the access of sensitive
+ * administration functions (in particular those control the upgrade process)
  */
 contract Controlled
 {
@@ -16,7 +18,7 @@ contract Controlled
 	}
 
 	/**
-	 * @dev Returns the current controller.
+	 * @dev Returns the current controller (virtual).
 	 * @return Address of the current controller
 	 */
 	function _controller() internal view returns (address);

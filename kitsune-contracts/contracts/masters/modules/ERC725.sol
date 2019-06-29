@@ -3,8 +3,11 @@ pragma solidity ^0.5.0;
 import "../../interfaces/IERC725.sol";
 import "../../tools/Storage.sol";
 
+
 contract ERC725 is IERC725, Storage
 {
+	bytes32 internal constant PUBLIC_SALT = 0xe81b6d741516190638e87536ee75908b2ec23b41de96d1ec3b6dcc71a09901ef;
+
 	uint256 internal constant OPERATION_CALL   = 0;
 	uint256 internal constant OPERATION_CREATE = 1;
 
@@ -17,13 +20,13 @@ contract ERC725 is IERC725, Storage
 	function getData(bytes32 key)
 	public view returns (bytes32)
 	{
-		return _getData(key);
+		return _get(keccak256(abi.encode(PUBLIC_SALT, key)));
 	}
 
 	function setData(bytes32 key, bytes32 value)
 	public onlyOwner()
 	{
-		_setData(key, value);
+		_set(keccak256(abi.encode(PUBLIC_SALT, key)), value);
 		emit DataChanged(key, value);
 	}
 

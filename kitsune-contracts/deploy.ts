@@ -62,6 +62,7 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 		{
 			if (!process.env.DRYRUN)
 			{
+				console.log(`Deploying ${master} ...`);
 				const address = (await sdk.contracts.deployContract(master, [])).address;
 				deployed[master] = { address, hash, ...options };
 				console.log(`${master} has been deployed to ${deployed[master].address} (chain ${chainId}, hash ${hash})`);

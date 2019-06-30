@@ -9,37 +9,25 @@ contract KitsuneProxyFactory
 
 	event NewProxy(address indexed proxyAddr);
 
-	function createProxy(address master, bytes calldata data, bytes32 salt)
+	function createProxy(address _master, bytes calldata _data, bytes32 _salt)
 	external returns(address)
 	{
-		address proxy = _create2(
-			abi.encodePacked(
-				PROXY_CODE,
-				abi.encode(master, bytes(""))
-			),
-			salt
-		);
-
-		// solium-disable-next-line security/no-low-level-calls
-		(bool success, bytes memory error) = proxy.call(data);
-		require(success, string(error));
-
-		emit NewProxy(proxy);
-		return proxy;
-	}
-
-	function _create2(bytes memory _code, bytes32 _salt)
-	internal returns(address)
-	{
-		bytes memory code = _code;
+		bytes memory code = abi.encodePacked(PROXY_CODE, abi.encode(_master, bytes("")));
 		bytes32      salt = _salt;
 		address      addr;
+
 		// solium-disable-next-line security/no-inline-assembly
 		assembly
 		{
 			addr := create2(0, add(code, 0x20), mload(code), salt)
 			if iszero(extcodesize(addr)) { revert(0, 0) }
 		}
+
+		// solium-disable-next-line security/no-low-level-calls
+		(bool success, bytes memory error) = addr.call(_data);
+		require(success, string(error));
+
+		emit NewProxy(addr);
 		return addr;
 	}
 }

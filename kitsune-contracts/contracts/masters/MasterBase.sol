@@ -47,6 +47,12 @@ contract MasterBase is IMaster, BaseKitsuneProxy, Controlled
 		return _controller();
 	}
 
+	function initialized()
+	external view returns (bool)
+	{
+		return _initialized();
+	}
+
 	/**
 	 * @dev kitsune wallet's upgrade process with optional reset by the old master.
 	 * @param logic new master to use

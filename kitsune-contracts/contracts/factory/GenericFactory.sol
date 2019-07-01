@@ -1,6 +1,5 @@
 pragma solidity ^0.5.0;
 
-import "../proxy/KitsuneProxy.sol";
 import "./CounterfactualFactory.sol";
 
 

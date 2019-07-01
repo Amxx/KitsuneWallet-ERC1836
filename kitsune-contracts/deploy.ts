@@ -1,12 +1,14 @@
-import { ethers }  from 'ethers';
-import { SDK }     from '@kitsune-wallet/sdk/dist/sdk';
+import { ethers }                                  from 'ethers';
+import { SDK }                                     from '@kitsune-wallet/sdk/dist/sdk';
 import { createMockProvider, getWallets, solidity} from 'ethereum-waffle';
-import fs from 'fs';
+import fs                                          from 'fs';
+import WaffleConfig                                from './waffle.json';
 
 ethers.errors.setLogLevel('error');
 
 import ActiveAdresses from '@kitsune-wallet/contracts/deployments/active.json';
-import WaffleConfig   from './waffle.json';
+import GenericFactory from '@kitsune-wallet/contracts/build/GenericFactory.json';
+const FACTORY_ADDRESS = "0xFaC100450Af66d838250EA25a389D8Cd09062629";
 
 function updateJSONFile(path, object)
 {
@@ -18,7 +20,6 @@ function updateJSONFile(path, object)
 		})
 		.then(content => {
 			const data = JSON.stringify({ ...content, ...object }, null, '\t');
-			console.log(data)
 			fs.writeFile(path, data, (err) => {
 				if (!err) { resolve(); } else { reject(err); }
 			});
@@ -29,6 +30,7 @@ function updateJSONFile(path, object)
 const chain    = process.argv[2] || "kovan";
 const provider = ethers.getDefaultProvider(chain);
 const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
+const factory  = new ethers.Contract(ethers.utils.hexlify(FACTORY_ADDRESS), GenericFactory.abi, wallet);
 
 (async () => {
 
@@ -50,34 +52,23 @@ const wallet   = new ethers.Wallet(process.env.MNEMONIC, provider);
 		"WalletMultisigRecovery"
 	])
 	{
-		const hash = ethers.utils.keccak256(`0x${sdk.ABIS[master].bytecode}`);
-		const deployedMaster = (ActiveAdresses[chainId] || {})[master] || {};
-
-		if (deployedMaster.hash == hash)
+		const hash    = ethers.utils.keccak256(`0x${sdk.ABIS[master].bytecode}`);
+		const address = await factory.predictAddress(`0x${sdk.ABIS[master].bytecode}`, ethers.constants.HashZero);
+		const code    = await provider.getCode(address);
+		if (code === '0x')
 		{
-			deployed[master] = { ...deployedMaster, hash, ...options };
-			console.log(`${master} is already deployed at ${deployed[master].address}`);
+			process.stdout.write(`Deploying ${master} to expected address ${address} (chain ${chainId}) ... `);
+			const tx = await factory.createContract(`0x${sdk.ABIS[master].bytecode}`, ethers.constants.HashZero);
+			await tx.wait();
+			process.stdout.write(`done\n`);
 		}
 		else
 		{
-			if (!process.env.DRYRUN)
-			{
-				console.log(`Deploying ${master} ...`);
-				const address = (await sdk.contracts.deployContract(master, [])).address;
-				deployed[master] = { address, hash, ...options };
-				console.log(`${master} has been deployed to ${deployed[master].address} (chain ${chainId}, hash ${hash})`);
-			}
-			else
-			{
-				console.log(`[DRYRUN] current version ${master} is not deployed in chain ${chainId}.`)
-			}
+			process.stdout.write(`${master} is already deployed at ${address} (chain: ${chainId})\n`);
 		}
+		deployed[master] = { address, hash, ...options };
 	}
-
-	if (!process.env.DRYRUN)
-	{
-		const path = `deployments/${options.git}.json`;
-		await updateJSONFile(path, { [chainId]: deployed });
-		console.log(`content written to ${path}`)
-	}
+	const path = `deployments/active.json`;
+	await updateJSONFile(path, { [chainId]: deployed });
+	process.stdout.write(`==> Content written to ${path}\n`)
 })();

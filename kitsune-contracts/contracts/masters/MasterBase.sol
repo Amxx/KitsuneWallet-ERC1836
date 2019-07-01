@@ -47,6 +47,10 @@ contract MasterBase is IMaster, BaseKitsuneProxy, Controlled
 		return _controller();
 	}
 
+	/**
+	 * @dev Accessor to the initialized status (for auditability purposes).
+	 * @return value of the initialized flag
+	 */
 	function initialized()
 	external view returns (bool)
 	{

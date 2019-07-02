@@ -13,7 +13,7 @@ contract WalletMultisigRecovery is WalletMultisig, Recovery
 		uint256          managementThreshold,
 		uint256          actionThreshold,
 		bytes32          recoveryHash)
-	public onlyInitializing()
+	public initializer()
 	{
 		_initializeRecovery(recoveryHash);
 		super.initialize(
@@ -29,7 +29,7 @@ contract WalletMultisigRecovery is WalletMultisig, Recovery
 		bytes32[] memory purposes,
 		uint256          managementThreshold,
 		uint256          actionThreshold)
-	public onlyInitializing()
+	public initializer()
 	{
 		initialize(
 			keys,

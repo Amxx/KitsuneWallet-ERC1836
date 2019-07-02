@@ -30,7 +30,7 @@ contract Multisig is ERC725, IERC1271, Initializable
 		bytes32[] memory purposes,
 		uint256          managementThreshold,
 		uint256          actionThreshold)
-	public onlyInitializing()
+	public initializer()
 	{
 		require(keys.length == purposes.length, "key-and-purpose-array-must-have-same-size");
 		for (uint256 i = 0; i < keys.length; ++i)

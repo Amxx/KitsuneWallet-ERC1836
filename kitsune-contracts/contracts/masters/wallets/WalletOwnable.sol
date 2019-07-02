@@ -22,7 +22,7 @@ contract WalletOwnable is MasterBase, ERC725, ERC721Receiver, IERC1271, ENSRegis
 	}
 
 	function initialize(address owner)
-	external onlyInitializing()
+	external initializer()
 	{
 		_transferOwnership(owner);
 	}

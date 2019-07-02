@@ -58,9 +58,16 @@ const factory  = new ethers.Contract(ethers.utils.hexlify(FACTORY_ADDRESS), Gene
 		if (code === '0x')
 		{
 			process.stdout.write(`Deploying ${master} to expected address ${address} (chain ${chainId}) ... `);
-			const tx = await factory.createContract(`0x${sdk.ABIS[master].bytecode}`, ethers.constants.HashZero);
-			await tx.wait();
-			process.stdout.write(`done\n`);
+			if (!process.env.DRYRUN)
+			{
+				const tx = await factory.createContract(`0x${sdk.ABIS[master].bytecode}`, ethers.constants.HashZero);
+				await tx.wait();
+				process.stdout.write(`done\n`);
+			}
+			else
+			{
+				process.stdout.write(`skipped (dryrun)\n`);
+			}
 		}
 		else
 		{
@@ -68,7 +75,10 @@ const factory  = new ethers.Contract(ethers.utils.hexlify(FACTORY_ADDRESS), Gene
 		}
 		deployed[master] = { address, hash, ...options };
 	}
-	const path = `deployments/active.json`;
-	await updateJSONFile(path, { [chainId]: deployed });
-	process.stdout.write(`==> Content written to ${path}\n`)
+	if (!process.env.DRYRUN)
+	{
+		const path = `deployments/active.json`;
+		await updateJSONFile(path, { [chainId]: deployed });
+		process.stdout.write(`==> Content written to ${path}\n`)
+	}
 })();

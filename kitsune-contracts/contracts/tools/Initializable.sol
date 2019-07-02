@@ -18,7 +18,7 @@ contract Initializable
 	/**
 	 * @dev Modifier to check whether the contract is initializing.
 	 */
-	modifier onlyInitializing()
+	modifier initializer()
 	{
 		require(!_initialized(), "already-initialized");
 		_;

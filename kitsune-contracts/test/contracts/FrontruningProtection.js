@@ -195,14 +195,13 @@ describe('KitsuneProxyFactory', () => {
 
 			proxy = sdk.contracts.viewContract(main_name, predictedAddress);
 
-
 			expect(await proxy.controller()).to.be.equal(user1.address);
 			expect(await proxy.implementation()).to.be.equal(main_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
 			expect(await proxy.initialized()).to.be.equal(true);
 		});
 
-		it('FrontrunningProtection - 1 step - protected - frontrunning prevented', async () => {
+		it('FrontrunningProtection - 1 step - protected - catch', async () => {
 			const main_name     = "WalletOwnable";
 			const main_contract = await sdk.contracts.getActiveInstance(main_name, { deploy: { enable: true } });
 			const main_data     = sdk.transactions.initialization(main_name, [ user1.address ]);

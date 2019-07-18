@@ -1,8 +1,12 @@
 # **Kitsune Wallet**
 
-This documentation is for version 0.0.24, please sumbit an issue if you feel like an update is required.
+Contracts: [![NPM Package](https://img.shields.io/npm/v/@kitsune-wallet/contracts.svg?style=flat-square)](https://www.npmjs.com/package/@kitsune-wallet/contracts)
 
+SDK: [![NPM Package](https://img.shields.io/npm/v/@kitsune-wallet/sdk.svg?style=flat-square)](https://www.npmjs.com/package/@kitsune-wallet/sdk)
 
+Provider: [![NPM Package](https://img.shields.io/npm/v/@kitsune-wallet/provider.svg?style=flat-square)](https://www.npmjs.com/package/@kitsune-wallet/provider)
+
+This documentation is for version 0.0.24, part of it may be out of date.
 
 ## What is Kitsune Wallet
 

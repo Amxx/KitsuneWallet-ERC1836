@@ -23,6 +23,8 @@
 		"zos-lib": "^2.4.0"
 	},
 	"devDependencies": {
+		"@ensdomains/buffer": "^0.0.10",
+		"@ensdomains/dnssec-oracle": "^0.1.2",
 		"@ensdomains/ens": "^0.3.11",
 		"@ensdomains/resolver": "^0.1.6",
 		"@types/chai": "^4.1.7",
@@ -33,7 +35,6 @@
 		"ens-builder": "^2.0.1",
 		"ethereum-waffle": "2.0.10",
 		"ethers": "^4.0.27",
-		"mocha": "^5.2.0",
 		"jq.node": "^2.1.2",
 		"mocha": "^6.0.2"
 	}

@@ -25,6 +25,17 @@ contract Multisig is ERC725, IERC1271, Initializable
 	event ManagementThresholdChange(uint256 previousThreshold, uint256 newThreshold);
 	event ActionThresholdChange(uint256 previousThreshold, uint256 newThreshold);
 
+	function initialize(address masterKey)
+	external
+	{
+		bytes32[] memory keys     = new bytes32[](1);
+		bytes32[] memory purposes = new bytes32[](1);
+		keys[0]     = addrToKey(masterKey);
+		purposes[0] = PURPOSE_MANAGEMENT & PURPOSE_ACTION & PURPOSE_SIGN;
+
+		initialize(keys, purposes, 1, 1);
+	}
+
 	function initialize(
 		bytes32[] memory keys,
 		bytes32[] memory purposes,

@@ -140,8 +140,9 @@ If multiple signatures must be required for an action, the different signatures 
 In order to be a Kitsune compatible master, your contract must follow some rules:
 
 1. Inherit from `contracts/masters/MasterBase.sol`..
-2. Implement an initialization function that will be called as part of the update process. This function should be protected by the `initializer()` modifier.
-3. Overload the `cleanup()` function that must cleanup the memory during the upgrade process.
+2. Implement the `_controller()` internal function that defines who can update the proxy. This is generally the `address(this)` for multisig contracts without priviledge access.
+3. Implement an initialization function that will be called as part of the update process. This function should be protected by the `initializer()` modifier.
+4. Overload the `_cleanup()` internal function that must cleanup the memory during the upgrade process.
 
 `WalletOwnable` provides a simple example. UniversalLogin also provides an exemple in its [WalletMaster](https://github.com/UniversalLogin/UniversalLoginSDK/blob/master/universal-login-contracts/contracts/WalletMaster.sol) contract.
 

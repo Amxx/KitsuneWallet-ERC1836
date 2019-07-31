@@ -38,6 +38,13 @@ describe('WalletOwnable', () => {
 		it('reintrance protection', async () => {
 			await expect(proxy.connect(user1).initialize(user2.address)).to.be.revertedWith('already-initialized');
 		});
+
+		it('Invalid initialization protection', async () => {
+			await expect(sdk.contracts.deployProxy(
+				"WalletOwnable",
+				[ ethers.constants.AddressZero ]
+			)).to.be.revertedWith("failed-to-initialize");
+		});
 	});
 
 	describe('ENS', async () => {
@@ -165,7 +172,7 @@ describe('WalletOwnable', () => {
 				sdk.transactions.initialization("WalletOwnable", [ user2.address ]),
 				true,
 				{ gasLimit: 800000 }
-			)).to.be.revertedWith("access-denied"); // onlyOwner overridden by openzeppelin's ownable
+			)).to.be.revertedWith("access-denied");
 		});
 	});
 

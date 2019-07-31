@@ -5,14 +5,14 @@ import "zos-lib/contracts/upgradeability/BaseUpgradeabilityProxy.sol";
 import "../interfaces/IERC897.sol";
 import "./IMaster.sol";
 import "../tools/Initializable.sol";
-import "../tools/Controlled.sol";
+import "../tools/Restricted.sol";
 
 
 /**
  * @title MasterBase
  * @dev This contract the base kitsune's masters.
  */
-contract MasterBase is IMaster, BaseUpgradeabilityProxy, Initializable, Controlled
+contract MasterBase is IMaster, BaseUpgradeabilityProxy, Initializable, Restricted
 {
 	/**
 	 * @dev Enpty fallback function (should not delegate further).
@@ -66,7 +66,7 @@ contract MasterBase is IMaster, BaseUpgradeabilityProxy, Initializable, Controll
 	 * @param reset flag used to trigger the reset of the proxy by the old master
 	 */
 	function updateImplementation(address logic, bytes calldata data, bool reset)
-	external onlyController()
+	external restricted()
 	{
 		require(IERC897(logic).implementation() == address(0), "invalid-master-implementation");
 		if (reset)

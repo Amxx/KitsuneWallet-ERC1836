@@ -2,16 +2,16 @@ pragma solidity ^0.5.0;
 
 
 /**
- * @title Controlled
+ * @title Restricted
  * @dev Virtual class with modifier to restrict the access of sensitive
  * administration functions (in particular those control the upgrade process)
  */
-contract Controlled
+contract Restricted
 {
 	/**
 	 * @dev Modifier to check whether the `msg.sender` is the controller.
 	 */
-	modifier onlyController()
+	modifier restricted()
 	{
 		require(isConstructor() || msg.sender == _controller(), "access-denied");
 		_;

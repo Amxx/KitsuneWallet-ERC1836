@@ -19,7 +19,8 @@ describe('ContractType', () => {
 	});
 
 	beforeEach(async () => {
-		proxy = await sdk.contracts.deployProxy("WalletOwnable", [ user1.address ]);
+		proxy        = await sdk.contracts.deployProxy("WalletOwnable", [ user1.address ]);
+		anotherProxy = await sdk.contracts.deployProxy("WalletOwnable", [ user1.address ]);
 	});
 
 	describe('Verify contract type', async () => {
@@ -33,9 +34,18 @@ describe('ContractType', () => {
 
 		it('Cant use another proxy as an implementation', async () => {
 			await expect(sdk.contracts.deployContract("Proxy", [
-				proxy.address,
+				anotherProxy.address,
 				sdk.transactions.initialization("WalletOwnable", [ user1.address ])
 			])).to.be.revertedWith("invalid-master-implementation");
+		});
+
+		it('Cant upgrade using another proxy as an implementation', async () => {
+			await expect(proxy.connect(user1).updateImplementation(
+				anotherProxy.address,
+				sdk.transactions.initialization("WalletOwnable", [ user2.address ]),
+				true,
+				{ gasLimit: 800000 }
+			)).to.be.revertedWith("invalid-master-implementation");
 		});
 
 		it('Cant upgrade a proxy to use itself', async () => {

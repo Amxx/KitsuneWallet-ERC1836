@@ -13,8 +13,16 @@ contract Controlled
 	 */
 	modifier onlyController()
 	{
-		require(msg.sender == _controller(), "access-denied");
+		require(isConstructor() || msg.sender == _controller(), "access-denied");
 		_;
+	}
+
+	function isConstructor()
+	internal view returns (bool)
+	{
+		uint256 size;
+		assembly { size := extcodesize(address) }
+		return size == 0;
 	}
 
 	/**

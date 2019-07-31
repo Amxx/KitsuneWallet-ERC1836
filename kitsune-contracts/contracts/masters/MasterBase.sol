@@ -1,8 +1,10 @@
 pragma solidity ^0.5.0;
 
-import "../proxy/BaseKitsuneProxy.sol";
+import "zos-lib/contracts/upgradeability/BaseUpgradeabilityProxy.sol";
 
+import "../interfaces/IERC897.sol";
 import "./IMaster.sol";
+import "../tools/Initializable.sol";
 import "../tools/Controlled.sol";
 
 
@@ -10,7 +12,7 @@ import "../tools/Controlled.sol";
  * @title MasterBase
  * @dev This contract the base kitsune's masters.
  */
-contract MasterBase is IMaster, BaseKitsuneProxy, Controlled
+contract MasterBase is IMaster, BaseUpgradeabilityProxy, Initializable, Controlled
 {
 	/**
 	 * @dev Enpty fallback function (should not delegate further).
@@ -66,11 +68,19 @@ contract MasterBase is IMaster, BaseKitsuneProxy, Controlled
 	function updateImplementation(address logic, bytes calldata data, bool reset)
 	external onlyController()
 	{
+		require(IERC897(logic).implementation() == address(0), "invalid-master-implementation");
 		if (reset)
 		{
 			cleanup();
 		}
-		_upgradeToAndInitialize(logic, data);
+		_upgradeTo(logic);
+		if (data.length > 0)
+		{
+			_unlock();
+			// solium-disable-next-line security/no-low-level-calls
+			(bool success,) = logic.delegatecall(data);
+			require(success, "failed-to-initialize");
+		}
 	}
 
 	/**

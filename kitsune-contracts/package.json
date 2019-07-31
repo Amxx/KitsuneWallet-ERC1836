@@ -10,17 +10,17 @@
 		"/test"
 	],
 	"scripts": {
-		"build":      "waffle waffle.json",
-		"deploy":     "GIT=$(git rev-parse HEAD) ts-node deploy.ts",
+		"build": "waffle waffle.json",
+		"deploy": "GIT=$(git rev-parse HEAD) ts-node deploy.ts",
 		"deploy-all": "yarn deploy ropsten && yarn deploy rinkeby && yarn deploy goerli && yarn deploy kovan",
-		"test":       "mocha 'test/**/*.{js,ts}'",
-		"lint":       "yarn lint:sol",
-		"lint:sol":   "solium -d contracts",
-		"clean":      "rm -rf build"
+		"test": "mocha 'test/**/*.{js,ts}'",
+		"lint": "yarn lint:sol",
+		"lint:sol": "solium -d contracts",
+		"clean": "rm -rf build"
 	},
 	"dependencies": {
-		"openzeppelin-solidity": "^2.2.0",
-		"zos-lib": "^2.4.0"
+		"openzeppelin-solidity": "^2.3.0",
+		"zos-lib": "^2.4.2"
 	},
 	"devDependencies": {
 		"@ensdomains/buffer": "^0.0.10",
@@ -33,9 +33,9 @@
 		"chai": "^4.2.0",
 		"chai-as-promised": "^7.1.1",
 		"ens-builder": "^2.0.1",
-		"ethereum-waffle": "2.0.10",
+		"ethereum-waffle": "^2.0.15",
 		"ethers": "^4.0.27",
 		"jq.node": "^2.1.2",
-		"mocha": "^6.0.2"
+		"mocha": "^6.2.0"
 	}
 }

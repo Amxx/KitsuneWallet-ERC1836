@@ -165,9 +165,8 @@ describe('WalletOwnable', () => {
 				sdk.transactions.initialization("WalletOwnable", [ user2.address ]),
 				true,
 				{ gasLimit: 800000 }
-			)).to.be.reverted; // onlyOwner overridden by openzeppelin's ownable
+			)).to.be.revertedWith("access-denied"); // onlyOwner overridden by openzeppelin's ownable
 		});
-
 	});
 
 });

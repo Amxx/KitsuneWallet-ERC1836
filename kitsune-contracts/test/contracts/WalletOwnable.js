@@ -43,7 +43,7 @@ describe('WalletOwnable', () => {
 			await expect(sdk.contracts.deployProxy(
 				"WalletOwnable",
 				[ ethers.constants.AddressZero ]
-			)).to.be.revertedWith("failed-to-initialize");
+			)).to.be.revertedWith("Ownable: new owner is the zero address");
 		});
 	});
 

@@ -78,8 +78,8 @@ contract MasterBase is IMaster, BaseUpgradeabilityProxy, Initializable, Restrict
 		{
 			_unlock();
 			// solium-disable-next-line security/no-low-level-calls
-			(bool success,) = logic.delegatecall(data);
-			require(success, "failed-to-initialize");
+			(bool success, bytes memory reason) = logic.delegatecall(data);
+			require(success, string(reason));
 		}
 	}
 

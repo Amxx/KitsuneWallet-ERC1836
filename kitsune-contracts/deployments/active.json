@@ -1,8 +1,8 @@
 {
 	"3": {
 		"WalletOwnable": {
-			"address": "0x9659CD1823d8aAa0AA00bA413A9c11cC28b1bFe5",
-			"hash": "0xd7db9fbdd9a5ab07822d697eeffbee662a13323e6b33d7182e5bcccb92d3af32",
+			"address": "0x387741FDa93A9fcFEC7C545E8E7F1E5D98f157c7",
+			"hash": "0xf897757008ee135d612de78124bff180582b0e34ffa204dd95d0e548cdf87d42",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -11,11 +11,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisig": {
-			"address": "0xcCE2BC4A6Fa13CA91f382467D8D97F76904a2224",
-			"hash": "0x47b98ef3749600d6c52eec77d728768efced19e597c8094428b803ca4dd17846",
+			"address": "0xae1f770CE5c89b100C505a05d81b8247C81B8C03",
+			"hash": "0x4a62a2254e6586bff3bf04a657a0070dc054a0505b0f0a3ff9b04b9d26f77192",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -24,11 +24,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisigRefund": {
-			"address": "0xc5835F97ce3b90856dB9cB9238EB0e4EA090D18F",
-			"hash": "0x6e988a59409c305594e08a94e2966f6c17c84f7e1e7818e5c5820f8fa780cb0b",
+			"address": "0x089ca8EA9f3E19b24626B946E8d903a6c0341Cb3",
+			"hash": "0x1eccbb7c7e2812e3a1a5f156583dd577dcab9d807174c580f2cdf8ab3523dfdf",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -37,11 +37,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisigRefundOutOfOrder": {
-			"address": "0x3494001BF20cf8f75d035Ab64A1E2C5A8E81f0b3",
-			"hash": "0x2ca6420b4842e5e98385057107445c4245c0b5a52ccfd224cc021f3146b249c7",
+			"address": "0x1Ca57308E80548cf583A351B74855254c2D536c8",
+			"hash": "0xf85e6fd2db5316eafa9da7647c3a31385e028d4b48ac7021abf48663ea038eb5",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -50,11 +50,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisigRecovery": {
-			"address": "0xb4004832f00A2BFD776b33e418234d1594767721",
-			"hash": "0x4478b0f39224df956e786a6197b248f7de9e58b09c437f0442cde1715d165804",
+			"address": "0x65DfB939e4707c4C058bdb0843C5C7B34A144DAF",
+			"hash": "0x47ac5cf4d225d8f56e1e62b16ff55d84cac43940c6e60ffa43c169f23517f4ff",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -63,13 +63,13 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		}
 	},
 	"4": {
 		"WalletOwnable": {
-			"address": "0x9659CD1823d8aAa0AA00bA413A9c11cC28b1bFe5",
-			"hash": "0xd7db9fbdd9a5ab07822d697eeffbee662a13323e6b33d7182e5bcccb92d3af32",
+			"address": "0x387741FDa93A9fcFEC7C545E8E7F1E5D98f157c7",
+			"hash": "0xf897757008ee135d612de78124bff180582b0e34ffa204dd95d0e548cdf87d42",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -78,11 +78,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisig": {
-			"address": "0xcCE2BC4A6Fa13CA91f382467D8D97F76904a2224",
-			"hash": "0x47b98ef3749600d6c52eec77d728768efced19e597c8094428b803ca4dd17846",
+			"address": "0xae1f770CE5c89b100C505a05d81b8247C81B8C03",
+			"hash": "0x4a62a2254e6586bff3bf04a657a0070dc054a0505b0f0a3ff9b04b9d26f77192",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -91,11 +91,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisigRefund": {
-			"address": "0xc5835F97ce3b90856dB9cB9238EB0e4EA090D18F",
-			"hash": "0x6e988a59409c305594e08a94e2966f6c17c84f7e1e7818e5c5820f8fa780cb0b",
+			"address": "0x089ca8EA9f3E19b24626B946E8d903a6c0341Cb3",
+			"hash": "0x1eccbb7c7e2812e3a1a5f156583dd577dcab9d807174c580f2cdf8ab3523dfdf",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -104,11 +104,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisigRefundOutOfOrder": {
-			"address": "0x3494001BF20cf8f75d035Ab64A1E2C5A8E81f0b3",
-			"hash": "0x2ca6420b4842e5e98385057107445c4245c0b5a52ccfd224cc021f3146b249c7",
+			"address": "0x1Ca57308E80548cf583A351B74855254c2D536c8",
+			"hash": "0xf85e6fd2db5316eafa9da7647c3a31385e028d4b48ac7021abf48663ea038eb5",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -117,11 +117,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisigRecovery": {
-			"address": "0xb4004832f00A2BFD776b33e418234d1594767721",
-			"hash": "0x4478b0f39224df956e786a6197b248f7de9e58b09c437f0442cde1715d165804",
+			"address": "0x65DfB939e4707c4C058bdb0843C5C7B34A144DAF",
+			"hash": "0x47ac5cf4d225d8f56e1e62b16ff55d84cac43940c6e60ffa43c169f23517f4ff",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -130,13 +130,13 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		}
 	},
 	"5": {
 		"WalletOwnable": {
-			"address": "0x9659CD1823d8aAa0AA00bA413A9c11cC28b1bFe5",
-			"hash": "0xd7db9fbdd9a5ab07822d697eeffbee662a13323e6b33d7182e5bcccb92d3af32",
+			"address": "0x387741FDa93A9fcFEC7C545E8E7F1E5D98f157c7",
+			"hash": "0xf897757008ee135d612de78124bff180582b0e34ffa204dd95d0e548cdf87d42",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -145,11 +145,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisig": {
-			"address": "0xcCE2BC4A6Fa13CA91f382467D8D97F76904a2224",
-			"hash": "0x47b98ef3749600d6c52eec77d728768efced19e597c8094428b803ca4dd17846",
+			"address": "0xae1f770CE5c89b100C505a05d81b8247C81B8C03",
+			"hash": "0x4a62a2254e6586bff3bf04a657a0070dc054a0505b0f0a3ff9b04b9d26f77192",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -158,11 +158,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisigRefund": {
-			"address": "0xc5835F97ce3b90856dB9cB9238EB0e4EA090D18F",
-			"hash": "0x6e988a59409c305594e08a94e2966f6c17c84f7e1e7818e5c5820f8fa780cb0b",
+			"address": "0x089ca8EA9f3E19b24626B946E8d903a6c0341Cb3",
+			"hash": "0x1eccbb7c7e2812e3a1a5f156583dd577dcab9d807174c580f2cdf8ab3523dfdf",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -171,11 +171,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisigRefundOutOfOrder": {
-			"address": "0x3494001BF20cf8f75d035Ab64A1E2C5A8E81f0b3",
-			"hash": "0x2ca6420b4842e5e98385057107445c4245c0b5a52ccfd224cc021f3146b249c7",
+			"address": "0x1Ca57308E80548cf583A351B74855254c2D536c8",
+			"hash": "0xf85e6fd2db5316eafa9da7647c3a31385e028d4b48ac7021abf48663ea038eb5",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -184,11 +184,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisigRecovery": {
-			"address": "0xb4004832f00A2BFD776b33e418234d1594767721",
-			"hash": "0x4478b0f39224df956e786a6197b248f7de9e58b09c437f0442cde1715d165804",
+			"address": "0x65DfB939e4707c4C058bdb0843C5C7B34A144DAF",
+			"hash": "0x47ac5cf4d225d8f56e1e62b16ff55d84cac43940c6e60ffa43c169f23517f4ff",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -197,13 +197,13 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		}
 	},
 	"42": {
 		"WalletOwnable": {
-			"address": "0x9659CD1823d8aAa0AA00bA413A9c11cC28b1bFe5",
-			"hash": "0xd7db9fbdd9a5ab07822d697eeffbee662a13323e6b33d7182e5bcccb92d3af32",
+			"address": "0x387741FDa93A9fcFEC7C545E8E7F1E5D98f157c7",
+			"hash": "0xf897757008ee135d612de78124bff180582b0e34ffa204dd95d0e548cdf87d42",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -212,11 +212,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisig": {
-			"address": "0xcCE2BC4A6Fa13CA91f382467D8D97F76904a2224",
-			"hash": "0x47b98ef3749600d6c52eec77d728768efced19e597c8094428b803ca4dd17846",
+			"address": "0xae1f770CE5c89b100C505a05d81b8247C81B8C03",
+			"hash": "0x4a62a2254e6586bff3bf04a657a0070dc054a0505b0f0a3ff9b04b9d26f77192",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -225,11 +225,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisigRefund": {
-			"address": "0xc5835F97ce3b90856dB9cB9238EB0e4EA090D18F",
-			"hash": "0x6e988a59409c305594e08a94e2966f6c17c84f7e1e7818e5c5820f8fa780cb0b",
+			"address": "0x089ca8EA9f3E19b24626B946E8d903a6c0341Cb3",
+			"hash": "0x1eccbb7c7e2812e3a1a5f156583dd577dcab9d807174c580f2cdf8ab3523dfdf",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -238,11 +238,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisigRefundOutOfOrder": {
-			"address": "0x3494001BF20cf8f75d035Ab64A1E2C5A8E81f0b3",
-			"hash": "0x2ca6420b4842e5e98385057107445c4245c0b5a52ccfd224cc021f3146b249c7",
+			"address": "0x1Ca57308E80548cf583A351B74855254c2D536c8",
+			"hash": "0xf85e6fd2db5316eafa9da7647c3a31385e028d4b48ac7021abf48663ea038eb5",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -251,11 +251,11 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		},
 		"WalletMultisigRecovery": {
-			"address": "0xb4004832f00A2BFD776b33e418234d1594767721",
-			"hash": "0x4478b0f39224df956e786a6197b248f7de9e58b09c437f0442cde1715d165804",
+			"address": "0x65DfB939e4707c4C058bdb0843C5C7B34A144DAF",
+			"hash": "0x47ac5cf4d225d8f56e1e62b16ff55d84cac43940c6e60ffa43c169f23517f4ff",
 			"solc": "v0.5.10+commit.5a6ea5b1",
 			"options": {
 				"optimizer": {
@@ -264,7 +264,7 @@
 				},
 				"evmVersion": "petersburg"
 			},
-			"git": "0ecea0402fb64177cc569002022b1cd082726972"
+			"git": "0d4fbf7362ed802a907bb47161d5599b061f5990"
 		}
 	}
 }

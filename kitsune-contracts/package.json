@@ -27,15 +27,15 @@
 		"@ensdomains/dnssec-oracle": "^0.1.2",
 		"@ensdomains/ens": "^0.3.11",
 		"@ensdomains/resolver": "^0.1.6",
-		"@types/chai": "^4.1.7",
-		"@types/chai-as-promised": "^7.1.0",
+		"@types/chai": "^4.2.3",
+		"@types/chai-as-promised": "^7.1.2",
 		"@types/mocha": "^5.2.6",
 		"chai": "^4.2.0",
 		"chai-as-promised": "^7.1.1",
-		"ens-builder": "^2.0.1",
-		"ethereum-waffle": "^2.0.15",
-		"ethers": "^4.0.27",
+		"ens-builder": "^2.0.2",
+		"ethereum-waffle": "^2.1.0",
+		"ethers": "^4.0.37",
 		"jq.node": "^2.1.2",
-		"mocha": "^6.2.0"
+		"mocha": "^6.2.1"
 	}
 }

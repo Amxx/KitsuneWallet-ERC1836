@@ -6,6 +6,7 @@ import WalletMultisig                 from '@kitsune-wallet/contracts/build/Wall
 import WalletMultisigRefund           from '@kitsune-wallet/contracts/build/WalletMultisigRefund.json';
 import WalletMultisigRefundOutOfOrder from '@kitsune-wallet/contracts/build/WalletMultisigRefundOutOfOrder.json';
 import WalletMultisigRecovery         from '@kitsune-wallet/contracts/build/WalletMultisigRecovery.json';
+import WalletMultisigV2               from '@kitsune-wallet/contracts/build/WalletMultisigV2.json';
 
 export {
 	IMaster
@@ -16,4 +17,5 @@ export {
 ,	WalletMultisigRefund
 ,	WalletMultisigRefundOutOfOrder
 ,	WalletMultisigRecovery
+,	WalletMultisigV2
 };

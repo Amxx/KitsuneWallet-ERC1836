@@ -126,36 +126,44 @@ export function sign(abi: string, tx: types.ethereum.metatx, proxy: types.contra
 			return signer.signMessage(ethers.utils.arrayify(hash(abi, tx, proxy)))
 
 		case 'execute((uint256,address,uint256,bytes,uint256),bytes[])':
-			return new Promise( async (resolve, reject) => {
+			return new Promise((resolve, reject) => {
 				proxy.domain()
 				.then(domain => {
-					resolve(
-						sigUtil.signTypedData(
-							Buffer.from(signer.signingKey.privateKey.substr(2), 'hex'),
-							{
-								data:
-								{
-									types: TYPES,
-									primaryType: 'TX',
-									domain:
-									{
-										name:              domain.name,
-										version:           domain.version,
-										chainId:           domain.chainId.toString(),
-										verifyingContract: domain.verifyingContract
-									},
-									message:
-									{
-										op:    tx.op.toString(),
-										to:    tx.to,
-										value: tx.value.toString(),
-										data:  tx.data,
-										nonce: tx.nonce.toString()
-									},
-								}
-							}
-						)
-					)
+					let data =
+					{
+						types: TYPES,
+						primaryType: 'TX',
+						domain:
+						{
+							name:              domain.name,
+							version:           domain.version,
+							chainId:           domain.chainId.toString(),
+							verifyingContract: domain.verifyingContract
+						},
+						message:
+						{
+							op:    tx.op.toString(),
+							to:    tx.to,
+							value: tx.value.toString(),
+							data:  tx.data,
+							nonce: tx.nonce.toString()
+						},
+					}
+
+					signer.provider._sendAsync({
+						method: "eth_signTypedData_v4",
+						params: [ signer.address, JSON.stringify({ data }) ],
+						from: signer.address,
+					}, (err, result) => {
+						if (!err)
+						{
+							resolve(result.result)
+						}
+						else
+						{
+							resolve(sigUtil.signTypedData(Buffer.from(signer.signingKey.privateKey.substr(2), 'hex'), { data }))
+						}
+					});
 				})
 				.catch(reject)
 			});

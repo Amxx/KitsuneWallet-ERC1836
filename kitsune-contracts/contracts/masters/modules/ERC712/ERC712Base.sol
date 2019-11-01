@@ -30,6 +30,9 @@ contract ERC712Base is ERC712DomainTools
 	function chainID()
 	public pure returns(uint256)
 	{
+		// uint256 id;
+		// assembly { id := chainid() }
+		// return id;
 		return 1;
 	}
 

@@ -9,7 +9,7 @@ pragma solidity ^0.5.0;
 contract Restricted
 {
 	/**
-	 * @dev Modifier to check whether the `msg.sender` is the controller.
+	 * @dev Modifier to check whether the `msg.sender` is a controller.
 	 */
 	modifier restricted()
 	{
@@ -26,7 +26,7 @@ contract Restricted
 	}
 
 	/**
-	 * @dev Controllers description (virtual).
+	 * @dev Returns weither of not an address is a controllers.
 	 */
 	function _isController(address) internal view returns (bool);
 }

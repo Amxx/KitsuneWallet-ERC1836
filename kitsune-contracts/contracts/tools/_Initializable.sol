@@ -20,7 +20,7 @@ contract Initializable
 	 */
 	modifier initializer()
 	{
-		require(!_initialized(), "already-initialized");
+		require(!_isInitialized(), "already-initialized");
 		_;
 		_lock();
 	}
@@ -29,7 +29,7 @@ contract Initializable
 	 * @dev Returns the current initialization status.
 	 * @return Current locking status
 	 */
-	function _initialized()
+	function _isInitialized()
 	internal view returns (bool locked)
 	{
 		bytes32 slot = INITIALIZED_SLOT;

@@ -52,10 +52,10 @@ contract MasterBase is IMaster, BaseUpgradeabilityProxy, KitsuneTools
 	 * @dev Accessor to the initialized status (for auditability purposes).
 	 * @return value of the initialized flag
 	 */
-	function initialized()
+	function isInitialized()
 	external view returns (bool)
 	{
-		return _initialized();
+		return _isInitialized();
 	}
 
 	/**

@@ -62,7 +62,7 @@ describe('KitsuneProxyFactory', () => {
 			expect(await proxy.isController(proxy.address)).to.be.equal(true);
 			expect(await proxy.implementation()).to.be.equal(init_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 
 			await expect(proxy.connect(user2).secureSetup(
 				main_contract.address,
@@ -78,7 +78,7 @@ describe('KitsuneProxyFactory', () => {
 			expect(await proxy.isController(proxy.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(main_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 		});
 
 		it('FrontrunningProtection - 2 step - protected - success', async () => {
@@ -114,7 +114,7 @@ describe('KitsuneProxyFactory', () => {
 			expect(await proxy.isController(proxy.address)).to.be.equal(true);
 			expect(await proxy.implementation()).to.be.equal(init_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 
 			await expect(proxy.connect(user1).secureSetup(
 				main_contract.address,
@@ -130,7 +130,7 @@ describe('KitsuneProxyFactory', () => {
 			expect(await proxy.isController(proxy.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(main_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 		});
 
 		it('FrontrunningProtection - 2 step - protected - catch', async () => {
@@ -166,7 +166,7 @@ describe('KitsuneProxyFactory', () => {
 			expect(await proxy.isController(proxy.address)).to.be.equal(true);
 			expect(await proxy.implementation()).to.be.equal(init_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 
 			await expect(proxy.connect(user2).secureSetup(
 				main_contract.address,
@@ -180,7 +180,7 @@ describe('KitsuneProxyFactory', () => {
 			expect(await proxy.isController(proxy.address)).to.be.equal(true);
 			expect(await proxy.implementation()).to.be.equal(init_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 		});
 
 		it('FrontrunningProtection - 1 step - protected - success', async () => {
@@ -219,7 +219,7 @@ describe('KitsuneProxyFactory', () => {
 			expect(await proxy.isController(proxy.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(main_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 		});
 
 		it('FrontrunningProtection - 1 step - protected - catch', async () => {

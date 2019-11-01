@@ -56,10 +56,13 @@ describe('KitsuneProxyFactory', () => {
 
 			proxy = sdk.contracts.viewContract(init_name, predictedAddress);
 
-			expect(await proxy.controller()).to.be.equal(proxy.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(false);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
+			expect(await proxy.isController(proxy.address)).to.be.equal(true);
 			expect(await proxy.implementation()).to.be.equal(init_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 
 			await expect(proxy.connect(user2).secureSetup(
 				main_contract.address,
@@ -69,10 +72,13 @@ describe('KitsuneProxyFactory', () => {
 
 			proxy = sdk.contracts.viewContract(main_name, predictedAddress);
 
-			expect(await proxy.controller()).to.be.equal(user2.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(false);
+			expect(await proxy.isController(user2.address)).to.be.equal(true);
+			expect(await proxy.isController(proxy.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(main_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 		});
 
 		it('FrontrunningProtection - 2 step - protected - success', async () => {
@@ -102,10 +108,13 @@ describe('KitsuneProxyFactory', () => {
 
 			proxy = sdk.contracts.viewContract(init_name, predictedAddress);
 
-			expect(await proxy.controller()).to.be.equal(proxy.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(false);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
+			expect(await proxy.isController(proxy.address)).to.be.equal(true);
 			expect(await proxy.implementation()).to.be.equal(init_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 
 			await expect(proxy.connect(user1).secureSetup(
 				main_contract.address,
@@ -115,10 +124,13 @@ describe('KitsuneProxyFactory', () => {
 
 			proxy = sdk.contracts.viewContract(main_name, predictedAddress);
 
-			expect(await proxy.controller()).to.be.equal(user1.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(true);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
+			expect(await proxy.isController(proxy.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(main_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 		});
 
 		it('FrontrunningProtection - 2 step - protected - catch', async () => {
@@ -148,10 +160,13 @@ describe('KitsuneProxyFactory', () => {
 
 			proxy = sdk.contracts.viewContract(init_name, predictedAddress);
 
-			expect(await proxy.controller()).to.be.equal(proxy.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(false);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
+			expect(await proxy.isController(proxy.address)).to.be.equal(true);
 			expect(await proxy.implementation()).to.be.equal(init_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 
 			await expect(proxy.connect(user2).secureSetup(
 				main_contract.address,
@@ -159,10 +174,13 @@ describe('KitsuneProxyFactory', () => {
 				{ gasLimit: 500000 }
 			)).to.be.reverted;
 
-			expect(await proxy.controller()).to.be.equal(proxy.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(false);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
+			expect(await proxy.isController(proxy.address)).to.be.equal(true);
 			expect(await proxy.implementation()).to.be.equal(init_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 		});
 
 		it('FrontrunningProtection - 1 step - protected - success', async () => {
@@ -195,10 +213,13 @@ describe('KitsuneProxyFactory', () => {
 
 			proxy = sdk.contracts.viewContract(main_name, predictedAddress);
 
-			expect(await proxy.controller()).to.be.equal(user1.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(true);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
+			expect(await proxy.isController(proxy.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(main_contract.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 		});
 
 		it('FrontrunningProtection - 1 step - protected - catch', async () => {

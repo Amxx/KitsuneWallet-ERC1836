@@ -76,26 +76,32 @@ describe('KitsuneProxyFactory', () => {
 			proxy = sdk.contracts.viewContract(name, predictedAddress);
 
 			expect(await proxy.owner()).to.be.equal(ethers.constants.AddressZero);
-			expect(await proxy.controller()).to.be.equal(ethers.constants.AddressZero);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(true);
+			expect(await proxy.isController(user1.address)).to.be.equal(false);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(master.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(false);
+			expect(await proxy.isInitialized()).to.be.equal(false);
 
 			await expect(proxy.connect(user1).initialize(user1.address, { gasLimit: 500000 })).to.be.not.reverted;
 
 			expect(await proxy.owner()).to.be.equal(user1.address);
-			expect(await proxy.controller()).to.be.equal(user1.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(true);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(master.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 
 			await expect(proxy.connect(user2).initialize(user2.address)).to.revertedWith('already-initialized');
 
 			expect(await proxy.owner()).to.be.equal(user1.address);
-			expect(await proxy.controller()).to.be.equal(user1.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(true);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(master.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 		});
 
 		it('with initialization', async () => {
@@ -112,18 +118,22 @@ describe('KitsuneProxyFactory', () => {
 			proxy = sdk.contracts.viewContract(name, predictedAddress);
 
 			expect(await proxy.owner()).to.be.equal(user1.address);
-			expect(await proxy.controller()).to.be.equal(user1.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(true);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(master.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 
 			await expect(proxy.connect(wallet).initialize(user2.address)).to.revertedWith('already-initialized');
 
 			expect(await proxy.owner()).to.be.equal(user1.address);
-			expect(await proxy.controller()).to.be.equal(user1.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(true);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(master.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 		});
 
 		it('callback initialization', async () => {
@@ -148,18 +158,22 @@ describe('KitsuneProxyFactory', () => {
 			proxy = sdk.contracts.viewContract(name, predictedAddress);
 
 			expect(await proxy.owner()).to.be.equal(user1.address);
-			expect(await proxy.controller()).to.be.equal(user1.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(true);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(master.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 
 			await expect(proxy.connect(wallet).initialize(user2.address)).to.revertedWith('already-initialized');
 
 			expect(await proxy.owner()).to.be.equal(user1.address);
-			expect(await proxy.controller()).to.be.equal(user1.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(true);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(master.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 		});
 
 		it('No duplicated', async () => {
@@ -193,18 +207,22 @@ describe('KitsuneProxyFactory', () => {
 			proxy = sdk.contracts.viewContract(name, predictedAddress);
 
 			expect(await proxy.owner()).to.be.equal(user1.address);
-			expect(await proxy.controller()).to.be.equal(user1.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(true);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(master.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 
 			await expect(proxy.connect(wallet).initialize(user2.address)).to.revertedWith('already-initialized');
 
 			expect(await proxy.owner()).to.be.equal(user1.address);
-			expect(await proxy.controller()).to.be.equal(user1.address);
+			expect(await proxy.isController(ethers.constants.AddressZero)).to.be.equal(false);
+			expect(await proxy.isController(user1.address)).to.be.equal(true);
+			expect(await proxy.isController(user2.address)).to.be.equal(false);
 			expect(await proxy.implementation()).to.be.equal(master.address);
 			expect(await proxy.proxyType()).to.be.equal(2);
-			expect(await proxy.initialized()).to.be.equal(true);
+			expect(await proxy.isInitialized()).to.be.equal(true);
 		});
 
 	});

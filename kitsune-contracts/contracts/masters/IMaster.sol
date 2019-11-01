@@ -10,11 +10,16 @@ import "../interfaces/IERC897.sol";
 contract IMaster is IERC897
 {
 	/**
-	 * @dev Accessor to the controller (for auditability purposes).
-	 * @return address of the controller
+	 * @dev Returns weither of not an address is a controllers.
 	 */
-	function controller()
-		external view returns (address);
+	function isController(address)
+		external view returns (bool);
+
+	/**
+	 * @dev Returns the current initialization status.
+	 */
+	function isInitialized()
+		external view returns (bool)
 
 	/**
 	 * @dev kitsune wallet's upgrade process with optional reset by the old master.

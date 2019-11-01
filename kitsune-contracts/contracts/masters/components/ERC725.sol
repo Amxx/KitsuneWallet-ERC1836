@@ -1,10 +1,10 @@
 pragma solidity ^0.5.0;
 
 import "../../interfaces/IERC725.sol";
-import "../../tools/Storage.sol";
+import "../../tools/KitsuneTools.sol";
 
 
-contract ERC725 is IERC725, Storage
+contract ERC725 is IERC725, KitsuneTools
 {
 	bytes32 internal constant PUBLIC_SALT = 0xe81b6d741516190638e87536ee75908b2ec23b41de96d1ec3b6dcc71a09901ef;
 

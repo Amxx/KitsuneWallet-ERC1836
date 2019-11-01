@@ -9,15 +9,15 @@ pragma solidity ^0.5.0;
 contract Restricted
 {
 	/**
-	 * @dev Modifier to check whether the `msg.sender` is the controller.
+	 * @dev Modifier to check whether the `msg.sender` is a controller.
 	 */
 	modifier restricted()
 	{
-		require(isConstructor() || msg.sender == _controller(), "access-denied");
+		require(_isConstructor() || _isController(msg.sender), "access-denied");
 		_;
 	}
 
-	function isConstructor()
+	function _isConstructor()
 	internal view returns (bool)
 	{
 		uint256 size;
@@ -26,8 +26,7 @@ contract Restricted
 	}
 
 	/**
-	 * @dev Returns the current controller (virtual).
-	 * @return Address of the current controller
+	 * @dev Returns weither of not an address is a controllers.
 	 */
-	function _controller() internal view returns (address);
+	function _isController(address) internal view returns (bool);
 }

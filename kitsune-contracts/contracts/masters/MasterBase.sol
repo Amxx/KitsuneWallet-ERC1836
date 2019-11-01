@@ -4,15 +4,14 @@ import "zos-lib/contracts/upgradeability/BaseUpgradeabilityProxy.sol";
 
 import "../interfaces/IERC897.sol";
 import "./IMaster.sol";
-import "../tools/Initializable.sol";
-import "../tools/Restricted.sol";
+import "../tools/KitsuneTools.sol";
 
 
 /**
  * @title MasterBase
  * @dev This contract the base kitsune's masters.
  */
-contract MasterBase is IMaster, BaseUpgradeabilityProxy, Initializable, Restricted
+contract MasterBase is IMaster, BaseUpgradeabilityProxy, KitsuneTools
 {
 	/**
 	 * @dev Enpty fallback function (should not delegate further).
@@ -43,20 +42,20 @@ contract MasterBase is IMaster, BaseUpgradeabilityProxy, Initializable, Restrict
 	 * @dev Accessor to the controller (for auditability purposes).
 	 * @return address of the controller
 	 */
-	function controller()
-	external view returns (address)
+	function isController(address _controller)
+	external view returns (bool)
 	{
-		return _controller();
+		return _isController(_controller);
 	}
 
 	/**
 	 * @dev Accessor to the initialized status (for auditability purposes).
 	 * @return value of the initialized flag
 	 */
-	function initialized()
+	function isInitialized()
 	external view returns (bool)
 	{
-		return _initialized();
+		return _isInitialized();
 	}
 
 	/**

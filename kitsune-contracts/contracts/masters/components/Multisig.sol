@@ -4,10 +4,10 @@ import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 
 import "./ERC725.sol";
 import "../../interfaces/IERC1271.sol";
-import "../../tools/Initializable.sol";
+import "../../tools/KitsuneTools.sol";
 
 
-contract Multisig is ERC725, IERC1271, Initializable
+contract Multisig is ERC725, IERC1271
 {
 	using ECDSA for bytes32;
 
@@ -67,10 +67,10 @@ contract Multisig is ERC725, IERC1271, Initializable
 		delete _actionThreshold;
 	}
 
-	function _controller()
-	internal view returns (address)
+	function _isController(address _controller)
+	internal view returns (bool)
 	{
-		return address(this);
+		return _controller == address(this);
 	}
 
 	// ACCESSORS

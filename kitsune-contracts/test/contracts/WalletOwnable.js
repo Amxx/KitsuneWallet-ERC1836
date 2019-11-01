@@ -61,22 +61,21 @@ describe('WalletOwnable', () => {
 		});
 
 		it('ENS registration', async () => {
-			const domain    = 'kitsune.eth';
-			const label     = 'proxy';
-			const hashLabel = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(label));
-			const name      = `${label}.${domain}`;
-			const node      = ethers.utils.namehash(name);
+			const domain     = 'kitsune.eth';
+			const domainHash = ethers.utils.namehash(domain);
+			const label      = 'proxy';
+			const labelHash  = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(label));
+			const name       = `${label}.${domain}`;
 
 			expect(await providerWithENS.resolveName(name)).to.be.eq(null);
 			// expect(await providerWithENS.lookupAddress(proxy.address)).to.be.eq(null); // TODO FIX
 
-			await expect(proxy.connect(user1).registerENS(
-				hashLabel,        /* bytes32        */
-				name,             /* string         */
-				node,             /* bytes32        */
+			await expect(proxy.connect(user1).ENSFullRegistration(
 				ensAddress,       /* ENSRegistry    */
-				registrarAddress, /* FIFSRegistrar  */
 				resolverAddress,  /* PublicResolver */
+				domainHash,       /* bytes32        */
+				labelHash,        /* bytes32        */
+				name,             /* string         */
 				{ gasLimit: 230000 }
 			)).to.not.reverted;
 

@@ -52,9 +52,9 @@ contract FrontrunningProtection is MasterBase
 	}
 
 	// ACCESSORS
-	function _controller()
-	internal view returns (address)
+	function _isController(address _controller)
+	internal view returns (bool)
 	{
-		return address(this);
+		return _controller == address(this);
 	}
 }

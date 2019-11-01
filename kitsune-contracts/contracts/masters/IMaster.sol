@@ -13,8 +13,8 @@ contract IMaster is IERC897
 	 * @dev Accessor to the controller (for auditability purposes).
 	 * @return address of the controller
 	 */
-	function controller()
-		external view returns (address);
+	function isController(address)
+		external view returns (bool);
 
 	/**
 	 * @dev kitsune wallet's upgrade process with optional reset by the old master.

@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
 import "./WalletMultisig.sol";
-import "../modules/Recovery.sol";
+import "../components/Recovery.sol";
 
 
 contract WalletMultisigRecovery is WalletMultisig, Recovery

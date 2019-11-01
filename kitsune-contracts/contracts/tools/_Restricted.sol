@@ -13,11 +13,11 @@ contract Restricted
 	 */
 	modifier restricted()
 	{
-		require(isConstructor() || msg.sender == _controller(), "access-denied");
+		require(_isConstructor() || _isController(msg.sender), "access-denied");
 		_;
 	}
 
-	function isConstructor()
+	function _isConstructor()
 	internal view returns (bool)
 	{
 		uint256 size;
@@ -26,8 +26,7 @@ contract Restricted
 	}
 
 	/**
-	 * @dev Returns the current controller (virtual).
-	 * @return Address of the current controller
+	 * @dev Controllers description (virtual).
 	 */
-	function _controller() internal view returns (address);
+	function _isController(address) internal view returns (bool);
 }

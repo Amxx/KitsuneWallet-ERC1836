@@ -2,14 +2,14 @@ pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
 import "../MasterBase.sol";
-import "../modules/Multisig.sol";
-import "../modules/ENSRegistered.sol";
-import "../modules/ERC712/ERC712Base.sol";
-import "../modules/ERC712/ERC712TransactionsTools.sol";
-import "../modules/ERC721Receiver.sol";
+import "../components/Multisig.sol";
+import "../components/ENSIntegration.sol";
+import "../components/ERC712/ERC712Base.sol";
+import "../components/ERC712/ERC712TransactionsTools.sol";
+import "../components/ERC721Receiver.sol";
 
 
-contract WalletMultisigV2 is MasterBase, Multisig, ENSRegistered, ERC712Base, ERC712TransactionsTools, ERC721Receiver
+contract WalletMultisigV2 is MasterBase, Multisig, ENSIntegration, ERC712Base, ERC712TransactionsTools, ERC721Receiver
 {
 	constructor()
 	public

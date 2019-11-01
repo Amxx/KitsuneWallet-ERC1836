@@ -40,8 +40,8 @@ contract ERC712Base is ERC712DomainTools
 	public view returns(EIP712Domain memory)
 	{
 		return EIP712Domain({
-			name:              "TOTO1" //ERC712_name
-		, version:           "TOTO2" //ERC712_version
+			name:              "KitsuneWallet" //ERC712_name
+		, version:           "v0.3.8" //ERC712_version
 		, chainId:           chainID()
 		, verifyingContract: address(this)
 		});

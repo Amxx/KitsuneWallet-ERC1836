@@ -4,29 +4,47 @@ pragma experimental ABIEncoderV2;
 import "../MasterBase.sol";
 import "../modules/Multisig.sol";
 import "../modules/ENSRegistered.sol";
-import "../modules/ERC712Base.sol";
+import "../modules/ERC712/ERC712Base.sol";
+import "../modules/ERC712/ERC712TransactionsTools.sol";
 import "../modules/ERC721Receiver.sol";
 
 
-contract WalletMultisigV2 is MasterBase, Multisig, ENSRegistered, ERC712Base, ERC721Receiver
+contract WalletMultisigV2 is MasterBase, Multisig, ENSRegistered, ERC712Base, ERC712TransactionsTools, ERC721Receiver
 {
-	using ERC712SignatureVerification for bytes32;
-	using ERC712SignatureVerification for ERC712SignatureVerification.EIP712Domain;
-	using ERC712SignatureVerification for ERC712SignatureVerification.TX;
-	using ERC712SignatureVerification for ERC712SignatureVerification.TXS;
-
-	// This is a delegate contract, lock it
 	constructor()
 	public
 	{
 	}
 
+	function initialize(
+		bytes32[] memory keys,
+		bytes32[] memory purposes,
+		uint256          managementThreshold,
+		uint256          actionThreshold)
+	public initializer()
+	{
+		_initializeERC712Base("KitsuneWalletMultisigV2", "0.0.1-beta.1");
+		super.initialize(
+			keys,
+			purposes,
+			managementThreshold,
+			actionThreshold
+		);
+	}
+
+	function cleanup()
+	internal
+	{
+		_cleanupERC712Base();
+		super.cleanup();
+	}
+
 	function execute(
-		ERC712SignatureVerification.TX memory _tx,
-		bytes[]                        memory _sigs)
+		TX      memory _tx,
+		bytes[] memory _sigs)
 	public
 	{
-		bytes32 executionID = _tx.hash().toEthTypedStructHash(domain().hash());
+		bytes32 executionID = toEthTypedStructHash(hash(_tx), hash(domain()));
 
 		_checkSignatures(
 			executionID,
@@ -37,12 +55,12 @@ contract WalletMultisigV2 is MasterBase, Multisig, ENSRegistered, ERC712Base, ER
 		_execute(_tx);
 	}
 
-	function execute(
-		ERC712SignatureVerification.TXS memory _txs,
-		bytes[]                         memory _sigs)
+	function batch(
+		TXS     memory _txs,
+		bytes[] memory _sigs)
 	public
 	{
-		bytes32 executionID = _txs.hash().toEthTypedStructHash(domain().hash());
+		bytes32 executionID = toEthTypedStructHash(hash(_txs), hash(domain()));
 
 		bool needsManagement = false;
 		for (uint256 i = 0; i < _txs.transactions.length; ++i)
@@ -86,7 +104,7 @@ contract WalletMultisigV2 is MasterBase, Multisig, ENSRegistered, ERC712Base, ER
 		return true;
 	}
 
-	function _execute(ERC712SignatureVerification.TX memory _tx)
+	function _execute(TX memory _tx)
 	internal
 	{
 		require(_incrNonce() == _tx.nonce, "invalid-nonce");

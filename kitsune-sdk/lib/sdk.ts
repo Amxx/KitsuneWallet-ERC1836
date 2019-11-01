@@ -8,6 +8,8 @@ import { Ownable      } from "./modules/Ownable";
 import { Transactions } from "./modules/Transactions";
 import { Utils        } from "./modules/Utils";
 
+ethers.errors.setLogLevel('error');
+
 export class SDK
 {
 	provider: types.provider;

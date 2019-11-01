@@ -11,7 +11,7 @@ export interface args extends Array<arg> {};
 // Transactions & Meta-Transactions
 export interface metatx
 {
-	type     ? : uint256,
+	op       ? : uint256,
 	to       ? : address,
 	value    ? : uint256,
 	data     ? : bytes,

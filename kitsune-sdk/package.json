@@ -11,7 +11,7 @@
 	],
 	"scripts": {
 		"build": "tsc",
-		"test":  "node examples/000_deploy-and-upgrade.js && ts-node examples/100_deploy-and-upgrade.ts",
+		"test": "node examples/000_deploy-and-upgrade.js && ts-node examples/100_deploy-and-upgrade.ts",
 		"clean": "rm -rf dist"
 	},
 	"dependencies": {
@@ -20,6 +20,7 @@
 	"devDependencies": {
 		"ethereum-waffle": "^2.0.15",
 		"ethers": "^4.0.27",
+		"eth-sig-util": "^2.4.4",
 		"typescript": "^3.4.4"
 	}
 }

@@ -1,6 +1,8 @@
 import { ethers }  from 'ethers';
 import * as types  from "../typings/all";
 
+ethers.errors.setLogLevel('error');
+
 import ModuleBase  from "./__ModuleBase";
 
 export class Transactions extends ModuleBase

@@ -19,7 +19,7 @@ contract IMaster is IERC897
 	 * @dev Returns the current initialization status.
 	 */
 	function isInitialized()
-		external view returns (bool)
+		external view returns (bool);
 
 	/**
 	 * @dev kitsune wallet's upgrade process with optional reset by the old master.

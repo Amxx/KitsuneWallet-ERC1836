@@ -21,12 +21,13 @@ contract Restricted
 	internal view returns (bool)
 	{
 		uint256 size;
-		assembly { size := extcodesize(address) }
+		assembly { size := extcodesize(address()) }
 		return size == 0;
 	}
 
 	/**
 	 * @dev Returns weither of not an address is a controllers.
 	 */
-	function _isController(address) internal view returns (bool);
+	function _isController(address)
+	internal view returns(bool);
 }

@@ -150,6 +150,7 @@ export function sign(abi: string, tx: types.ethereum.metatx, proxy: types.contra
 						},
 					}
 
+					// @ts-ignore
 					signer.provider._sendAsync({
 						method: "eth_signTypedData_v4",
 						params: [ signer.address, JSON.stringify({ data }) ],
@@ -161,6 +162,7 @@ export function sign(abi: string, tx: types.ethereum.metatx, proxy: types.contra
 						}
 						else
 						{
+							// @ts-ignore
 							resolve(sigUtil.signTypedData(Buffer.from(signer.signingKey.privateKey.substr(2), 'hex'), { data }))
 						}
 					});

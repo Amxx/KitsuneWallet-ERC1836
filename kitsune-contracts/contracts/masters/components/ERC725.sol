@@ -17,14 +17,17 @@ contract ERC725 is IERC725, KitsuneTools
 		_;
 	}
 
+	function owner()
+	public view returns (address);
+
 	function getData(bytes32 key)
-	public view returns (bytes32)
+	external view returns (bytes32)
 	{
 		return _get(keccak256(abi.encode(PUBLIC_SALT, key)));
 	}
 
 	function setData(bytes32 key, bytes32 value)
-	public onlyOwner()
+	external onlyOwner()
 	{
 		_set(keccak256(abi.encode(PUBLIC_SALT, key)), value);
 		emit DataChanged(key, value);
@@ -34,8 +37,8 @@ contract ERC725 is IERC725, KitsuneTools
 		uint256 operationType,
 		address to,
 		uint256 value,
-		bytes memory data)
-	public onlyOwner()
+		bytes calldata data)
+	external onlyOwner()
 	{
 		_execute(
 			operationType,

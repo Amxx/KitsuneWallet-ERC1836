@@ -1,7 +1,6 @@
 pragma solidity ^0.5.0;
 
 import "zos-lib/contracts/upgradeability/BaseUpgradeabilityProxy.sol";
-
 import "../interfaces/IERC897.sol";
 import "./IMaster.sol";
 import "../tools/KitsuneTools.sol";

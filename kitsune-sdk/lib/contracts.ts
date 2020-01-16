@@ -1,6 +1,5 @@
 import IMaster                        from '@kitsune-wallet/contracts/build/IMaster.json';
 import Proxy                          from '@kitsune-wallet/contracts/build/KitsuneProxy.json';
-import FrontrunningProtection         from '@kitsune-wallet/contracts/build/FrontrunningProtection.json';
 import WalletOwnable                  from '@kitsune-wallet/contracts/build/WalletOwnable.json';
 import WalletMultisig                 from '@kitsune-wallet/contracts/build/WalletMultisig.json';
 import WalletMultisigRefund           from '@kitsune-wallet/contracts/build/WalletMultisigRefund.json';
@@ -11,7 +10,6 @@ import WalletMultisigV2               from '@kitsune-wallet/contracts/build/Wall
 export {
 	IMaster
 ,	Proxy
-,	FrontrunningProtection
 ,	WalletOwnable
 ,	WalletMultisig
 ,	WalletMultisigRefund

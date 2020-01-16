@@ -1,8 +1,8 @@
 pragma solidity ^0.5.0;
 
 
-contract IERC1271
+interface IERC1271
 {
-	function isValidSignature(bytes32,bytes memory)
-		public view returns (bool);
+	function isValidSignature(bytes32,bytes calldata)
+	external view returns (bytes4);
 }

@@ -21,13 +21,13 @@ contract ERC712TransactionsTools
 		TX[] transactions;
 	}
 
-	function hash(bytes32[] memory _array)
+	function _hash(bytes32[] memory _array)
 	internal pure returns (bytes32 arrayhash)
 	{
 		return keccak256(abi.encodePacked(_array));
 	}
 
-	function hash(TX memory _tx)
+	function _hash(TX memory _tx)
 	internal pure returns (bytes32 txhash)
 	{
 		return keccak256(abi.encode(
@@ -40,19 +40,19 @@ contract ERC712TransactionsTools
 		));
 	}
 
-	function hash(TXS memory _txs)
+	function _hash(TXS memory _txs)
 	internal pure returns (bytes32 txshash)
 	{
 		bytes32[] memory txs_hashes = new bytes32[](_txs.transactions.length);
 
 		for (uint256 i = 0; i < _txs.transactions.length; ++i)
 		{
-			txs_hashes[i] = hash(_txs.transactions[i]);
+			txs_hashes[i] = _hash(_txs.transactions[i]);
 		}
 
 		return keccak256(abi.encode(
 			TXS_TYPEHASH
-		, hash(txs_hashes)
+		, _hash(txs_hashes)
 		));
 	}
 }

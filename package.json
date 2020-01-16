@@ -15,18 +15,18 @@
 		"url": "https://github.com/Amxx/KitsuneWallet-ERC1836.git/issues"
 	},
 	"scripts": {
-		"build": "yarn wsrun build",
-		"test": "yarn wsrun test --fast-exit",
-		"clean": "yarn wsrun clean"
+		"build": "yarn wsrun --stages --fast-exit --report build",
+		"test": "yarn wsrun --serial --fast-exit --report test",
+		"clean": "yarn wsrun --report clean"
 	},
 	"engines": {
 		"node": ">=10.9",
 		"yarn": ">=1.9.4"
 	},
 	"dependencies": {
-		"wsrun": "^5.0.0"
+		"wsrun": "^5.2.0"
 	},
 	"devDependencies": {
-		"chalk": "^2.0.1"
+		"chalk": "^3.0.0"
 	}
 }

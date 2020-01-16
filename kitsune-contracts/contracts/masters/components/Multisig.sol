@@ -1,13 +1,12 @@
 pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
-
 import "./ERC725.sol";
-import "../../interfaces/IERC1271.sol";
+import "./ERC1271.sol";
 import "../../tools/KitsuneTools.sol";
 
 
-contract Multisig is ERC725, IERC1271
+contract Multisig is ERC725, ERC1271
 {
 	using ECDSA for bytes32;
 
@@ -245,8 +244,8 @@ contract Multisig is ERC725, IERC1271
 	}
 
 	// ERC1271 SIGNING
-	function isValidSignature(bytes32 data, bytes memory signature)
-	public view returns (bool)
+	function _isValidSignature(bytes32 data, bytes memory signature)
+	internal view returns (bool)
 	{
 		return keyHasPurpose(addrToKey(data.recover(signature)), PURPOSE_SIGN);
 	}

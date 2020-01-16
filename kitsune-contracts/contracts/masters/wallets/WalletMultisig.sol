@@ -24,7 +24,6 @@ contract WalletMultisig is MasterBase, Multisig, ENSIntegration, ERC721Receiver
 		bytes[] memory sigs)
 	public
 	{
-
 		require(_incrNonce() == nonce, "invalid-nonce");
 
 		bytes32 neededPurpose;

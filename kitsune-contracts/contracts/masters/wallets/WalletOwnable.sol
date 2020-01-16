@@ -7,10 +7,10 @@ import "../MasterBase.sol";
 import "../components/ENSIntegration.sol";
 import "../components/ERC725.sol";
 import "../components/ERC721Receiver.sol";
-import "../../interfaces/IERC1271.sol";
+import "../components/ERC1271.sol";
 
 
-contract WalletOwnable is MasterBase, ENSIntegration, ERC725, ERC721Receiver, IERC1271, Ownable
+contract WalletOwnable is MasterBase, ENSIntegration, ERC725, ERC721Receiver, ERC1271, Ownable
 {
 	using ECDSA for bytes32;
 
@@ -40,8 +40,8 @@ contract WalletOwnable is MasterBase, ENSIntegration, ERC725, ERC721Receiver, IE
 		return _controller == owner();
 	}
 
-	function isValidSignature(bytes32 data, bytes memory signature)
-	public view returns (bool)
+	function _isValidSignature(bytes32 data, bytes memory signature)
+	internal view returns (bool)
 	{
 		return owner() == data.recover(signature);
 	}

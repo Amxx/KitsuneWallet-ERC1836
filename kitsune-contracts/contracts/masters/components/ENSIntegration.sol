@@ -1,6 +1,6 @@
 pragma solidity ^0.5.0;
 
-import "@ensdomains/ens/contracts/ENSRegistry.sol";
+import "@ensdomains/ens/contracts/ENS.sol";
 import "@ensdomains/ens/contracts/FIFSRegistrar.sol";
 import "@ensdomains/ens/contracts/ReverseRegistrar.sol";
 import "@ensdomains/resolver/contracts/PublicResolver.sol";
@@ -12,7 +12,7 @@ contract ENSIntegration is KitsuneTools
 	bytes32 internal constant ADDR_REVERSE_NODE = 0x91d1777781884d03a6757a803996e38de2a42967fb37eeaca72729271025a9e2;
 
 	function ENSFIFSRegister(
-		ENSRegistry    ens,
+		ENS            ens,
 		PublicResolver resolver,
 		bytes32        domainHash,
 		bytes32        labelHash)
@@ -26,7 +26,7 @@ contract ENSIntegration is KitsuneTools
 	}
 
 	function ENSReverseRegister(
-		ENSRegistry   ens,
+		ENS           ens,
 		string memory name)
 	public restricted()
 	{
@@ -34,7 +34,7 @@ contract ENSIntegration is KitsuneTools
 	}
 
 	function ENSFullRegistration(
-		ENSRegistry    ens,
+		ENS            ens,
 		PublicResolver resolver,
 		bytes32        domainHash,
 		bytes32        labelHash,

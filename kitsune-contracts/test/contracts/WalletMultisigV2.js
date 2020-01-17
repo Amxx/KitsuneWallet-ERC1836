@@ -17,6 +17,7 @@ ethers.errors.setLogLevel('error');
 eth = x => ethers.utils.parseEther(x.toString())
 describe('WalletMultisigV2', () => {
 
+	// const provider = new MockProvider({ hardfork: 'istanbul' }); // TODO: fix istanbul
 	const provider = new MockProvider();
 	const [ wallet, relayer, user1, user2, user3 ] = provider.getWallets();
 	const sdk = new SDK(provider, relayer);

@@ -94,7 +94,7 @@ describe('KitsuneProxyFactory', () => {
 			expect(await proxy.proxyType()).to.be.equal(2);
 			expect(await proxy.isInitialized()).to.be.equal(true);
 
-			// await expect(proxy.connect(user2).initialize(user2.address)).to.revertedWith('already-initialized');
+			// await expect(proxy.connect(user2).initialize(user2.address)).to.revertedWith('already-initialized'); // TODO: check error message
 			await expect(proxy.connect(user2).initialize(user2.address)).to.reverted;
 
 			expect(await proxy.owner()).to.be.equal(user1.address);
@@ -135,7 +135,7 @@ describe('KitsuneProxyFactory', () => {
 			expect(await proxy.proxyType()).to.be.equal(2);
 			expect(await proxy.isInitialized()).to.be.equal(true);
 
-			// await expect(proxy.connect(wallet).initialize(user2.address)).to.revertedWith('already-initialized');
+			// await expect(proxy.connect(wallet).initialize(user2.address)).to.revertedWith('already-initialized'); // TODO: check error message
 			await expect(proxy.connect(wallet).initialize(user2.address)).to.reverted;
 
 			expect(await proxy.owner()).to.be.equal(user1.address);
@@ -180,7 +180,7 @@ describe('KitsuneProxyFactory', () => {
 			expect(await proxy.proxyType()).to.be.equal(2);
 			expect(await proxy.isInitialized()).to.be.equal(true);
 
-			// await expect(proxy.connect(wallet).initialize(user2.address)).to.revertedWith('already-initialized');
+			// await expect(proxy.connect(wallet).initialize(user2.address)).to.revertedWith('already-initialized'); // TODO: check error message
 			await expect(proxy.connect(wallet).initialize(user2.address)).to.reverted;
 
 			expect(await proxy.owner()).to.be.equal(user1.address);
@@ -240,7 +240,7 @@ describe('KitsuneProxyFactory', () => {
 			expect(await proxy.proxyType()).to.be.equal(2);
 			expect(await proxy.isInitialized()).to.be.equal(true);
 
-			// await expect(proxy.connect(wallet).initialize(user2.address)).to.revertedWith('already-initialized');
+			// await expect(proxy.connect(wallet).initialize(user2.address)).to.revertedWith('already-initialized'); // TODO: check error message
 			await expect(proxy.connect(wallet).initialize(user2.address)).to.reverted;
 
 			expect(await proxy.owner()).to.be.equal(user1.address);

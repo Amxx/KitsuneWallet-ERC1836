@@ -1,13 +1,13 @@
 import { ethers } from 'ethers';
 import { SDK }    from '../dist/sdk';
-import { createMockProvider, getWallets, solidity} from 'ethereum-waffle';
+import { MockProvider, solidity} from 'ethereum-waffle';
 
 ethers.errors.setLogLevel('error');
 
 (async () => {
 
-	const provider = createMockProvider();
-	const [ wallet ] = getWallets(provider);
+	const provider = new MockProvider();
+	const [ wallet ] = provider.getWallets();
 
 	var sdk = new SDK(provider, wallet)
 

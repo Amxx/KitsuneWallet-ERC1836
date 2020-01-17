@@ -1,13 +1,13 @@
 const { ethers } = require('ethers');
 const { SDK }    = require('../dist/sdk');
-const { createMockProvider, getWallets, solidity} = require('ethereum-waffle');
+const { MockProvider, solidity} = require('ethereum-waffle');
 
 ethers.errors.setLogLevel('error');
 
 (async () => {
 
-	const provider = createMockProvider();
-	const [ relayer, user1, user2, user3 ] = getWallets(provider);
+	const provider = new MockProvider();
+	const [ relayer, user1, user2, user3 ] = provider.getWallets();
 	await provider.ready;
 
 	const sdk = new SDK(provider, relayer);

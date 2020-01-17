@@ -127,7 +127,7 @@ export function sign(abi: string, tx: types.ethereum.metatx, proxy: types.contra
 
 		case 'execute((uint256,address,uint256,bytes,uint256),bytes[])':
 			return new Promise((resolve, reject) => {
-				proxy.domain()
+				proxy.ERC712_domain()
 				.then(domain => {
 					let data =
 					{

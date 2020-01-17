@@ -44,7 +44,7 @@ contract WalletMultisigV2 is MasterBase, Multisig, ENSIntegration, ERC712Base, E
 		bytes[] memory _sigs)
 	public
 	{
-		bytes32 executionID = toEthTypedStructHash(_hash(_tx), _hash(domain()));
+		bytes32 executionID = _toEthTypedStructHash(_hash(_tx), _hash(ERC712_domain()));
 
 		_checkSignatures(
 			executionID,
@@ -55,12 +55,12 @@ contract WalletMultisigV2 is MasterBase, Multisig, ENSIntegration, ERC712Base, E
 		_execute(_tx);
 	}
 
-	function batch(
+	function executeBatch(
 		TXS     memory _txs,
 		bytes[] memory _sigs)
 	public
 	{
-		bytes32 executionID = toEthTypedStructHash(_hash(_txs), _hash(domain()));
+		bytes32 executionID = _toEthTypedStructHash(_hash(_txs), _hash(ERC712_domain()));
 
 		bool needsManagement = false;
 		for (uint256 i = 0; i < _txs.transactions.length; ++i)

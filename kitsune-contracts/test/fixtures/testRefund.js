@@ -1,6 +1,6 @@
 const chai   = require('chai');
 const ethers = require('ethers');
-const {getWallets, solidity} = require('ethereum-waffle');
+const { solidity } = require('ethereum-waffle');
 
 const {expect} = chai;
 chai.use(solidity);
@@ -8,8 +8,7 @@ chai.use(solidity);
 function testRefund(sdk)
 {
 	describe('Refund', async () => {
-
-		const [ wallet, relayer, user1, user2, user3 ] = getWallets(sdk.provider);
+		const [ wallet, relayer, user1, user2, user3 ] = sdk.provider.getWallets();
 		const eth = x => ethers.utils.parseEther(x.toString())
 
 		it('Refund in ether', async () => {

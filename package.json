@@ -24,6 +24,7 @@
 		"yarn": ">=1.9.4"
 	},
 	"dependencies": {
+		"npm-check": "^5.9.0",
 		"wsrun": "^5.2.0"
 	},
 	"devDependencies": {

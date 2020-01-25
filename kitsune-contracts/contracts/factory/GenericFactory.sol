@@ -22,13 +22,13 @@ contract GenericFactory is CounterfactualFactory
 	function predictAddressWithCall(bytes memory _code, bytes32 _salt, bytes memory _call)
 	public view returns(address)
 	{
-		return _predictAddress(_code, keccak256(abi.encodePacked(bytes1(0xff), _salt, _call)));
+		return _predictAddress(_code, keccak256(abi.encodePacked(_salt, _call)));
 	}
 
 	function createContractAndCall(bytes memory _code, bytes32 _salt, bytes memory _call)
 	public returns(address)
 	{
-		address addr = _create2(_code, keccak256(abi.encodePacked(bytes1(0xff), _salt, _call)));
+		address addr = _create2(_code, keccak256(abi.encodePacked(_salt, _call)));
 		emit NewContract(addr);
 		if (_call.length > 0)
 		{

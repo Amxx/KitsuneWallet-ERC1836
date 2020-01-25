@@ -33,9 +33,9 @@
 		"chai": "^4.2.0",
 		"chai-as-promised": "^7.1.1",
 		"ens-builder": "^2.0.2",
-		"ethereum-waffle": "^2.1.0",
+		"ethereum-waffle": "^2.3.1",
 		"ethers": "^4.0.37",
 		"jq.node": "^2.1.2",
-		"mocha": "^6.2.1"
+		"mocha": "^7.0.0"
 	}
 }

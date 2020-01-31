@@ -25,7 +25,7 @@
 	"devDependencies": {
 		"@ensdomains/buffer": "^0.0.10",
 		"@ensdomains/dnssec-oracle": "^0.1.2",
-		"@ensdomains/ens": "^0.3.11",
+		"@ensdomains/ens": "^0.4.0",
 		"@ensdomains/resolver": "^0.1.6",
 		"@types/chai": "^4.2.3",
 		"@types/chai-as-promised": "^7.1.2",

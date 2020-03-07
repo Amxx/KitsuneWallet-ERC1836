@@ -2,6 +2,7 @@ pragma solidity ^0.6.0;
 
 import "./IMaster.sol";
 import "../zos-upgradeability/BaseUpgradeabilityProxy.sol";
+import "./tools/Context.sol";
 import "./tools/Initializable.sol";
 import "./tools/Restricted.sol";
 import "./tools/Storage.sol";
@@ -14,6 +15,7 @@ import "./tools/Storage.sol";
 abstract contract MasterBase is
 	IMaster,
 	BaseUpgradeabilityProxy,
+	Context,
 	Initializable,
 	Restricted,
 	Storage

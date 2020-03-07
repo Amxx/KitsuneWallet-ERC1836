@@ -33,12 +33,14 @@ export function hash(abi: string, tx: types.ethereum.metatx, proxy: types.contra
 			return ethers.utils.solidityKeccak256([
 				'address',
 				'uint256',
+				'uint256',
 				'address',
 				'uint256',
 				'bytes32',
 				'uint256',
 			],[
 				proxy.address,
+				tx.chainId,
 				tx.op,
 				tx.to,
 				tx.value,
@@ -50,6 +52,7 @@ export function hash(abi: string, tx: types.ethereum.metatx, proxy: types.contra
 			return ethers.utils.solidityKeccak256([
 				'address',
 				'uint256',
+				'uint256',
 				'address',
 				'uint256',
 				'bytes32',
@@ -58,6 +61,7 @@ export function hash(abi: string, tx: types.ethereum.metatx, proxy: types.contra
 				'uint256',
 			],[
 				proxy.address,
+				tx.chainId,
 				tx.op,
 				tx.to,
 				tx.value,
@@ -71,6 +75,7 @@ export function hash(abi: string, tx: types.ethereum.metatx, proxy: types.contra
 			return ethers.utils.solidityKeccak256([
 				'address',
 				'uint256',
+				'uint256',
 				'address',
 				'uint256',
 				'bytes32',
@@ -80,6 +85,7 @@ export function hash(abi: string, tx: types.ethereum.metatx, proxy: types.contra
 				'uint256',
 			],[
 				proxy.address,
+				tx.chainId,
 				tx.op,
 				tx.to,
 				tx.value,
@@ -100,16 +106,16 @@ export function sanitize(abi: string, tx: types.ethereum.metatx) : types.ethereu
 	switch (abi)
 	{
 		case 'execute(uint256,address,uint256,bytes,uint256,bytes[])':
-			return {op:0,value:0,data:"0x",...tx};
+			return {chainId:1,op:0,value:0,data:"0x",...tx};
 
 		case 'execute(uint256,address,uint256,bytes,uint256,address,uint256,bytes[])':
-			return {op:0,value:0,data:"0x",gasToken:ethers.constants.AddressZero,gasPrice:0,...tx};
+			return {chainId:1,op:0,value:0,data:"0x",gasToken:ethers.constants.AddressZero,gasPrice:0,...tx};
 
 		case 'execute(uint256,address,uint256,bytes,uint256,bytes32,address,uint256,bytes[])':
-			return {op:0,value:0,data:"0x",gasToken:ethers.constants.AddressZero,gasPrice:0,salt:ethers.utils.hexlify(ethers.utils.randomBytes(32)),...tx};
+			return {chainId:1,op:0,value:0,data:"0x",gasToken:ethers.constants.AddressZero,gasPrice:0,salt:ethers.utils.hexlify(ethers.utils.randomBytes(32)),...tx};
 
 		case 'execute((uint256,address,uint256,bytes,uint256),bytes[])':
-			return {op:0,value:0,data:"0x",...tx};
+			return {chainId:1,op:0,value:0,data:"0x",...tx};
 
 		default:
 			throw new Error(`[ERROR] Meta.sanitize does not support abi ${abi}`)

@@ -42,6 +42,7 @@ contract WalletMultisig is MasterCore, Multisig, ENSIntegration, ERC721Receiver
 		bytes32 executionID = keccak256(
 			abi.encodePacked(
 				address(this),
+				chainID(),
 				operationType,
 				to,
 				value,

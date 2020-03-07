@@ -11,6 +11,7 @@ export interface args extends Array<arg> {};
 // Transactions & Meta-Transactions
 export interface metatx
 {
+	chainId  ? : uint256,
 	op       ? : uint256,
 	to       ? : address,
 	value    ? : uint256,
@@ -30,7 +31,7 @@ export interface tx
 	gasLimit ? : uint256,
 	gasPrice ? : uint256,
 	chainId  ? : uint256,
-	wait ? : () => Promise<{}>
+	wait     ? : () => Promise<{}>
 }
 
 type hashing<T> = (arg: T) => bytes32;

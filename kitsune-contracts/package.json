@@ -19,17 +19,17 @@
 		"clean": "rm -rf build"
 	},
 	"dependencies": {
-		"openzeppelin-solidity": "^2.3.0",
-		"zos-lib": "^2.4.2"
+		"@openzeppelin/contracts": "3.0.0-beta.0",
+		"solstruct": "0.0.10"
 	},
 	"devDependencies": {
 		"@ensdomains/buffer": "^0.0.10",
 		"@ensdomains/dnssec-oracle": "^0.1.2",
-		"@ensdomains/ens": "^0.3.11",
-		"@ensdomains/resolver": "^0.1.6",
+		"@ensdomains/ens": "^0.4.4",
+		"@ensdomains/resolver": "^0.2.4",
 		"@types/chai": "^4.2.3",
 		"@types/chai-as-promised": "^7.1.2",
-		"@types/mocha": "^5.2.6",
+		"@types/mocha": "^7.0.1",
 		"chai": "^4.2.0",
 		"chai-as-promised": "^7.1.1",
 		"ens-builder": "^2.0.2",

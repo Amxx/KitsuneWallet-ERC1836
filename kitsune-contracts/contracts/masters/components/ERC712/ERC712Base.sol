@@ -1,10 +1,10 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 pragma experimental ABIEncoderV2;
 
 import "./ERC712DomainTools.sol";
 
 
-contract ERC712Base is ERC712DomainTools
+abstract contract ERC712Base is ERC712DomainTools
 {
 	string public ERC712_name;
 	string public ERC712_version;
@@ -28,12 +28,9 @@ contract ERC712Base is ERC712DomainTools
 	}
 
 	function chainID()
-	public pure returns(uint256)
+	public pure returns(uint256 id)
 	{
-		// uint256 id;
-		// assembly { id := chainid() }
-		// return id;
-		return 1;
+		assembly { id := chainid() }
 	}
 
 	function domain()

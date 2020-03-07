@@ -1,8 +1,8 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 pragma experimental ABIEncoderV2;
 
 
-contract ERC712TransactionsTools
+abstract contract ERC712TransactionsTools
 {
 	bytes32 public constant  TX_TYPEHASH = 0xe9952cc5c9759ae091ba932ae88c7c6459f92bf3591c49b66e66bbe6eacce6b5;
 	bytes32 public constant TXS_TYPEHASH = 0x486550a104b6c06f67d2b5e490511d71244d92b5d27b53370ba6e41629be3fb2;

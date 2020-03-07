@@ -1,7 +1,7 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 pragma experimental ABIEncoderV2;
 
-import "../MasterBase.sol";
+import "../components/MasterCore.sol";
 import "../components/Multisig.sol";
 import "../components/ENSIntegration.sol";
 import "../components/ERC712/ERC712Base.sol";
@@ -9,11 +9,18 @@ import "../components/ERC712/ERC712TransactionsTools.sol";
 import "../components/ERC721Receiver.sol";
 
 
-contract WalletMultisigV2 is MasterBase, Multisig, ENSIntegration, ERC712Base, ERC712TransactionsTools, ERC721Receiver
+contract WalletMultisigV2 is MasterCore, Multisig, ENSIntegration, ERC712Base, ERC712TransactionsTools, ERC721Receiver
 {
 	constructor()
 	public
 	{
+	}
+
+	function initialize(address masterKey)
+	public virtual override(Multisig) initializer()
+	{
+		_initializeERC712Base("KitsuneWalletMultisigV2", "0.0.1-beta.1");
+		Multisig.initialize(masterKey);
 	}
 
 	function initialize(
@@ -21,10 +28,10 @@ contract WalletMultisigV2 is MasterBase, Multisig, ENSIntegration, ERC712Base, E
 		bytes32[] memory purposes,
 		uint256          managementThreshold,
 		uint256          actionThreshold)
-	public initializer()
+	public virtual override(Multisig) initializer()
 	{
 		_initializeERC712Base("KitsuneWalletMultisigV2", "0.0.1-beta.1");
-		super.initialize(
+		Multisig.initialize(
 			keys,
 			purposes,
 			managementThreshold,
@@ -33,10 +40,10 @@ contract WalletMultisigV2 is MasterBase, Multisig, ENSIntegration, ERC712Base, E
 	}
 
 	function cleanup()
-	internal
+	internal virtual override(IMaster, Multisig)
 	{
 		_cleanupERC712Base();
-		super.cleanup();
+		Multisig.cleanup();
 	}
 
 	function execute(

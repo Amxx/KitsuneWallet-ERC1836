@@ -1,16 +1,17 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 
-import "openzeppelin-solidity/contracts/token/ERC721/IERC721Receiver.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "../MasterBase.sol";
 
 
-contract ERC721Receiver is IERC721Receiver
+abstract contract ERC721Receiver is MasterBase, IERC721Receiver
 {
 	function onERC721Received(
 		address,
 		address,
 		uint256,
 		bytes memory)
-	public returns (bytes4)
+	public override returns (bytes4)
 	{
 		return this.onERC721Received.selector;
 	}

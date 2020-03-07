@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 
 
 /**
@@ -7,7 +7,7 @@ pragma solidity ^0.5.0;
  * Objective is to enshure generic upgradeability while preventing
  * unauthorized re-initialization.
  */
-contract Initializable
+abstract contract Initializable
 {
 	/**
 	 * @dev Storage slot with the initialization status.
@@ -27,7 +27,7 @@ contract Initializable
 
 	/**
 	 * @dev Returns the current initialization status.
-	 * @return Current locking status
+	 * @return locked Current locking status
 	 */
 	function _isInitialized()
 	internal view returns (bool locked)

@@ -1,8 +1,14 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 
 
-contract IERC1271
+abstract contract IERC1271
 {
-	function isValidSignature(bytes32,bytes memory)
-		public view returns (bool);
+	// bytes4(keccak256("isValidSignature(bytes,bytes)")
+	bytes4 constant internal MAGICVALUE = 0x20c13b0b;
+
+	function isValidSignature(
+		bytes32 _data,
+		bytes memory _signature
+	)
+	public virtual view returns (bytes4);
 }

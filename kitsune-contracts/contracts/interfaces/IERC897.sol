@@ -1,11 +1,11 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 
 
-interface IERC897
+abstract contract IERC897
 {
 	function implementation()
-		external view returns (address codeAddr);
+	external virtual view returns (address codeAddr);
 
 	function proxyType()
-		external pure returns (uint256 proxyTypeId);
+	external virtual pure returns (uint256 proxyTypeId);
 }

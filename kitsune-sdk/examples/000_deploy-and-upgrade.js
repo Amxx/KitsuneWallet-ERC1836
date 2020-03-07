@@ -1,13 +1,13 @@
 const { ethers } = require('ethers');
 const { SDK }    = require('../dist/sdk');
-const { createMockProvider, getWallets, solidity} = require('ethereum-waffle');
+const { MockProvider, solidity } = require('ethereum-waffle');
 
 ethers.errors.setLogLevel('error');
 
 (async () => {
 
-	const provider = createMockProvider();
-	const [ relayer, user1, user2, user3 ] = getWallets(provider);
+	const provider = new MockProvider();
+	const [ relayer, user1, user2, user3 ] = provider.getWallets();
 	await provider.ready;
 
 	const sdk = new SDK(provider, relayer);
@@ -71,10 +71,10 @@ ethers.errors.setLogLevel('error');
 
 	// ------------ WalletMultisig → WalletMultisigRefundOutOfOrder -------------
 	{
-		console.log("\nUpdating proxy: WalletMultisig → WalletMultisigRefundOutOfOrder\n");
+		console.log("\nUpdating proxy: WalletMultisig → WalletMultisig\n");
 
 		let updateMasterTx = await sdk.transactions.updateImplementation(
-			"WalletMultisigRefundOutOfOrder",
+			"WalletMultisig",
 			"0x",
 			{ deploy: { enable: true } }
 		);
@@ -86,7 +86,7 @@ ethers.errors.setLogLevel('error');
 			{ options: { gasLimit: 1000000 } }
 		);
 
-		proxy = sdk.contracts.viewContract("WalletMultisigRefundOutOfOrder", proxy.address);
+		proxy = sdk.contracts.viewContract("WalletMultisig", proxy.address);
 
 		console.log(`proxy          : ${proxy.address}`               );
 		console.log(`implementation : ${await proxy.implementation()}`);

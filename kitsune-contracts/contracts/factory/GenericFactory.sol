@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 
 import "./CounterfactualFactory.sol";
 
@@ -38,5 +38,4 @@ contract GenericFactory is CounterfactualFactory
 		}
 		return addr;
 	}
-
 }

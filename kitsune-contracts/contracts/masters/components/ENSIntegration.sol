@@ -1,18 +1,32 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 
-import "@ensdomains/ens/contracts/ENSRegistry.sol";
-import "@ensdomains/ens/contracts/FIFSRegistrar.sol";
-import "@ensdomains/ens/contracts/ReverseRegistrar.sol";
-import "@ensdomains/resolver/contracts/PublicResolver.sol";
-import "../../tools/KitsuneTools.sol";
+import "@ensdomains/ens/contracts/ENS.sol";
+// @ensdomains/ens/contracts/ReverseRegistrar.sol is not 0.6.0 ready
+// @ensdomains/ens/contracts/FIFSRegistrar.sol is not 0.6.0 ready
+// @ensdomains/resolver/contracts/PublicResolver.sol is not 0.6.0 ready
+import "../MasterBase.sol";
 
+interface ReverseRegistrar
+{
+	function setName(string calldata) external returns (bytes32);
+}
 
-contract ENSIntegration is KitsuneTools
+interface FIFSRegistrar
+{
+	function register(bytes32, address) external;
+}
+
+interface PublicResolver
+{
+	function setAddr(bytes32, address) external;
+}
+
+abstract contract ENSIntegration is MasterBase
 {
 	bytes32 internal constant ADDR_REVERSE_NODE = 0x91d1777781884d03a6757a803996e38de2a42967fb37eeaca72729271025a9e2;
 
 	function ENSFIFSRegister(
-		ENSRegistry    ens,
+		ENS            ens,
 		PublicResolver resolver,
 		bytes32        domainHash,
 		bytes32        labelHash)
@@ -26,7 +40,7 @@ contract ENSIntegration is KitsuneTools
 	}
 
 	function ENSReverseRegister(
-		ENSRegistry   ens,
+		ENS           ens,
 		string memory name)
 	public restricted()
 	{
@@ -34,7 +48,7 @@ contract ENSIntegration is KitsuneTools
 	}
 
 	function ENSFullRegistration(
-		ENSRegistry    ens,
+		ENS            ens,
 		PublicResolver resolver,
 		bytes32        domainHash,
 		bytes32        labelHash,

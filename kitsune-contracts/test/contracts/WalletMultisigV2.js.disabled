@@ -1,7 +1,7 @@
 const chai = require('chai');
 const ethers = require('ethers');
 const { SDK } = require('@kitsune-wallet/sdk/dist/sdk');
-const { createMockProvider, deployContract, getWallets, solidity } = require('ethereum-waffle');
+const { MockProvider, deployContract, solidity } = require('ethereum-waffle');
 
 const Target = require('../../build/Target');
 
@@ -11,24 +11,24 @@ const testExecute              = require("../fixtures/testExecute.js");
 const testKeyManagement        = require("../fixtures/testKeyManagement.js");
 const testMultisig             = require("../fixtures/testMultisig.js");
 const testUpdateImplementation = require("../fixtures/testUpdateImplementation.js");
-const testRecovery             = require("../fixtures/testRecovery.js");
 
 ethers.errors.setLogLevel('error');
 
 eth = x => ethers.utils.parseEther(x.toString())
-describe('WalletMultisigRecovery', () => {
+describe('WalletMultisigV2', () => {
 
-	const provider = createMockProvider();
-	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
+	const provider = new MockProvider();
+	const [ wallet, relayer, user1, user2, user3 ] = provider.getWallets();
 	const sdk = new SDK(provider, relayer);
 
 	before(async () => {
+		walletContract = await sdk.contracts.getActiveInstance("WalletMultisigV2", { deploy: { enable: true } });
 		targetContract = await deployContract(wallet, Target, []);
 	});
 
 	beforeEach(async () => {
 		proxy = await sdk.contracts.deployProxy(
-			"WalletMultisigRecovery",
+			"WalletMultisigV2",
 			[
 				[
 					sdk.utils.addrToKey(user1.address),
@@ -44,12 +44,11 @@ describe('WalletMultisigRecovery', () => {
 		await wallet.sendTransaction({to: proxy.address, value: eth(1)});
 	});
 
-	testInitialize          (sdk, "WalletMultisigRecovery");
-	testENS                 (sdk, "WalletMultisigRecovery");
-	testExecute             (sdk, "WalletMultisigRecovery");
-	testKeyManagement       (sdk, "WalletMultisigRecovery");
-	testMultisig            (sdk, "WalletMultisigRecovery");
-	testUpdateImplementation(sdk, "WalletMultisigRecovery");
-	testRecovery            (sdk, "WalletMultisigRecovery");
+	testInitialize          (sdk, "WalletMultisigV2");
+	testENS                 (sdk, "WalletMultisigV2");
+	testExecute             (sdk, "WalletMultisigV2");
+	testKeyManagement       (sdk, "WalletMultisigV2");
+	testMultisig            (sdk, "WalletMultisigV2");
+	testUpdateImplementation(sdk, "WalletMultisigV2");
 
 });

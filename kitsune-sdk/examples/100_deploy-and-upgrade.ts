@@ -1,13 +1,13 @@
 import { ethers } from 'ethers';
 import { SDK }    from '../dist/sdk';
-import { createMockProvider, getWallets, solidity} from 'ethereum-waffle';
+import { MockProvider, solidity } from 'ethereum-waffle';
 
 ethers.errors.setLogLevel('error');
 
 (async () => {
 
-	const provider = createMockProvider();
-	const [ wallet ] = getWallets(provider);
+	const provider = new MockProvider();
+	const [ wallet ] = provider.getWallets();
 
 	var sdk = new SDK(provider, wallet)
 
@@ -43,7 +43,7 @@ ethers.errors.setLogLevel('error');
 
 	proxy = await sdk.contracts.upgradeProxy(
 		proxy,
-		"WalletMultisigRefund",
+		"WalletMultisig",
 		null,
 		(proxy, tx, config) => sdk.multisig.execute(proxy, [ wallet ], tx, config),
 		{ deploy: { enable: true }, options: { gasLimit: 1000000 } }

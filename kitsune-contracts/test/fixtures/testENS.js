@@ -1,6 +1,6 @@
 const chai   = require('chai');
 const ethers = require('ethers');
-const {getWallets, solidity} = require('ethereum-waffle');
+const { solidity } = require('ethereum-waffle');
 
 const withENS = require('../utils/withENS.js');
 
@@ -12,7 +12,7 @@ function testENS(sdk)
 {
 	describe('ENS', async () => {
 
-		const [ wallet, relayer, user1, user2, user3 ] = getWallets(sdk.provider);
+		const [ wallet, relayer, user1, user2, user3 ] = sdk.provider.getWallets();
 		let ensAddress       = undefined;
 		let resolverAddress  = undefined;
 		let registrarAddress = undefined;

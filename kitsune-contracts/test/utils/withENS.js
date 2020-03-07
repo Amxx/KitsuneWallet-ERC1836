@@ -1,7 +1,5 @@
-// const chai       = require('chai');
 const ethers     = require('ethers');
 const ENSBuilder = require('ens-builder');
-// const {getWallets, solidity} = require('ethereum-waffle');
 
 async function withENS(wallet, domain = 'kitsune.eth')
 {

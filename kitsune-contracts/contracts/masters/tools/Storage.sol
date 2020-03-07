@@ -1,11 +1,11 @@
-pragma solidity ^0.5.9;
+pragma solidity ^0.6.0;
 
 
 /**
  * @title Storage
  * @dev Beneric unstructured key-value store for persistente data.
  */
-contract Storage
+abstract contract Storage
 {
 	/**
 	 * @dev Slots used as a base for the derivation of keys.
@@ -16,7 +16,7 @@ contract Storage
 	/**
 	 * @dev Get value in store.
 	 * @param key index to retreive
-	 * @return bytes32 content stored at key
+	 * @return value content currently stored at key
 	 */
 	function _get(bytes32 key)
 	internal view returns (bytes32 value)

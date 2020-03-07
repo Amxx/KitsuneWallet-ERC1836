@@ -1,19 +1,31 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 pragma experimental ABIEncoderV2;
 
-import "../MasterBase.sol";
+import "../components/MasterCore.sol";
 import "../components/Multisig.sol";
 import "../components/ENSIntegration.sol";
-import "../components/ERC712/ERC712Base.sol";
-import "../components/ERC712/ERC712TransactionsTools.sol";
+import "../components/ERC712.sol";
+import "../components/ERC712TransactionsTools.sol";
 import "../components/ERC721Receiver.sol";
 
 
-contract WalletMultisigV2 is MasterBase, Multisig, ENSIntegration, ERC712Base, ERC712TransactionsTools, ERC721Receiver
+contract WalletMultisigV2 is MasterCore, Multisig, ENSIntegration, ERC712, ERC712TransactionsTools, ERC721Receiver
 {
 	constructor()
 	public
 	{
+	}
+
+	function initialize(address masterKey)
+	public virtual override initializer()
+	{
+		Multisig.initialize(
+			masterKey
+		);
+		ERC712.initialize(
+			"KitsuneWalletMultisigV2",
+			"0.0.1-beta.1"
+		);
 	}
 
 	function initialize(
@@ -21,22 +33,25 @@ contract WalletMultisigV2 is MasterBase, Multisig, ENSIntegration, ERC712Base, E
 		bytes32[] memory purposes,
 		uint256          managementThreshold,
 		uint256          actionThreshold)
-	public initializer()
+	public virtual override initializer()
 	{
-		_initializeERC712Base("KitsuneWalletMultisigV2", "0.0.1-beta.1");
-		super.initialize(
+		Multisig.initialize(
 			keys,
 			purposes,
 			managementThreshold,
 			actionThreshold
 		);
+		ERC712.initialize(
+			"KitsuneWalletMultisigV2",
+			"0.0.1-beta.1"
+		);
 	}
 
 	function cleanup()
-	internal
+	internal virtual override(IMaster, Multisig, ERC712)
 	{
-		_cleanupERC712Base();
-		super.cleanup();
+		Multisig.cleanup();
+		ERC712.cleanup();
 	}
 
 	function execute(
@@ -44,7 +59,7 @@ contract WalletMultisigV2 is MasterBase, Multisig, ENSIntegration, ERC712Base, E
 		bytes[] memory _sigs)
 	public
 	{
-		bytes32 executionID = toEthTypedStructHash(hash(_tx), hash(domain()));
+		bytes32 executionID = _toEthTypedStructHash(_hash(_tx), _hash(ERC712_domain()));
 
 		_checkSignatures(
 			executionID,
@@ -55,12 +70,12 @@ contract WalletMultisigV2 is MasterBase, Multisig, ENSIntegration, ERC712Base, E
 		_execute(_tx);
 	}
 
-	function batch(
+	function executeBatch(
 		TXS     memory _txs,
 		bytes[] memory _sigs)
 	public
 	{
-		bytes32 executionID = toEthTypedStructHash(hash(_txs), hash(domain()));
+		bytes32 executionID = _toEthTypedStructHash(_hash(_txs), _hash(ERC712_domain()));
 
 		bool needsManagement = false;
 		for (uint256 i = 0; i < _txs.transactions.length; ++i)

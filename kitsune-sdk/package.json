@@ -1,7 +1,7 @@
 {
 	"name": "@kitsune-wallet/sdk",
 	"author": "Hadrien Croubois <hadrien.croubois@gmail.com>",
-	"version": "0.3.0",
+	"version": "0.4.0-beta.0",
 	"license": "MIT",
 	"files": [
 		"/lib",
@@ -15,12 +15,12 @@
 		"clean": "rm -rf dist"
 	},
 	"dependencies": {
-		"@kitsune-wallet/contracts": "^0.3.8"
+		"@kitsune-wallet/contracts": "0.4.0-beta.0"
 	},
 	"devDependencies": {
 		"eth-sig-util": "^2.5.2",
-		"ethereum-waffle": "^2.3.0",
-		"ethers": "^4.0.43",
-		"typescript": "^3.7.4"
+		"ethereum-waffle": "^2.3.2",
+		"ethers": "^4.0.45",
+		"typescript": "^3.8.3"
 	}
 }

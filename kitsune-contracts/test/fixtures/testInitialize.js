@@ -8,6 +8,7 @@ chai.use(solidity);
 function testInitialize(sdk, name)
 {
 	describe('Initialize', async () => {
+
 		const [ wallet, relayer, user1, user2, user3 ] = sdk.provider.getWallets();
 
 		it('Verify proxy initialization', async () => {

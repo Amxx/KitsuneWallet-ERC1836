@@ -2,9 +2,6 @@ import IMaster                        from '@kitsune-wallet/contracts/build/IMas
 import Proxy                          from '@kitsune-wallet/contracts/build/KitsuneProxy.json';
 import WalletOwnable                  from '@kitsune-wallet/contracts/build/WalletOwnable.json';
 import WalletMultisig                 from '@kitsune-wallet/contracts/build/WalletMultisig.json';
-import WalletMultisigRefund           from '@kitsune-wallet/contracts/build/WalletMultisigRefund.json';
-import WalletMultisigRefundOutOfOrder from '@kitsune-wallet/contracts/build/WalletMultisigRefundOutOfOrder.json';
-import WalletMultisigRecovery         from '@kitsune-wallet/contracts/build/WalletMultisigRecovery.json';
 import WalletMultisigV2               from '@kitsune-wallet/contracts/build/WalletMultisigV2.json';
 
 export {
@@ -12,8 +9,5 @@ export {
 ,	Proxy
 ,	WalletOwnable
 ,	WalletMultisig
-,	WalletMultisigRefund
-,	WalletMultisigRefundOutOfOrder
-,	WalletMultisigRecovery
 ,	WalletMultisigV2
 };

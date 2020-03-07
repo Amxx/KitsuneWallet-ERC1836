@@ -11,6 +11,7 @@ eth = x => ethers.utils.parseEther(x.toString())
 function testENS(sdk)
 {
 	describe('ENS', async () => {
+
 		const [ wallet, relayer, user1, user2, user3 ] = sdk.provider.getWallets();
 		let ensAddress       = undefined;
 		let resolverAddress  = undefined;

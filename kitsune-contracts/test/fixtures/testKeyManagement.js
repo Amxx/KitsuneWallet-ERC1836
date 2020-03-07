@@ -8,6 +8,7 @@ chai.use(solidity);
 function testKeyManagement(sdk)
 {
 	describe('Key Management', async () => {
+
 		const [ wallet, relayer, user1, user2, user3 ] = sdk.provider.getWallets();
 		const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 

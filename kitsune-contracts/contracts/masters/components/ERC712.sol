@@ -1,55 +1,46 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 pragma experimental ABIEncoderV2;
 
+import "../MasterBase.sol";
 
-contract ERC712Base
+
+struct EIP712Domain
+{
+	string  name;
+	string  version;
+	uint256 chainId;
+	address verifyingContract;
+}
+
+abstract contract ERC712 is MasterBase
 {
 	bytes32 internal constant EIP712DOMAIN_TYPEHASH = 0x8b73c3c69bb8fe3d512ecc4cf759cc79239f7b179b0ffacaa9a75d522b39400f;
-	string  internal ERC712_name;
-	string  internal ERC712_version;
+	string  internal          ERC712_NAME;
+	string  internal          ERC712_VERSION;
 
-	struct EIP712Domain
+	function initialize(string memory _name, string memory _version)
+	internal virtual
 	{
-		string  name;
-		string  version;
-		uint256 chainId;
-		address verifyingContract;
+		ERC712_NAME    = _name;
+		ERC712_VERSION = _version;
 	}
 
-	constructor()
-	public
-	{}
-
-	function _initializeERC712Base(string memory _name, string memory _version)
-	internal
+	function cleanup()
+	internal virtual override
 	{
-		ERC712_name    = _name;
-		ERC712_version = _version;
-	}
-
-	function _cleanupERC712Base()
-	internal
-	{
-		delete ERC712_name;
-		delete ERC712_version;
+		delete ERC712_NAME;
+		delete ERC712_VERSION;
 	}
 
 	function ERC712_domain()
 	public view returns(EIP712Domain memory)
 	{
 		return EIP712Domain({
-			name:              ERC712_name
-		, version:           ERC712_version
-		, chainId:           _chainID()
+			name:              ERC712_NAME
+		, version:           ERC712_VERSION
+		, chainId:           chainID()
 		, verifyingContract: address(this)
 		});
-	}
-
-	function _chainID()
-	internal pure returns(uint256 id)
-	{
-		// assembly { id := chainid() } // TODO: fix istanbul
-		id = 1;
 	}
 
 	function _hash(EIP712Domain memory _domain)

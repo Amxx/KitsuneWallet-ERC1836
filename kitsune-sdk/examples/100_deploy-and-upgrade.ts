@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { SDK }    from '../dist/sdk';
-import { MockProvider, solidity} from 'ethereum-waffle';
+import { MockProvider, solidity } from 'ethereum-waffle';
 
 ethers.errors.setLogLevel('error');
 
@@ -43,8 +43,13 @@ ethers.errors.setLogLevel('error');
 
 	proxy = await sdk.contracts.upgradeProxy(
 		proxy,
-		"WalletMultisigRefund",
-		null,
+		"WalletMultisigV2",
+		[
+			[ sdk.utils.addrToKey(wallet.address) ],
+			[ "0x0000000000000000000000000000000000000000000000000000000000000001" ],
+			1,
+			1,
+		],
 		(proxy, tx, config) => sdk.multisig.execute(proxy, [ wallet ], tx, config),
 		{ deploy: { enable: true }, options: { gasLimit: 1000000 } }
 	);
@@ -53,6 +58,7 @@ ethers.errors.setLogLevel('error');
 	console.log(`implementation : ${await proxy.implementation()}`);
 	console.log(`owner          : ${await proxy.owner()}`         );
 	console.log(`getKey(U1)     : ${await proxy.functions['getKey(address)'](wallet.address)}`);
+	console.log(`domain         : ${await proxy.ERC712_domain()}` );
 	console.log("");
 
 })();

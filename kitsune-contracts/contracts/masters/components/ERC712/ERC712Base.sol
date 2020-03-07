@@ -30,7 +30,8 @@ abstract contract ERC712Base is ERC712DomainTools
 	function chainID()
 	public pure returns(uint256 id)
 	{
-		assembly { id := chainid() }
+		// assembly { id := chainid() }
+		id = 1; // TODO: fix for istanbul !!!
 	}
 
 	function domain()

@@ -20,7 +20,7 @@
 	},
 	"dependencies": {
 		"@openzeppelin/contracts": "3.0.0-beta.0",
-		"solstruct": "0.0.10"
+		"solstruct": "0.0.13"
 	},
 	"devDependencies": {
 		"@ensdomains/buffer": "^0.0.10",

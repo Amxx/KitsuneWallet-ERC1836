@@ -71,11 +71,19 @@ ethers.errors.setLogLevel('error');
 
 	// ------------ WalletMultisig → WalletMultisigRefundOutOfOrder -------------
 	{
-		console.log("\nUpdating proxy: WalletMultisig → WalletMultisig\n");
+		console.log("\nUpdating proxy: WalletMultisig → WalletMultisigV2\n");
 
 		let updateMasterTx = await sdk.transactions.updateImplementation(
-			"WalletMultisig",
-			"0x",
+			"WalletMultisigV2",
+			sdk.transactions.initialization(
+				"WalletMultisigV2",
+				[
+					[ sdk.utils.addrToKey(user1.address) ],
+					[ "0x0000000000000000000000000000000000000000000000000000000000000001" ],
+					1,
+					1,
+				]
+			),
 			{ deploy: { enable: true } }
 		);
 
@@ -86,7 +94,7 @@ ethers.errors.setLogLevel('error');
 			{ options: { gasLimit: 1000000 } }
 		);
 
-		proxy = sdk.contracts.viewContract("WalletMultisig", proxy.address);
+		proxy = sdk.contracts.viewContract("WalletMultisigV2", proxy.address);
 
 		console.log(`proxy          : ${proxy.address}`               );
 		console.log(`implementation : ${await proxy.implementation()}`);
@@ -94,6 +102,7 @@ ethers.errors.setLogLevel('error');
 		console.log(`getKey(U1)     : ${await proxy.functions['getKey(address)'](user1.address)}`);
 		console.log(`getKey(U2)     : ${await proxy.functions['getKey(address)'](user2.address)}`);
 		console.log(`getKey(U3)     : ${await proxy.functions['getKey(address)'](user3.address)}`);
+		console.log(`domain         : ${await proxy.domain()}`        );
 	}
 
 })();

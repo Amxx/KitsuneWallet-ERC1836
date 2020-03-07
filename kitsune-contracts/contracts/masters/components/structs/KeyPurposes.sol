@@ -37,7 +37,8 @@ library KeyPurposes
 	function clear(keypurposes storage _keypurposes)
 	internal returns (bool)
 	{
+		LibMap_bytes32_bytes32.clear(_keypurposes.data);
 		_keypurposes.managers = 0;
-		return LibMap_bytes32_bytes32.clear(_keypurposes.data);
+		return true;
 	}
 }

@@ -1,6 +1,6 @@
 const chai   = require('chai');
 const ethers = require('ethers');
-const {getWallets, solidity} = require('ethereum-waffle');
+const { solidity } = require('ethereum-waffle');
 
 const {expect} = chai;
 chai.use(solidity);
@@ -10,7 +10,7 @@ function testExecute(sdk)
 {
 	describe('Execute', async () => {
 
-		const [ wallet, relayer, user1, user2, user3 ] = getWallets(sdk.provider);
+		const [ wallet, relayer, user1, user2, user3 ] = sdk.provider.getWallets();
 		const dest = ethers.utils.getAddress(ethers.utils.hexlify(ethers.utils.randomBytes(20)));
 
 		it('authorized - pay with proxy', async () => {

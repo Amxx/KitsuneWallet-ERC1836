@@ -1,8 +1,10 @@
 import { ethers } from 'ethers';
 import * as types from "../typings/all";
 
+ethers.errors.setLogLevel('error');
+
 import ModuleBase from "./__ModuleBase";
-import { HASHING_METATX, PREPARE_TX, INLINE_TX } from './Meta'
+import Meta from './Meta'
 
 function toNumber(
 	n: types.ethereum.uint256
@@ -25,14 +27,17 @@ export class Multisig extends ModuleBase
 	) : Promise<types.ethereum.tx>
 	{
 		var executeABI : string = Object.keys(proxy.interface.functions).filter(fn => fn.startsWith("execute(") && fn !== 'execute(uint256,address,uint256,bytes)')[0]
-		return new Promise(function(resolve, reject) {
+		return new Promise((resolve, reject) => {
 			proxy.nonce()
 			.then((previousNonce: types.ethereum.uint256) => {
-				var txFull: types.ethereum.metatx  = PREPARE_TX[executeABI]({ nonce: toNumber(previousNonce) + 1, ...metatx });
-				var txHash: types.ethereum.bytes32 = ethers.utils.arrayify(HASHING_METATX[executeABI](proxy.address, txFull));
-				Promise.all(signers.sort((a,b) => (a.address == b.address) ? 0 : (a.address > b.address) ? 1 : -1).map(signer => signer.signMessage(txHash)))
+				var tx: types.ethereum.metatx = Meta.sanitize(executeABI, { nonce: toNumber(previousNonce) + 1, ...metatx });
+				Promise.all(
+					signers
+					.sort((a,b) => (a.address == b.address) ? 0 : (a.address > b.address) ? 1 : -1)
+					.map(signer => Meta.sign(executeABI, tx, proxy, signer))
+				)
 				.then(signatures => {
-					resolve({ to: proxy.address, data: proxy.interface.functions[executeABI].encode([...INLINE_TX[executeABI](txFull), signatures]) });
+					resolve({ to: proxy.address, data: proxy.interface.functions[executeABI].encode([...Meta.inline(executeABI, tx), signatures]) });
 				})
 				.catch(reject);
 			})

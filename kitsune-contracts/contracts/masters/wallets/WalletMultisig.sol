@@ -1,13 +1,13 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 pragma experimental ABIEncoderV2;
 
-import "../MasterBase.sol";
-import "../modules/Multisig.sol";
-import "../modules/ENSRegistered.sol";
-import "../modules/ERC721Receiver.sol";
+import "../components/MasterCore.sol";
+import "../components/Multisig.sol";
+import "../components/ENSIntegration.sol";
+import "../components/ERC721Receiver.sol";
 
 
-contract WalletMultisig is MasterBase, Multisig, ENSRegistered, ERC721Receiver
+contract WalletMultisig is MasterCore, Multisig, ENSIntegration, ERC721Receiver
 {
 	// This is a delegate contract, lock it
 	constructor()
@@ -24,7 +24,6 @@ contract WalletMultisig is MasterBase, Multisig, ENSRegistered, ERC721Receiver
 		bytes[] memory sigs)
 	public
 	{
-
 		require(_incrNonce() == nonce, "invalid-nonce");
 
 		bytes32 neededPurpose;
@@ -42,6 +41,7 @@ contract WalletMultisig is MasterBase, Multisig, ENSRegistered, ERC721Receiver
 		bytes32 executionID = keccak256(
 			abi.encodePacked(
 				address(this),
+				chainID(),
 				operationType,
 				to,
 				value,

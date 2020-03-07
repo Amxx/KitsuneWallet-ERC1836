@@ -1,7 +1,7 @@
 const chai = require('chai');
 const ethers = require('ethers');
 const { SDK } = require('@kitsune-wallet/sdk/dist/sdk');
-const { createMockProvider, deployContract, getWallets, solidity } = require('ethereum-waffle');
+const { MockProvider, deployContract, solidity } = require('ethereum-waffle');
 
 const Target = require('../../build/Target');
 
@@ -17,8 +17,8 @@ ethers.errors.setLogLevel('error');
 eth = x => ethers.utils.parseEther(x.toString())
 describe('WalletMultisig', () => {
 
-	const provider = createMockProvider();
-	const [ wallet, relayer, user1, user2, user3 ] = getWallets(provider);
+	const provider = new MockProvider();
+	const [ wallet, relayer, user1, user2, user3 ] = provider.getWallets();
 	const sdk = new SDK(provider, relayer);
 
 	before(async () => {

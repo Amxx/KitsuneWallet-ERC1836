@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 
 import "./CounterfactualFactory.sol";
 
@@ -10,25 +10,32 @@ contract GenericFactory is CounterfactualFactory
 	function predictAddress(bytes memory _code, bytes32 _salt)
 	public view returns(address)
 	{
-		return _predictAddress(_code, _salt);
+		return predictAddressWithCall(_code, _salt, bytes(""));
 	}
 
 	function createContract(bytes memory _code, bytes32 _salt)
 	public returns(address)
 	{
-		address addr = _create2(_code, _salt);
-		emit NewContract(addr);
-		return addr;
+		return createContractAndCall(_code, _salt, bytes(""));
 	}
 
-	function createContractAndCallback(bytes memory _code, bytes32 _salt, bytes memory _callback)
+	function predictAddressWithCall(bytes memory _code, bytes32 _salt, bytes memory _call)
+	public view returns(address)
+	{
+		return _predictAddress(_code, keccak256(abi.encodePacked(_salt, _call)));
+	}
+
+	function createContractAndCall(bytes memory _code, bytes32 _salt, bytes memory _call)
 	public returns(address)
 	{
-		address addr = createContract(_code, _salt);
-		// solium-disable-next-line security/no-low-level-calls
-		(bool success, bytes memory reason) = addr.call(_callback);
-		require(success, string(reason));
+		address addr = _create2(_code, keccak256(abi.encodePacked(_salt, _call)));
+		emit NewContract(addr);
+		if (_call.length > 0)
+		{
+			// solium-disable-next-line security/no-low-level-calls
+			(bool success, bytes memory reason) = addr.call(_call);
+			require(success, string(reason));
+		}
 		return addr;
 	}
-
 }

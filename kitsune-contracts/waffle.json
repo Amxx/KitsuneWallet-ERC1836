@@ -2,7 +2,7 @@
 	"sourcesPath": "./contracts",
 	"targetPath": "./build",
 	"npmPath": "../node_modules",
-	"solcVersion": "v0.6.1+commit.e6f7d5a4",
+	"solcVersion": "v0.6.4+commit.1dca32f3",
 	"compilerOptions":
 	{
 		"optimizer":

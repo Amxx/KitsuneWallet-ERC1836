@@ -58,7 +58,7 @@ abstract contract ERC725 is MasterBase, IERC725
 			bytes memory returndata;
 			uint256 gas = gasleft();
 			// solium-disable-next-line security/no-call-value
-			(success, returndata) = to.call.value(value)(data);
+			(success, returndata) = to.call{value: value}(data);
 			// Don't revert if call reverted, just log the failure
 			if (success)
 			{
